@@ -33,6 +33,10 @@
 <meta name="author" content="Yatus — Dakar, Sénégal">
 <meta name="description" content="Al-Quran Al-Karim — 114 sourates complètes avec audio, traduction française et anglaise.">
 <meta name="theme-color" content="#0C0E0B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Al-Quran">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Al-Quran Al-Karim">
 <meta property="og:title" content="Al-Quran Al-Karim — Lecture du Saint Coran">
@@ -45,7 +49,8 @@
 <title>القرآن الكريم — Al-Quran Al-Karim</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icons/site-icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/site-icon.svg">
+<link rel="icon" href="icons/site-icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/site-icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#C8A96E;--gold2:#E2C98A;--gold3:#8B6F3A;--em:#40916C;--em2:#1B4332;--bg:#0C0E0B;--bg2:#131610;--bg3:#1A1E16;--bg4:#20251C;--tx:#EAE0C8;--tx2:#A89B7A;--tx3:#6B6050;--bd:rgba(200,169,110,.15);--bd2:rgba(200,169,110,.35);--r:6px;}
@@ -221,6 +226,10 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .toolrow label{font-size:.8rem;color:var(--tx2);min-width:88px;}
 .toolrange{flex:1;accent-color:var(--gold);}
 .toolval{font-size:.75rem;color:var(--gold);min-width:42px;text-align:right;}
+.offlinebox{border:1px solid var(--bd);border-radius:var(--r);background:var(--bg3);padding:.85rem;margin:1rem 0;}
+.offlinetitle{font-size:.78rem;color:var(--gold);font-family:'Cinzel Decorative',serif;letter-spacing:.08em;margin-bottom:.45rem;}
+.offlinestatus{font-size:.78rem;color:var(--tx2);line-height:1.5;margin-bottom:.65rem;}
+.offlineactions{display:flex;gap:6px;flex-wrap:wrap;}
 .speedopts{display:flex;gap:5px;flex-wrap:wrap;}
 .speedbtn{background:var(--bg3);border:1px solid var(--bd);border-radius:3px;color:var(--tx3);font-family:'Crimson Pro',serif;font-size:.75rem;padding:4px 10px;cursor:pointer;transition:all .2s;}
 .speedbtn:hover{border-color:var(--gold3);color:var(--gold);}
@@ -401,6 +410,14 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
         <button class="speedbtn on" data-speed="1" onclick="setAudioSpeed(1)">1×</button>
         <button class="speedbtn" data-speed="1.25" onclick="setAudioSpeed(1.25)">1.25×</button>
         <button class="speedbtn" data-speed="1.5" onclick="setAudioSpeed(1.5)">1.5×</button>
+      </div>
+    </div>
+    <div class="offlinebox">
+      <div class="offlinetitle">Hors ligne</div>
+      <div class="offlinestatus" id="offline-status">Cette sourate n'est pas encore disponible hors ligne.</div>
+      <div class="offlineactions">
+        <button class="vbtn" onclick="saveCurrentSurahOffline()">Rendre cette sourate disponible</button>
+        <button class="vbtn" onclick="removeCurrentSurahOffline()">Retirer cette sourate</button>
       </div>
     </div>
   </div>
@@ -636,6 +653,8 @@ let playCtx='',repTimer=null;
 let arSize=30,audioSpeed=1,searchIndex=[],searchLoading=null,libraryView='favs';
 const PREF_KEY='aq_prefs';
 const SURAH_CACHE_PREFIX='aq_surah_';
+const LOCAL_SURAH_CACHE_PREFIX='aq_offline_surah_';
+const OFFLINE_SURAH_LIST_KEY='aq_offline_surahs';
 const SEARCH_CACHE_KEY='aq_search_index';
 const FAV_KEY='aq_favs';
 const BOOKMARK_KEY='aq_bookmarks';
@@ -857,6 +876,71 @@ function registerSW(){
   }
 }
 
+function readJsonStore(store,key,fallback=null){
+  try{
+    const raw=store.getItem(key);
+    return raw?JSON.parse(raw):fallback;
+  }catch(e){
+    return fallback;
+  }
+}
+function validSurahPack(pack){
+  return !!(pack&&pack.ar?.data?.ayahs&&pack.fr?.data?.ayahs&&pack.en?.data?.ayahs&&pack.ph?.data?.ayahs);
+}
+function getOfflineSurahs(){
+  const list=readJsonStore(localStorage,OFFLINE_SURAH_LIST_KEY,[]);
+  return Array.isArray(list)?list.filter(n=>n>=1&&n<=114):[];
+}
+function saveOfflineSurahs(list){
+  const clean=[...new Set(list.map(Number).filter(n=>n>=1&&n<=114))].sort((a,b)=>a-b);
+  localStorage.setItem(OFFLINE_SURAH_LIST_KEY,JSON.stringify(clean));
+  return clean;
+}
+function getOfflinePack(n=curS){
+  const pack=readJsonStore(localStorage,LOCAL_SURAH_CACHE_PREFIX+n,null);
+  return validSurahPack(pack)?pack:null;
+}
+function updateOfflineStatus(){
+  const el=document.getElementById('offline-status');
+  if(!el)return;
+  const list=getOfflineSurahs();
+  const m=SS[curS-1];
+  const saved=getOfflinePack(curS);
+  const total=list.length+' sourate'+(list.length>1?'s':'')+' sauvegardée'+(list.length>1?'s':'');
+  el.textContent=saved
+    ? `${m.fr} est disponible hors ligne. ${total}.`
+    : `${m.fr} n'est pas encore disponible hors ligne. ${total}.`;
+}
+function currentSurahPack(){
+  if(!vData.length||!trFr.length||!trEn.length||!trPh.length)return null;
+  return {
+    ar:{data:{ayahs:vData}},
+    fr:{data:{ayahs:trFr}},
+    en:{data:{ayahs:trEn}},
+    ph:{data:{ayahs:trPh}},
+    surah:curS,
+    savedAt:Date.now()
+  };
+}
+function saveCurrentSurahOffline(){
+  const pack=currentSurahPack();
+  if(!pack){toast('Chargez d’abord la sourate');return;}
+  try{
+    localStorage.setItem(LOCAL_SURAH_CACHE_PREFIX+curS,JSON.stringify(pack));
+    saveOfflineSurahs([...getOfflineSurahs(),curS]);
+    updateOfflineStatus();
+    toast('Sourate disponible hors ligne');
+  }catch(e){
+    toast('Stockage local plein');
+  }
+}
+function removeCurrentSurahOffline(){
+  localStorage.removeItem(LOCAL_SURAH_CACHE_PREFIX+curS);
+  saveOfflineSurahs(getOfflineSurahs().filter(n=>n!==curS));
+  updateOfflineStatus();
+    toast('Sourate retirée du hors ligne');
+}
+
 /* ── PANELS ── */
 function renderSList(f=''){
   const kh=getKhatm();
@@ -891,7 +975,7 @@ function showTool(tab){
   if(tab==='search')setTimeout(()=>document.getElementById('qsearch').focus(),80);
   if(tab==='favs')renderLibrary();
   if(tab==='khatm')renderKhatm();
-  if(tab==='settings'){setArabicSize(arSize,false);setAudioSpeed(audioSpeed,false);}
+  if(tab==='settings'){setArabicSize(arSize,false);setAudioSpeed(audioSpeed,false);updateOfflineStatus();}
 }
 async function searchQuran(q){
   q=q.trim();
@@ -982,28 +1066,39 @@ async function loadSurah(n){
   renderSList();renderKhatm();window.scrollTo({top:0,behavior:'smooth'});
   try{
     const ck=SURAH_CACHE_PREFIX+n;
-    let cached=null;
-    try{cached=JSON.parse(sessionStorage.getItem(ck)||'null');}catch(e){cached=null;}
-    let d1,d2,d3,d4;
-    if(cached&&cached.ar&&cached.fr&&cached.en&&cached.ph){
+    const cached=readJsonStore(sessionStorage,ck,null);
+    const offlinePack=getOfflinePack(n);
+    let d1,d2,d3,d4,fromOffline=false;
+    if(validSurahPack(cached)){
       ({ar:d1,fr:d2,en:d3,ph:d4}=cached);
+    }else if(!navigator.onLine&&offlinePack){
+      ({ar:d1,fr:d2,en:d3,ph:d4}=offlinePack);
+      fromOffline=true;
     }else{
-      const [r1,r2,r3,r4]=await Promise.all([
-        fetch('https://api.alquran.cloud/v1/surah/'+n),
-        fetch('https://api.alquran.cloud/v1/surah/'+n+'/fr.hamidullah'),
-        fetch('https://api.alquran.cloud/v1/surah/'+n+'/en.asad'),
-        fetch('https://api.alquran.cloud/v1/surah/'+n+'/en.transliteration'),
-      ]);
-      [d1,d2,d3,d4]=await Promise.all([r1.json(),r2.json(),r3.json(),r4.json()]);
-      try{sessionStorage.setItem(ck,JSON.stringify({ar:d1,fr:d2,en:d3,ph:d4}));}catch(e){}
+      try{
+        const [r1,r2,r3,r4]=await Promise.all([
+          fetch('https://api.alquran.cloud/v1/surah/'+n),
+          fetch('https://api.alquran.cloud/v1/surah/'+n+'/fr.hamidullah'),
+          fetch('https://api.alquran.cloud/v1/surah/'+n+'/en.asad'),
+          fetch('https://api.alquran.cloud/v1/surah/'+n+'/en.transliteration'),
+        ]);
+        [d1,d2,d3,d4]=await Promise.all([r1.json(),r2.json(),r3.json(),r4.json()]);
+        try{sessionStorage.setItem(ck,JSON.stringify({ar:d1,fr:d2,en:d3,ph:d4}));}catch(e){}
+      }catch(netErr){
+        if(!offlinePack)throw netErr;
+        ({ar:d1,fr:d2,en:d3,ph:d4}=offlinePack);
+        fromOffline=true;
+      }
     }
     vData=d1.data.ayahs;trFr=d2.data.ayahs;trEn=d3.data.ayahs;trPh=d4.data.ayahs;
     totV=vData.length;
     document.getElementById('loading').style.display='none';
-    renderV();
+    renderV();updateOfflineStatus();
+    if(fromOffline)toast('Sourate chargée hors ligne');
   }catch(e){
     document.getElementById('loading').style.display='none';
     document.getElementById('errmsg').style.display='block';
+    updateOfflineStatus();
   }
 }
 
