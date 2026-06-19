@@ -12,7 +12,7 @@
       } else {
         // Méthode 2 : résistant au "Frame Buster Buster" via sandbox
         // Si on arrive ici, on n'est pas dans un iframe → afficher la page
-        document.documentElement.style.display = '';
+        document.documentElement.style.setProperty('display','block','important');
       }
       // Méthode 3 : Protection continue contre les tentatives de re-framing
       Object.defineProperty(window,'__defineGetter__',{value:function(){},writable:false});
@@ -23,7 +23,7 @@
           throw new Error('iframe détecté');
         }
       }catch(e){
-        document.documentElement.style.display='';
+        document.documentElement.style.setProperty('display','block','important');
       }
     })();
   </script>

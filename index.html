@@ -12,7 +12,7 @@
       } else {
         // Méthode 2 : résistant au "Frame Buster Buster" via sandbox
         // Si on arrive ici, on n'est pas dans un iframe → afficher la page
-        document.documentElement.style.display = '';
+        document.documentElement.style.setProperty('display','block','important');
       }
       // Méthode 3 : Protection continue contre les tentatives de re-framing
       Object.defineProperty(window,'__defineGetter__',{value:function(){},writable:false});
@@ -23,7 +23,7 @@
           throw new Error('iframe détecté');
         }
       }catch(e){
-        document.documentElement.style.display='';
+        document.documentElement.style.setProperty('display','block','important');
       }
     })();
   </script>
@@ -809,18 +809,20 @@ function toggleTheme(){
 
 /* ── AUDIO ── */
 function gN(s,a){return SS.slice(0,s-1).reduce((x,r)=>x+r.v,0)+a;}
-function playV(n){
+function playV(n,resetRep=true,trackStats=true){
   stopAud();curV=n;
-  localStorage.setItem('aq_verses', (+localStorage.getItem('aq_verses')||0)+1);
-  // Track top surah
-  try {
-    const key='aq_top_surahs';
-    const tops=JSON.parse(localStorage.getItem(key)||'[]');
-    const m=SS[curS-1];const idx=tops.findIndex(s=>s.name===m.fr);
-    if(idx>=0)tops[idx].v++;else tops.push({name:m.fr,v:1});
-    tops.sort((a,b)=>b.v-a.v);
-    localStorage.setItem(key,JSON.stringify(tops.slice(0,10)));
-  } catch(e){}
+  if(trackStats){
+    localStorage.setItem('aq_verses', (+localStorage.getItem('aq_verses')||0)+1);
+    // Track top surah
+    try {
+      const key='aq_top_surahs';
+      const tops=JSON.parse(localStorage.getItem(key)||'[]');
+      const m=SS[curS-1];const idx=tops.findIndex(s=>s.name===m.fr);
+      if(idx>=0)tops[idx].v++;else tops.push({name:m.fr,v:1});
+      tops.sort((a,b)=>b.v-a.v);
+      localStorage.setItem(key,JSON.stringify(tops.slice(0,10)));
+    } catch(e){}
+  }
   const m=SS[curS-1];
   document.getElementById('pinfo').textContent=m.ar+' — '+toAr(n);
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
@@ -828,7 +830,8 @@ function playV(n){
   const card=document.getElementById('vc'+n),btn=document.getElementById('vb'+n);
   if(card){card.classList.add('playing');card.scrollIntoView({behavior:'smooth',block:'center'});}
   if(btn){btn.classList.add('on');btn.textContent='⏸ En cours';}
-  repCur=0;updRC();
+  if(resetRep)repCur=repCount>1?1:0;
+  updRC();
   const gn=gN(curS,n);
   aud.onerror=null;
   aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+gn+'.mp3';
@@ -850,7 +853,14 @@ function nextV(){if(curV<totV)playV(curV+1);else if(curS<114)loadSurah(curS+1).t
 
 aud.addEventListener('ended',()=>{
   isPlaying=false;updPB();
-  if(repCount>1){repCur++;if(repCur<repCount){updRC();setTimeout(()=>playV(curV),500);return;}else{repCur=0;updRC();}}
+  if(repCount>1){
+    if(repCur<repCount){
+      repCur++;updRC();
+      setTimeout(()=>playV(curV,false,false),500);
+      return;
+    }
+    repCur=0;updRC();
+  }
   if(autoplay)nextV();
 });
 aud.addEventListener('timeupdate',()=>{
