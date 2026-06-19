@@ -73,6 +73,12 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .lb.on{background:var(--em2);border-color:var(--em);color:var(--gold2);}
 .ibtn{background:var(--bg3);border:1px solid var(--bd);color:var(--tx2);width:34px;height:34px;border-radius:var(--r);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:all .2s;flex-shrink:0;}
 .ibtn:hover{border-color:var(--bd2);color:var(--gold);}
+.menubtn{position:relative;}
+.menu-lines,.menu-lines::before,.menu-lines::after{display:block;width:16px;height:2px;background:currentColor;border-radius:2px;}
+.menu-lines{position:relative;}
+.menu-lines::before,.menu-lines::after{content:'';position:absolute;left:0;}
+.menu-lines::before{top:-6px;}
+.menu-lines::after{top:6px;}
 @media(max-width:600px){.ssel{max-width:130px;font-size:.78rem;}#topbar{gap:.4rem;padding:.6rem .8rem;}}
 
 /* PLAYER BAR */
@@ -377,7 +383,9 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 
   <!-- TOPBAR -->
   <div id="topbar">
-    <button class="ibtn" onclick="openPanel()">☰</button>
+    <button class="ibtn menubtn" onclick="openPanel()" aria-label="Ouvrir la liste des sourates" title="Sourates">
+      <span class="menu-lines" aria-hidden="true"></span>
+    </button>
     <div>
       <div class="logo-ar">القرآن</div>
       <div class="logo-sub">Al-Quran Al-Karim</div>
