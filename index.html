@@ -854,12 +854,13 @@ function nextV(){if(curV<totV)playV(curV+1);else if(curS<114)loadSurah(curS+1).t
 aud.addEventListener('ended',()=>{
   isPlaying=false;updPB();
   if(repCount>1){
+    if(repCur<1)repCur=1;
     if(repCur<repCount){
       repCur++;updRC();
-      setTimeout(()=>playV(curV,false,false),500);
+      setTimeout(()=>replayV(),500);
       return;
     }
-    repCur=0;updRC();
+    repCur=repCount;updRC();
   }
   if(autoplay)nextV();
 });
@@ -871,7 +872,13 @@ aud.addEventListener('timeupdate',()=>{
 });
 function seekA(e){if(!aud.duration)return;const r=e.currentTarget.getBoundingClientRect();aud.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*aud.duration;}
 
-function setRep(n,btn){repCount=n;repCur=0;document.querySelectorAll('.rb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');updRC();savePrefs();}
+function replayV(){
+  try{aud.currentTime=0;}catch(e){}
+  const btn=document.getElementById('vb'+curV);
+  if(btn){btn.classList.add('on');btn.textContent='⏸ En cours';}
+  aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{isPlaying=false;updPB();});
+}
+function setRep(n,btn){repCount=n;repCur=repCount>1&&aud.src?1:0;document.querySelectorAll('.rb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');updRC();savePrefs();}
 function updRC(){document.getElementById('repcount').textContent=repCount>1?repCur+'/'+repCount:'';}
 function toggleAuto(){autoplay=!autoplay;document.getElementById('autosw').classList.toggle('on',autoplay);savePrefs();}
 
