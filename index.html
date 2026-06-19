@@ -86,13 +86,13 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .progbar{flex:1;height:3px;background:var(--bg4);border-radius:2px;cursor:pointer;}
 .progfill{height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width .3s;pointer-events:none;}
 .tlbl{font-size:.7rem;color:var(--tx3);min-width:32px;}
-.repwrap{display:flex;align-items:center;gap:4px;}
-.replbl{font-size:.7rem;color:var(--tx3);}
+.repwrap{display:flex;align-items:center;gap:5px;}
+.replbl{font-size:.72rem;color:var(--tx3);}
 .rbopts{display:flex;gap:3px;}
-.rb{width:28px;height:25px;background:var(--bg4);border:1px solid var(--bd);border-radius:3px;color:var(--tx3);font-size:.68rem;cursor:pointer;transition:all .2s;font-family:'Crimson Pro',serif;}
+.rb{min-width:34px;height:25px;padding:0 7px;background:var(--bg4);border:1px solid var(--bd);border-radius:3px;color:var(--tx3);font-size:.68rem;cursor:pointer;transition:all .2s;font-family:'Crimson Pro',serif;}
 .rb:hover{border-color:var(--gold3);color:var(--gold);}
 .rb.on{background:rgba(200,169,110,.12);border-color:var(--gold);color:var(--gold);}
-.repcount{font-size:.68rem;color:var(--gold);min-width:32px;font-family:'Cinzel Decorative',serif;}
+.repcount{font-size:.68rem;color:var(--gold);min-width:34px;font-family:'Cinzel Decorative',serif;text-align:left;}
 .autotog{display:flex;align-items:center;gap:4px;cursor:pointer;}
 .togsw{width:28px;height:16px;background:var(--bg4);border-radius:8px;position:relative;transition:background .3s;}
 .togsw.on{background:var(--em);}
@@ -406,15 +406,15 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
       <span class="tlbl" id="ttot">0:00</span>
     </div>
     <div class="repwrap">
-      <span class="replbl">🔁</span>
+      <span class="replbl">↻</span>
       <div class="rbopts">
-        <button class="rb on" onclick="setRep(1,this)">1×</button>
-        <button class="rb" onclick="setRep(2,this)">2×</button>
-        <button class="rb" onclick="setRep(3,this)">3×</button>
-        <button class="rb" onclick="setRep(5,this)">5×</button>
-        <button class="rb" onclick="setRep(10,this)">10×</button>
+        <button class="rb on" data-rep="1" onclick="setRep(1)">Off</button>
+        <button class="rb" data-rep="2" onclick="setRep(2)">2×</button>
+        <button class="rb" data-rep="3" onclick="setRep(3)">3×</button>
+        <button class="rb" data-rep="5" onclick="setRep(5)">5×</button>
+        <button class="rb" data-rep="10" onclick="setRep(10)">10×</button>
       </div>
-      <span class="repcount" id="repcount"></span>
+      <span class="repcount" id="repcount" aria-live="polite"></span>
     </div>
     <div class="autotog" onclick="toggleAuto()">
       <div class="togsw on" id="autosw"><div class="togknob"></div></div>
@@ -496,6 +496,7 @@ let curS=1,curV=1,totV=0,isPlaying=false,autoplay=true,showPhon=false,isLight=fa
 let curRec='ar.alafasy',repCount=1,repCur=0,curLang='fr';
 let vData=[],trFr=[],trEn=[],trPh=[];
 let vodData=null,vodGN=0,shareV=null,shareTheme='dark';
+let playCtx='',repTimer=null;
 const PREF_KEY='aq_prefs';
 const SURAH_CACHE_PREFIX='aq_surah_';
 const aud=document.getElementById('aud');
@@ -676,10 +677,9 @@ function applyPrefs(p){
   document.getElementById('lben').classList.toggle('on',curLang==='en');
   document.getElementById('lbph').classList.toggle('on',showPhon);
   document.getElementById('autosw').classList.toggle('on',autoplay);
-  document.querySelectorAll('.rb').forEach(b=>b.classList.toggle('on',b.textContent.trim()===repCount+'×'));
   const r=RECS.find(x=>x.id===curRec);
   if(r)document.getElementById('frec').textContent=r.name;
-  updRC();
+  updateRepeatUI();
 }
 function renderDonWidget(){
   let cfg={};
@@ -809,20 +809,21 @@ function toggleTheme(){
 
 /* ── AUDIO ── */
 function gN(s,a){return SS.slice(0,s-1).reduce((x,r)=>x+r.v,0)+a;}
-function playV(n,resetRep=true,trackStats=true){
+function playV(n){
   stopAud();curV=n;
-  if(trackStats){
-    localStorage.setItem('aq_verses', (+localStorage.getItem('aq_verses')||0)+1);
-    // Track top surah
-    try {
-      const key='aq_top_surahs';
-      const tops=JSON.parse(localStorage.getItem(key)||'[]');
-      const m=SS[curS-1];const idx=tops.findIndex(s=>s.name===m.fr);
-      if(idx>=0)tops[idx].v++;else tops.push({name:m.fr,v:1});
-      tops.sort((a,b)=>b.v-a.v);
-      localStorage.setItem(key,JSON.stringify(tops.slice(0,10)));
-    } catch(e){}
-  }
+  playCtx='verse';
+  repCur=repCount>1?1:0;
+  updateRepeatUI();
+  localStorage.setItem('aq_verses', (+localStorage.getItem('aq_verses')||0)+1);
+  // Track top surah
+  try {
+    const key='aq_top_surahs';
+    const tops=JSON.parse(localStorage.getItem(key)||'[]');
+    const m=SS[curS-1];const idx=tops.findIndex(s=>s.name===m.fr);
+    if(idx>=0)tops[idx].v++;else tops.push({name:m.fr,v:1});
+    tops.sort((a,b)=>b.v-a.v);
+    localStorage.setItem(key,JSON.stringify(tops.slice(0,10)));
+  } catch(e){}
   const m=SS[curS-1];
   document.getElementById('pinfo').textContent=m.ar+' — '+toAr(n);
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
@@ -830,8 +831,6 @@ function playV(n,resetRep=true,trackStats=true){
   const card=document.getElementById('vc'+n),btn=document.getElementById('vb'+n);
   if(card){card.classList.add('playing');card.scrollIntoView({behavior:'smooth',block:'center'});}
   if(btn){btn.classList.add('on');btn.textContent='⏸ En cours';}
-  if(resetRep)repCur=repCount>1?1:0;
-  updRC();
   const gn=gN(curS,n);
   aud.onerror=null;
   aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+gn+'.mp3';
@@ -839,7 +838,9 @@ function playV(n,resetRep=true,trackStats=true){
   aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{});
 }
 function stopAud(){
+  clearRepeatTimer();
   aud.pause();aud.src='';isPlaying=false;updPB();
+  playCtx='';repCur=0;updateRepeatUI();
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
   document.querySelectorAll('[id^="vb"]').forEach(b=>{b.classList.remove('on');b.textContent='▶ Écouter';});
   document.getElementById('progfill').style.width='0%';
@@ -853,15 +854,14 @@ function nextV(){if(curV<totV)playV(curV+1);else if(curS<114)loadSurah(curS+1).t
 
 aud.addEventListener('ended',()=>{
   isPlaying=false;updPB();
-  if(repCount>1){
-    if(repCur<1)repCur=1;
-    if(repCur<repCount){
-      repCur++;updRC();
-      setTimeout(()=>replayV(),500);
-      return;
-    }
-    repCur=repCount;updRC();
+  if(playCtx!=='verse')return;
+  if(repCount>1&&repCur>0&&repCur<repCount){
+    repCur++;
+    updateRepeatUI();
+    repTimer=setTimeout(()=>{repTimer=null;replayV();},450);
+    return;
   }
+  if(repCount>1){repCur=repCount;updateRepeatUI();}
   if(autoplay)nextV();
 });
 aud.addEventListener('timeupdate',()=>{
@@ -873,13 +873,27 @@ aud.addEventListener('timeupdate',()=>{
 function seekA(e){if(!aud.duration)return;const r=e.currentTarget.getBoundingClientRect();aud.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*aud.duration;}
 
 function replayV(){
+  if(playCtx!=='verse'||!aud.src)return;
   try{aud.currentTime=0;}catch(e){}
   const btn=document.getElementById('vb'+curV);
   if(btn){btn.classList.add('on');btn.textContent='⏸ En cours';}
+  document.getElementById('progfill').style.width='0%';
+  document.getElementById('tcur').textContent='0:00';
   aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{isPlaying=false;updPB();});
 }
-function setRep(n,btn){repCount=n;repCur=repCount>1&&aud.src?1:0;document.querySelectorAll('.rb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');updRC();savePrefs();}
-function updRC(){document.getElementById('repcount').textContent=repCount>1?repCur+'/'+repCount:'';}
+function clearRepeatTimer(){if(repTimer){clearTimeout(repTimer);repTimer=null;}}
+function setRep(n){
+  clearRepeatTimer();
+  repCount=[1,2,3,5,10].includes(+n)?+n:1;
+  repCur=repCount>1&&playCtx==='verse'&&aud.src?Math.max(1,repCur||1):0;
+  updateRepeatUI();
+  savePrefs();
+}
+function updateRepeatUI(){
+  document.querySelectorAll('.rb').forEach(b=>b.classList.toggle('on',+b.dataset.rep===repCount));
+  const c=document.getElementById('repcount');
+  if(c)c.textContent=repCount>1&&repCur>0?repCur+'/'+repCount:'';
+}
 function toggleAuto(){autoplay=!autoplay;document.getElementById('autosw').classList.toggle('on',autoplay);savePrefs();}
 
 /* ── RECITER ── */
