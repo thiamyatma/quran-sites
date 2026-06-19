@@ -190,6 +190,10 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .toolfield:focus{border-color:var(--gold);}
 .toolhint{font-size:.76rem;color:var(--tx3);line-height:1.5;margin:.6rem 0 .9rem;}
 .toolstatus{font-size:.75rem;color:var(--gold3);margin:.6rem 0;}
+.subtabs{display:flex;gap:5px;margin:.4rem 0 .9rem;}
+.subtab{flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:3px;color:var(--tx3);font-family:'Crimson Pro',serif;font-size:.74rem;padding:4px 8px;cursor:pointer;transition:all .2s;}
+.subtab:hover{border-color:var(--gold3);color:var(--gold);}
+.subtab.on{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1);}
 .toolitem{border:1px solid var(--bd);border-radius:var(--r);padding:.75rem;margin-bottom:.55rem;background:var(--bg3);cursor:pointer;transition:all .2s;}
 .toolitem:hover{border-color:var(--bd2);background:var(--bg4);}
 .toolref{font-family:'Cinzel Decorative',serif;font-size:.62rem;color:var(--gold);letter-spacing:.06em;margin-bottom:.35rem;}
@@ -338,7 +342,13 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     <div id="search-results"></div>
   </div>
   <div class="toolbody" id="tool-favs">
-    <div class="toolhint">Vos versets marqués sont conservés sur cet appareil.</div>
+    <div class="toolhint">Favoris, marque-pages et derniers versets lus restent sur cet appareil.</div>
+    <div class="subtabs">
+      <button class="subtab on" id="libtab-favs" onclick="setLibraryView('favs')">Favoris</button>
+      <button class="subtab" id="libtab-bookmarks" onclick="setLibraryView('bookmarks')">Marque-pages</button>
+      <button class="subtab" id="libtab-recent" onclick="setLibraryView('recent')">Derniers</button>
+    </div>
+    <div class="toolstatus" id="library-status"></div>
     <div id="fav-results"></div>
   </div>
   <div class="toolbody" id="tool-settings">
@@ -585,11 +595,13 @@ let curRec='ar.alafasy',repCount=1,repCur=0,curLang='fr';
 let vData=[],trFr=[],trEn=[],trPh=[];
 let vodData=null,vodGN=0,shareV=null,shareTheme='dark';
 let playCtx='',repTimer=null;
-let arSize=30,audioSpeed=1,searchIndex=[],searchLoading=null;
+let arSize=30,audioSpeed=1,searchIndex=[],searchLoading=null,libraryView='favs';
 const PREF_KEY='aq_prefs';
 const SURAH_CACHE_PREFIX='aq_surah_';
 const SEARCH_CACHE_KEY='aq_search_index';
 const FAV_KEY='aq_favs';
+const BOOKMARK_KEY='aq_bookmarks';
+const RECENT_KEY='aq_recent_reads';
 const LAST_KEY='aq_last_read';
 const aud=document.getElementById('aud');
 
@@ -837,7 +849,7 @@ function showTool(tab){
     document.getElementById('tooltab-'+x).classList.toggle('on',x===tab);
   });
   if(tab==='search')setTimeout(()=>document.getElementById('qsearch').focus(),80);
-  if(tab==='favs')renderFavorites();
+  if(tab==='favs')renderLibrary();
   if(tab==='settings'){setArabicSize(arSize,false);setAudioSpeed(audioSpeed,false);}
 }
 async function searchQuran(q){
@@ -966,6 +978,7 @@ function renderV(){
       <div class="vacts">
         <button class="vbtn" id="vb${v.numberInSurah}" onclick="event.stopPropagation();playV(${v.numberInSurah})">▶ Écouter</button>
         <button class="vbtn ${isFav(curS,v.numberInSurah)?'on':''}" id="fav${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleFav(${i})">${isFav(curS,v.numberInSurah)?'★ Favori':'☆ Favori'}</button>
+        <button class="vbtn ${isBookmark(curS,v.numberInSurah)?'on':''}" id="bm${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleBookmark(${i})">${isBookmark(curS,v.numberInSurah)?'◆ Marqué':'◇ Marque-page'}</button>
         <button class="vbtn" onclick="event.stopPropagation();copyV(${i})">⎘ Copier</button>
         <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openShare('verse')">⬡ Image</button>
         <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openVid('verse')">🎬 Vidéo</button>
@@ -977,39 +990,81 @@ function renderV(){
 function favId(s,a){return s+':'+a;}
 function getFavs(){try{return JSON.parse(localStorage.getItem(FAV_KEY)||'[]');}catch(e){return [];}}
 function saveFavs(f){localStorage.setItem(FAV_KEY,JSON.stringify(f));}
+function getBookmarks(){try{return JSON.parse(localStorage.getItem(BOOKMARK_KEY)||'[]');}catch(e){return [];}}
+function saveBookmarks(f){localStorage.setItem(BOOKMARK_KEY,JSON.stringify(f));}
+function getRecentReads(){try{return JSON.parse(localStorage.getItem(RECENT_KEY)||'[]');}catch(e){return [];}}
+function saveRecentReads(f){localStorage.setItem(RECENT_KEY,JSON.stringify(f));}
 function isFav(s,a){return getFavs().some(x=>x.id===favId(s,a));}
+function isBookmark(s,a){return getBookmarks().some(x=>x.id===favId(s,a));}
+function verseSnapshot(i){
+  const v=vData[i];if(!v)return null;
+  const m=SS[curS-1],a=v.numberInSurah;
+  return {id:favId(curS,a),s:curS,a,gn:gN(curS,a),ref:curS+':'+a+' — '+m.fr,ar:v.text,fr:trFr[i]?.text||'',en:trEn[i]?.text||'',t:Date.now()};
+}
 function toggleFav(i){
-  const v=vData[i];if(!v)return;
-  const id=favId(curS,v.numberInSurah);
+  const item=verseSnapshot(i);if(!item)return;
+  const id=item.id;
   let favs=getFavs();
   const idx=favs.findIndex(x=>x.id===id);
   if(idx>=0){
     favs.splice(idx,1);
     toast('Favori retiré');
   }else{
-    const m=SS[curS-1];
-    favs.unshift({id,s:curS,a:v.numberInSurah,gn:gN(curS,v.numberInSurah),ref:curS+':'+v.numberInSurah+' — '+m.fr,ar:v.text,fr:trFr[i]?.text||'',en:trEn[i]?.text||'',t:Date.now()});
+    favs.unshift(item);
     toast('Verset ajouté aux favoris');
   }
   saveFavs(favs.slice(0,250));
-  const btn=document.getElementById('fav'+curS+'_'+v.numberInSurah);
+  const btn=document.getElementById('fav'+curS+'_'+item.a);
   if(btn){const on=idx<0;btn.classList.toggle('on',on);btn.textContent=on?'★ Favori':'☆ Favori';}
-  renderFavorites();
+  renderLibrary();
 }
-function renderFavorites(){
+function toggleBookmark(i){
+  const item=verseSnapshot(i);if(!item)return;
+  const id=item.id;
+  let marks=getBookmarks();
+  const idx=marks.findIndex(x=>x.id===id);
+  if(idx>=0){
+    marks.splice(idx,1);
+    toast('Marque-page retiré');
+  }else{
+    marks.unshift(item);
+    toast('Marque-page ajouté');
+  }
+  saveBookmarks(marks.slice(0,250));
+  const btn=document.getElementById('bm'+curS+'_'+item.a);
+  if(btn){const on=idx<0;btn.classList.toggle('on',on);btn.textContent=on?'◆ Marqué':'◇ Marque-page';}
+  renderLibrary();
+}
+function setLibraryView(v){
+  libraryView=['favs','bookmarks','recent'].includes(v)?v:'favs';
+  renderLibrary();
+}
+function renderLibrary(){
   const out=document.getElementById('fav-results');if(!out)return;
-  const favs=getFavs();
-  out.innerHTML=favs.length?favs.map(v=>`
+  document.querySelectorAll('[id^="libtab-"]').forEach(b=>b.classList.remove('on'));
+  const tab=document.getElementById('libtab-'+libraryView);if(tab)tab.classList.add('on');
+  const status=document.getElementById('library-status');
+  const data=libraryView==='bookmarks'?getBookmarks():(libraryView==='recent'?getRecentReads():getFavs());
+  const label=libraryView==='bookmarks'?'marque-page':(libraryView==='recent'?'verset récent':'favori');
+  if(status)status.textContent=data.length?data.length+' '+label+(data.length>1?'s':''):'';
+  out.innerHTML=data.length?data.map(v=>`
     <div class="toolitem" onclick="goAyah(${v.s},${v.a})">
       <div class="toolref">${esc(v.ref)}</div>
       <div class="toolar">${esc(v.ar)}</div>
       <div class="tooltr">${esc(curLang==='fr'?(v.fr||v.en):(v.en||v.fr))}</div>
-      <button class="vbtn" style="margin-top:.55rem" onclick="event.stopPropagation();removeFav('${escAttr(v.id)}')">Retirer</button>
-    </div>`).join(''):'<div class="emptymsg">Aucun favori pour le moment.</div>';
+      ${libraryView==='recent'?'':`<button class="vbtn" style="margin-top:.55rem" onclick="event.stopPropagation();removeLibraryItem('${escAttr(v.id)}')">Retirer</button>`}
+    </div>`).join(''):`<div class="emptymsg">Aucun ${label} pour le moment.</div>`;
 }
-function removeFav(id){
-  saveFavs(getFavs().filter(x=>x.id!==id));
-  renderFavorites();renderV();
+function removeLibraryItem(id){
+  if(libraryView==='bookmarks')saveBookmarks(getBookmarks().filter(x=>x.id!==id));
+  else saveFavs(getFavs().filter(x=>x.id!==id));
+  renderLibrary();renderV();
+}
+function addRecentRead(item){
+  const recent=getRecentReads().filter(x=>x.id!==item.id);
+  recent.unshift({...item,t:Date.now()});
+  saveRecentReads(recent.slice(0,20));
+  if(libraryView==='recent')renderLibrary();
 }
 function saveLastRead(s=curS,a=curV){
   const m=SS[s-1];
@@ -1060,6 +1115,7 @@ function playV(n){
   repCur=repCount>1?1:0;
   updateRepeatUI();
   saveLastRead(curS,n);
+  const snap=verseSnapshot(n-1);if(snap)addRecentRead(snap);
   localStorage.setItem('aq_verses', (+localStorage.getItem('aq_verses')||0)+1);
   // Track top surah
   try {
