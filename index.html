@@ -43,6 +43,9 @@
 <meta name="twitter:title" content="Al-Quran Al-Karim">
 <meta name="twitter:description" content="Lecture du Saint Coran avec audio, traductions et translittération.">
 <title>القرآن الكريم — Al-Quran Al-Karim</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/site-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/site-icon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,400;0,500;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#C8A96E;--gold2:#E2C98A;--gold3:#8B6F3A;--em:#40916C;--em2:#1B4332;--bg:#0C0E0B;--bg2:#131610;--bg3:#1A1E16;--bg4:#20251C;--tx:#EAE0C8;--tx2:#A89B7A;--tx3:#6B6050;--bd:rgba(200,169,110,.15);--bd2:rgba(200,169,110,.35);--r:6px;}
@@ -79,7 +82,8 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .menu-lines::before,.menu-lines::after{content:'';position:absolute;left:0;}
 .menu-lines::before{top:-6px;}
 .menu-lines::after{top:6px;}
-@media(max-width:600px){.ssel{max-width:130px;font-size:.78rem;}#topbar{gap:.4rem;padding:.6rem .8rem;}}
+@media(max-width:760px){.logo-sub{display:none}.logo-ar{font-size:1.15rem}.ibtn{width:31px;height:31px}.ssel{max-width:150px;font-size:.78rem;}#topbar{gap:.4rem;padding:.6rem .8rem;}}
+@media(max-width:560px){.brand,.ssel{display:none}.tsp{display:block;}}
 
 /* PLAYER BAR */
 #pbar{position:sticky;top:53px;z-index:90;background:var(--bg3);border-bottom:1px solid var(--bd);padding:.5rem 1.2rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;}
@@ -135,8 +139,9 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .vc{border-bottom:1px solid var(--bd);padding:1.6rem .4rem;cursor:pointer;transition:background .2s;border-radius:var(--r);}
 .vc:hover{background:rgba(200,169,110,.04);}
 .vc.playing{background:rgba(200,169,110,.07);border-left:3px solid var(--gold);padding-left:calc(.4rem + 3px);}
+.vc.focus{background:rgba(64,145,108,.12);box-shadow:inset 3px 0 0 var(--em);}
 .vn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:1px solid var(--bd2);border-radius:50%;font-size:.7rem;color:var(--gold3);font-family:'Cinzel Decorative',serif;float:left;margin-top:.4rem;}
-.var{font-family:'Noto Naskh Arabic',serif;font-size:clamp(1.35rem,3.2vw,1.9rem);direction:rtl;text-align:right;line-height:2;color:var(--tx);margin-bottom:.7rem;padding-right:38px;}
+.var{font-family:'Noto Naskh Arabic',serif;font-size:var(--ar-size,clamp(1.35rem,3.2vw,1.9rem));direction:rtl;text-align:right;line-height:2;color:var(--tx);margin-bottom:.7rem;padding-right:38px;}
 .vph{font-size:.88rem;color:var(--em);line-height:1.75;padding-left:38px;margin-bottom:.4rem;display:none;}
 .vph.show{display:block;}
 .vtr{font-size:.92rem;color:var(--tx2);line-height:1.75;font-style:italic;padding-left:38px;}
@@ -169,6 +174,38 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .slin{font-size:.68rem;color:var(--tx3);min-width:20px;text-align:center;}
 .sliar{font-family:'Noto Naskh Arabic',serif;font-size:1.05rem;color:var(--gold);direction:rtl;flex:1;text-align:right;}
 .slien{font-size:.75rem;color:var(--tx2);max-width:105px;}
+
+/* TOOLS PANEL */
+#toolpanel{position:fixed;top:0;right:0;bottom:0;width:min(420px,94vw);background:var(--bg2);border-left:1px solid var(--bd2);z-index:210;transform:translateX(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+#toolpanel.open{transform:translateX(0);}
+.tooltabs{display:flex;gap:5px;padding:.7rem;border-bottom:1px solid var(--bd);}
+.tooltab{flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx3);font-family:'Crimson Pro',serif;font-size:.75rem;padding:.42rem .3rem;cursor:pointer;transition:all .2s;}
+.tooltab:hover{border-color:var(--gold3);color:var(--gold);}
+.tooltab.on{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1);}
+.toolbody{display:none;flex:1;overflow-y:auto;padding:1rem;}
+.toolbody.on{display:block;}
+.toolbody::-webkit-scrollbar{width:4px;}
+.toolbody::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px;}
+.toolfield{width:100%;background:var(--bg3);border:1px solid var(--bd2);border-radius:var(--r);color:var(--tx);font-family:'Crimson Pro',serif;font-size:.9rem;padding:.6rem .85rem;outline:none;}
+.toolfield:focus{border-color:var(--gold);}
+.toolhint{font-size:.76rem;color:var(--tx3);line-height:1.5;margin:.6rem 0 .9rem;}
+.toolstatus{font-size:.75rem;color:var(--gold3);margin:.6rem 0;}
+.toolitem{border:1px solid var(--bd);border-radius:var(--r);padding:.75rem;margin-bottom:.55rem;background:var(--bg3);cursor:pointer;transition:all .2s;}
+.toolitem:hover{border-color:var(--bd2);background:var(--bg4);}
+.toolref{font-family:'Cinzel Decorative',serif;font-size:.62rem;color:var(--gold);letter-spacing:.06em;margin-bottom:.35rem;}
+.toolar{font-family:'Noto Naskh Arabic',serif;font-size:1.05rem;line-height:1.8;direction:rtl;text-align:right;color:var(--tx);margin-bottom:.25rem;}
+.tooltr{font-size:.82rem;line-height:1.5;color:var(--tx2);font-style:italic;}
+.toolrow{display:flex;align-items:center;gap:.65rem;margin:.8rem 0;}
+.toolrow label{font-size:.8rem;color:var(--tx2);min-width:88px;}
+.toolrange{flex:1;accent-color:var(--gold);}
+.toolval{font-size:.75rem;color:var(--gold);min-width:42px;text-align:right;}
+.speedopts{display:flex;gap:5px;flex-wrap:wrap;}
+.speedbtn{background:var(--bg3);border:1px solid var(--bd);border-radius:3px;color:var(--tx3);font-family:'Crimson Pro',serif;font-size:.75rem;padding:4px 10px;cursor:pointer;transition:all .2s;}
+.speedbtn:hover{border-color:var(--gold3);color:var(--gold);}
+.speedbtn.on{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1);}
+.emptymsg{text-align:center;color:var(--tx3);font-style:italic;font-size:.85rem;padding:1.5rem .5rem;}
+.resume-btn{display:none;}
+.resume-btn.show{display:inline-flex;}
 
 /* RECITER PANEL */
 #rpanel{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bd2);z-index:300;transform:translateY(110%);transition:transform .35s cubic-bezier(.4,0,.2,1);padding:1.1rem 1.3rem 2.5rem;max-height:68vh;overflow-y:auto;}
@@ -283,8 +320,47 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
   <div class="rpgrid" id="rpgrid"></div>
 </div>
 
+<!-- TOOLS PANEL -->
+<div id="toolpanel">
+  <div class="phdr">
+    <div class="ptitle" id="tooltitle">Outils</div>
+    <button class="pclose" onclick="closeTools()">✕</button>
+  </div>
+  <div class="tooltabs">
+    <button class="tooltab on" id="tooltab-search" onclick="showTool('search')">Recherche</button>
+    <button class="tooltab" id="tooltab-favs" onclick="showTool('favs')">Favoris</button>
+    <button class="tooltab" id="tooltab-settings" onclick="showTool('settings')">Réglages</button>
+  </div>
+  <div class="toolbody on" id="tool-search">
+    <input class="toolfield" id="qsearch" type="search" placeholder="Mot, sourate, ou référence 2:255" oninput="searchQuran(this.value)">
+    <div class="toolhint">Recherche dans les textes arabe, français et anglais. Le premier chargement peut prendre quelques secondes.</div>
+    <div class="toolstatus" id="search-status"></div>
+    <div id="search-results"></div>
+  </div>
+  <div class="toolbody" id="tool-favs">
+    <div class="toolhint">Vos versets marqués sont conservés sur cet appareil.</div>
+    <div id="fav-results"></div>
+  </div>
+  <div class="toolbody" id="tool-settings">
+    <div class="toolrow">
+      <label for="ar-size">Texte arabe</label>
+      <input class="toolrange" id="ar-size" type="range" min="22" max="42" step="1" value="30" oninput="setArabicSize(+this.value)">
+      <span class="toolval" id="ar-size-val">30px</span>
+    </div>
+    <div class="toolrow">
+      <label>Vitesse audio</label>
+      <div class="speedopts" id="speedopts">
+        <button class="speedbtn" data-speed="0.75" onclick="setAudioSpeed(.75)">0.75×</button>
+        <button class="speedbtn on" data-speed="1" onclick="setAudioSpeed(1)">1×</button>
+        <button class="speedbtn" data-speed="1.25" onclick="setAudioSpeed(1.25)">1.25×</button>
+        <button class="speedbtn" data-speed="1.5" onclick="setAudioSpeed(1.5)">1.5×</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- OVERLAY -->
-<div id="overlay" onclick="closePanel();closeRec();"></div>
+<div id="overlay" onclick="closePanel();closeRec();closeTools();"></div>
 
 <!-- SHARE IMAGE MODAL -->
 <div id="sharewrap" onclick="if(event.target===this)closeShare()">
@@ -386,12 +462,15 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     <button class="ibtn menubtn" onclick="openPanel()" aria-label="Ouvrir la liste des sourates" title="Sourates">
       <span class="menu-lines" aria-hidden="true"></span>
     </button>
-    <div>
+    <div class="brand">
       <div class="logo-ar">القرآن</div>
       <div class="logo-sub">Al-Quran Al-Karim</div>
     </div>
     <div class="tsp"></div>
     <select class="ssel" id="ssel" onchange="loadSurah(+this.value)"></select>
+    <button class="ibtn" onclick="openTools('search')" aria-label="Recherche" title="Recherche">⌕</button>
+    <button class="ibtn" onclick="openTools('favs')" aria-label="Favoris" title="Favoris">☆</button>
+    <button class="ibtn" onclick="openTools('settings')" aria-label="Réglages" title="Réglages">⚙</button>
     <div class="lsw">
       <button class="lb on" id="lbfr" onclick="setLang('fr')">FR</button>
       <button class="lb" id="lben" onclick="setLang('en')">EN</button>
@@ -403,6 +482,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
   <!-- PLAYER BAR -->
   <div id="pbar">
     <div class="pinfo" id="pinfo">—</div>
+    <button class="recbtn resume-btn" id="resumeBtn" onclick="resumeLast()">Reprendre</button>
     <div class="pctrls">
       <button class="ctrl" onclick="prevV()">⏮</button>
       <button class="ctrl big" id="playbtn" onclick="togglePlay()">▶</button>
@@ -505,8 +585,12 @@ let curRec='ar.alafasy',repCount=1,repCur=0,curLang='fr';
 let vData=[],trFr=[],trEn=[],trPh=[];
 let vodData=null,vodGN=0,shareV=null,shareTheme='dark';
 let playCtx='',repTimer=null;
+let arSize=30,audioSpeed=1,searchIndex=[],searchLoading=null;
 const PREF_KEY='aq_prefs';
 const SURAH_CACHE_PREFIX='aq_surah_';
+const SEARCH_CACHE_KEY='aq_search_index';
+const FAV_KEY='aq_favs';
+const LAST_KEY='aq_last_read';
 const aud=document.getElementById('aud');
 
 /* ── DATA ── */
@@ -655,7 +739,7 @@ window.addEventListener('load',()=>{
   }
   const prefs=loadPrefs();
   applyPrefs(prefs);
-  buildSel();renderSList();renderRec();renderDonWidget();loadSurah(curS);loadVod();
+  buildSel();renderSList();renderRec();renderDonWidget();updateResumeBtn();registerSW();loadSurah(curS);loadVod();
   setTimeout(()=>document.getElementById('greeting').classList.add('hide'),4400);
 });
 
@@ -668,7 +752,7 @@ function loadPrefs(){
   catch(e){return {};}
 }
 function savePrefs(){
-  const p={lang:curLang,theme:isLight?'light':'dark',rec:curRec,surah:curS,phon:showPhon,auto:autoplay,rep:repCount};
+  const p={lang:curLang,theme:isLight?'light':'dark',rec:curRec,surah:curS,phon:showPhon,auto:autoplay,rep:repCount,arSize,audioSpeed};
   localStorage.setItem(PREF_KEY,JSON.stringify(p));
 }
 function applyPrefs(p){
@@ -678,6 +762,8 @@ function applyPrefs(p){
   showPhon=!!p.phon;
   autoplay=p.auto!==false;
   repCount=[1,2,3,5,10].includes(+p.rep)?+p.rep:1;
+  arSize=Math.max(22,Math.min(42,+p.arSize||30));
+  audioSpeed=[.75,1,1.25,1.5].includes(+p.audioSpeed)?+p.audioSpeed:1;
   isLight=p.theme==='light';
   document.body.classList.toggle('light',isLight);
   document.getElementById('thbtn').textContent=isLight?'☀️':'🌙';
@@ -688,6 +774,8 @@ function applyPrefs(p){
   const r=RECS.find(x=>x.id===curRec);
   if(r)document.getElementById('frec').textContent=r.name;
   updateRepeatUI();
+  setArabicSize(arSize,false);
+  setAudioSpeed(audioSpeed,false);
 }
 function renderDonWidget(){
   let cfg={};
@@ -712,6 +800,11 @@ function safeUrl(u){
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function escAttr(s){return esc(s).replace(/`/g,'&#96;');}
+function registerSW(){
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+}
 
 /* ── PANELS ── */
 function renderSList(f=''){
@@ -727,6 +820,95 @@ function filterS(v){renderSList(v);}
 function goS(n){closePanel();loadSurah(n);}
 function openPanel(){document.getElementById('spanel').classList.add('open');document.getElementById('overlay').classList.add('show');}
 function closePanel(){document.getElementById('spanel').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
+
+function openTools(tab='search'){
+  closePanel();closeRec();
+  document.getElementById('toolpanel').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  showTool(tab);
+}
+function closeTools(){
+  document.getElementById('toolpanel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+function showTool(tab){
+  ['search','favs','settings'].forEach(x=>{
+    document.getElementById('tool-'+x).classList.toggle('on',x===tab);
+    document.getElementById('tooltab-'+x).classList.toggle('on',x===tab);
+  });
+  if(tab==='search')setTimeout(()=>document.getElementById('qsearch').focus(),80);
+  if(tab==='favs')renderFavorites();
+  if(tab==='settings'){setArabicSize(arSize,false);setAudioSpeed(audioSpeed,false);}
+}
+async function searchQuran(q){
+  q=q.trim();
+  const st=document.getElementById('search-status'),out=document.getElementById('search-results');
+  if(q.length<2){st.textContent='';out.innerHTML='';return;}
+  st.textContent='Préparation de la recherche...';
+  try{
+    await ensureSearchIndex();
+    const nq=norm(q);
+    const ref=q.match(/^(\d{1,3})\s*[:.\-]\s*(\d{1,3})$/);
+    let res=[];
+    if(ref){
+      const s=+ref[1],a=+ref[2];
+      res=searchIndex.filter(x=>x.s===s&&x.a===a);
+    }else{
+      res=searchIndex.filter(x=>x.key.includes(nq)).slice(0,50);
+    }
+    st.textContent=res.length?res.length+' résultat'+(res.length>1?'s':''):'Aucun résultat';
+    out.innerHTML=res.map(renderToolItem).join('')||'<div class="emptymsg">Essayez un autre mot ou une référence comme 2:255.</div>';
+  }catch(e){
+    st.textContent='Recherche indisponible pour le moment.';
+    out.innerHTML='<div class="emptymsg">Vérifiez la connexion puis réessayez.</div>';
+  }
+}
+async function ensureSearchIndex(){
+  if(searchIndex.length)return;
+  if(searchLoading)return searchLoading;
+  searchLoading=(async()=>{
+    const cached=sessionStorage.getItem(SEARCH_CACHE_KEY);
+    if(cached){try{searchIndex=JSON.parse(cached);return;}catch(e){}}
+    const [arR,frR,enR]=await Promise.all([
+      fetch('https://api.alquran.cloud/v1/quran/quran-uthmani'),
+      fetch('https://api.alquran.cloud/v1/quran/fr.hamidullah'),
+      fetch('https://api.alquran.cloud/v1/quran/en.asad'),
+    ]);
+    const [arD,frD,enD]=await Promise.all([arR.json(),frR.json(),enR.json()]);
+    const flat=(d)=>d.data.surahs.flatMap(s=>s.ayahs.map(a=>({s:s.number,a:a.numberInSurah,text:a.text})));
+    const ar=flat(arD),fr=flat(frD),en=flat(enD);
+    searchIndex=ar.map((x,i)=>{
+      const m=SS[x.s-1],trFr=fr[i]?.text||'',trEn=en[i]?.text||'';
+      return {s:x.s,a:x.a,gn:gN(x.s,x.a),ar:x.text,fr:trFr,en:trEn,ref:x.s+':'+x.a+' — '+m.fr,key:norm([x.s,x.a,m.ar,m.fr,m.en,x.text,trFr,trEn].join(' '))};
+    });
+    try{sessionStorage.setItem(SEARCH_CACHE_KEY,JSON.stringify(searchIndex));}catch(e){}
+  })();
+  return searchLoading;
+}
+function renderToolItem(v){
+  const tr=curLang==='fr'?(v.fr||v.en):(v.en||v.fr);
+  return `<div class="toolitem" onclick="goAyah(${v.s},${v.a})">
+    <div class="toolref">${esc(v.ref)}</div>
+    <div class="toolar">${esc(v.ar)}</div>
+    <div class="tooltr">${esc(tr)}</div>
+  </div>`;
+}
+async function goAyah(s,a){
+  closeTools();closePanel();
+  if(curS!==s)await loadSurah(s);
+  setTimeout(()=>focusVerse(a),120);
+}
+function focusVerse(a){
+  const el=document.getElementById('vc'+a);
+  if(!el)return;
+  document.querySelectorAll('.vc.focus').forEach(x=>x.classList.remove('focus'));
+  el.classList.add('focus');
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>el.classList.remove('focus'),2400);
+}
+function norm(s){
+  return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[\u064B-\u065F\u0670]/g,'').replace(/[^\p{L}\p{N}:]+/gu,' ').trim();
+}
 
 /* ── LOAD SURAH ── */
 async function loadSurah(n){
@@ -783,12 +965,67 @@ function renderV(){
       <div class="vtr" id="vt${v.numberInSurah}">${tr}</div>
       <div class="vacts">
         <button class="vbtn" id="vb${v.numberInSurah}" onclick="event.stopPropagation();playV(${v.numberInSurah})">▶ Écouter</button>
+        <button class="vbtn ${isFav(curS,v.numberInSurah)?'on':''}" id="fav${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleFav(${i})">${isFav(curS,v.numberInSurah)?'★ Favori':'☆ Favori'}</button>
         <button class="vbtn" onclick="event.stopPropagation();copyV(${i})">⎘ Copier</button>
         <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openShare('verse')">⬡ Image</button>
         <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openVid('verse')">🎬 Vidéo</button>
       </div>
     </div>`;
   }).join('');
+}
+
+function favId(s,a){return s+':'+a;}
+function getFavs(){try{return JSON.parse(localStorage.getItem(FAV_KEY)||'[]');}catch(e){return [];}}
+function saveFavs(f){localStorage.setItem(FAV_KEY,JSON.stringify(f));}
+function isFav(s,a){return getFavs().some(x=>x.id===favId(s,a));}
+function toggleFav(i){
+  const v=vData[i];if(!v)return;
+  const id=favId(curS,v.numberInSurah);
+  let favs=getFavs();
+  const idx=favs.findIndex(x=>x.id===id);
+  if(idx>=0){
+    favs.splice(idx,1);
+    toast('Favori retiré');
+  }else{
+    const m=SS[curS-1];
+    favs.unshift({id,s:curS,a:v.numberInSurah,gn:gN(curS,v.numberInSurah),ref:curS+':'+v.numberInSurah+' — '+m.fr,ar:v.text,fr:trFr[i]?.text||'',en:trEn[i]?.text||'',t:Date.now()});
+    toast('Verset ajouté aux favoris');
+  }
+  saveFavs(favs.slice(0,250));
+  const btn=document.getElementById('fav'+curS+'_'+v.numberInSurah);
+  if(btn){const on=idx<0;btn.classList.toggle('on',on);btn.textContent=on?'★ Favori':'☆ Favori';}
+  renderFavorites();
+}
+function renderFavorites(){
+  const out=document.getElementById('fav-results');if(!out)return;
+  const favs=getFavs();
+  out.innerHTML=favs.length?favs.map(v=>`
+    <div class="toolitem" onclick="goAyah(${v.s},${v.a})">
+      <div class="toolref">${esc(v.ref)}</div>
+      <div class="toolar">${esc(v.ar)}</div>
+      <div class="tooltr">${esc(curLang==='fr'?(v.fr||v.en):(v.en||v.fr))}</div>
+      <button class="vbtn" style="margin-top:.55rem" onclick="event.stopPropagation();removeFav('${escAttr(v.id)}')">Retirer</button>
+    </div>`).join(''):'<div class="emptymsg">Aucun favori pour le moment.</div>';
+}
+function removeFav(id){
+  saveFavs(getFavs().filter(x=>x.id!==id));
+  renderFavorites();renderV();
+}
+function saveLastRead(s=curS,a=curV){
+  const m=SS[s-1];
+  localStorage.setItem(LAST_KEY,JSON.stringify({s,a,ref:s+':'+a+' — '+m.fr,t:Date.now()}));
+  updateResumeBtn();
+}
+function getLastRead(){try{return JSON.parse(localStorage.getItem(LAST_KEY)||'null');}catch(e){return null;}}
+function updateResumeBtn(){
+  const b=document.getElementById('resumeBtn');if(!b)return;
+  const last=getLastRead();
+  b.classList.toggle('show',!!last);
+  if(last)b.textContent='Reprendre '+last.s+':'+last.a;
+}
+async function resumeLast(){
+  const last=getLastRead();if(!last)return;
+  await goAyah(last.s,last.a);
 }
 
 function setLang(l){
@@ -822,6 +1059,7 @@ function playV(n){
   playCtx='verse';
   repCur=repCount>1?1:0;
   updateRepeatUI();
+  saveLastRead(curS,n);
   localStorage.setItem('aq_verses', (+localStorage.getItem('aq_verses')||0)+1);
   // Track top surah
   try {
@@ -842,7 +1080,8 @@ function playV(n){
   const gn=gN(curS,n);
   aud.onerror=null;
   aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+gn+'.mp3';
-  aud.onerror=()=>{if(curRec!=='ar.alafasy'){aud.onerror=null;aud.src='https://cdn.islamic.network/quran/audio/128/ar.alafasy/'+gn+'.mp3';aud.play().catch(()=>{});toast('Alafasy utilisé par défaut');}};
+  aud.playbackRate=audioSpeed;
+  aud.onerror=()=>{if(curRec!=='ar.alafasy'){aud.onerror=null;aud.src='https://cdn.islamic.network/quran/audio/128/ar.alafasy/'+gn+'.mp3';aud.playbackRate=audioSpeed;aud.play().catch(()=>{});toast('Alafasy utilisé par défaut');}};
   aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{});
 }
 function stopAud(){
@@ -887,6 +1126,7 @@ function replayV(){
   if(btn){btn.classList.add('on');btn.textContent='⏸ En cours';}
   document.getElementById('progfill').style.width='0%';
   document.getElementById('tcur').textContent='0:00';
+  aud.playbackRate=audioSpeed;
   aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{isPlaying=false;updPB();});
 }
 function clearRepeatTimer(){if(repTimer){clearTimeout(repTimer);repTimer=null;}}
@@ -903,6 +1143,20 @@ function updateRepeatUI(){
   if(c)c.textContent=repCount>1&&repCur>0?repCur+'/'+repCount:'';
 }
 function toggleAuto(){autoplay=!autoplay;document.getElementById('autosw').classList.toggle('on',autoplay);savePrefs();}
+function setArabicSize(v,save=true){
+  arSize=Math.max(22,Math.min(42,+v||30));
+  document.documentElement.style.setProperty('--ar-size',arSize+'px');
+  const r=document.getElementById('ar-size'),lbl=document.getElementById('ar-size-val');
+  if(r)r.value=arSize;
+  if(lbl)lbl.textContent=arSize+'px';
+  if(save)savePrefs();
+}
+function setAudioSpeed(v,save=true){
+  audioSpeed=[.75,1,1.25,1.5].includes(+v)?+v:1;
+  aud.playbackRate=audioSpeed;
+  document.querySelectorAll('.speedbtn').forEach(b=>b.classList.toggle('on',+b.dataset.speed===audioSpeed));
+  if(save)savePrefs();
+}
 
 /* ── RECITER ── */
 function renderRec(){
@@ -945,6 +1199,7 @@ function playVod(){
   if(aud.src.includes('/'+vodGN+'.mp3')&&isPlaying){aud.pause();isPlaying=false;updPB();btn.textContent='▶ Écouter';return;}
   stopAud();
   aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+vodGN+'.mp3';
+  aud.playbackRate=audioSpeed;
   aud.play().then(()=>{isPlaying=true;updPB();btn.textContent='⏸ En cours';}).catch(()=>{});
   aud.addEventListener('ended',function h(){btn.textContent='▶ Écouter';aud.removeEventListener('ended',h);},{once:true});
 }
