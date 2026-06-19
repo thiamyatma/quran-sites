@@ -92,6 +92,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 
 /* PLAYER BAR */
 #pbar{position:sticky;top:53px;z-index:90;background:var(--bg3);border-bottom:1px solid var(--bd);padding:.5rem 1.2rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;}
+#pbar.playing{box-shadow:0 8px 24px rgba(0,0,0,.18),inset 0 -1px 0 rgba(200,169,110,.18);}
 .pinfo{font-family:'Noto Naskh Arabic',serif;font-size:.95rem;color:var(--gold);min-width:50px;text-align:right;direction:rtl;}
 .pctrls{display:flex;gap:5px;}
 .ctrl{background:transparent;border:1px solid var(--bd2);color:var(--gold);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78rem;transition:all .2s;}
@@ -100,13 +101,18 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .pprog{flex:1;display:flex;align-items:center;gap:6px;min-width:100px;}
 .progbar{flex:1;height:3px;background:var(--bg4);border-radius:2px;cursor:pointer;}
 .progfill{height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width .3s;pointer-events:none;}
+#pbar.playing .progfill{background:linear-gradient(90deg,var(--em),var(--gold));}
 .tlbl{font-size:.7rem;color:var(--tx3);min-width:32px;}
-.repwrap{display:flex;align-items:center;gap:5px;}
+.repwrap{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
 .replbl{font-size:.72rem;color:var(--tx3);}
 .rbopts{display:flex;gap:3px;}
 .rb{min-width:34px;height:25px;padding:0 7px;background:var(--bg4);border:1px solid var(--bd);border-radius:3px;color:var(--tx3);font-size:.68rem;cursor:pointer;transition:all .2s;font-family:'Crimson Pro',serif;}
 .rb:hover{border-color:var(--gold3);color:var(--gold);}
 .rb.on{background:rgba(200,169,110,.12);border-color:var(--gold);color:var(--gold);}
+.rangebox{display:none;align-items:center;gap:3px;}
+.rangebox.show{display:flex;}
+.rinput{width:42px;height:25px;background:var(--bg4);border:1px solid var(--bd);border-radius:3px;color:var(--tx);font-size:.7rem;text-align:center;font-family:'Crimson Pro',serif;outline:none;}
+.rinput:focus{border-color:var(--gold);}
 .repcount{font-size:.68rem;color:var(--gold);min-width:34px;font-family:'Cinzel Decorative',serif;text-align:left;}
 .autotog{display:flex;align-items:center;gap:4px;cursor:pointer;}
 .togsw{width:28px;height:16px;background:var(--bg4);border-radius:8px;position:relative;transition:background .3s;}
@@ -561,11 +567,18 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     <div class="repwrap">
       <span class="replbl">↻</span>
       <div class="rbopts">
-        <button class="rb on" data-rep="1" onclick="setRep(1)">Off</button>
+        <button class="rb on" id="rep-off" onclick="setRepeatMode('off')">Off</button>
+        <button class="rb" id="rep-verse" onclick="setRepeatMode('verse')">Verset</button>
+        <button class="rb" id="rep-range" onclick="setRepeatMode('range')">Plage</button>
         <button class="rb" data-rep="2" onclick="setRep(2)">2×</button>
         <button class="rb" data-rep="3" onclick="setRep(3)">3×</button>
         <button class="rb" data-rep="5" onclick="setRep(5)">5×</button>
         <button class="rb" data-rep="10" onclick="setRep(10)">10×</button>
+      </div>
+      <div class="rangebox" id="rangebox">
+        <input class="rinput" id="rangeStart" type="number" min="1" value="1" onchange="setRangeBounds()">
+        <span class="replbl">→</span>
+        <input class="rinput" id="rangeEnd" type="number" min="1" value="1" onchange="setRangeBounds()">
       </div>
       <span class="repcount" id="repcount" aria-live="polite"></span>
     </div>
@@ -646,7 +659,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 <script>
 /* ── STATE ── */
 let curS=1,curV=1,totV=0,isPlaying=false,autoplay=true,showPhon=false,isLight=false;
-let curRec='ar.alafasy',repCount=1,repCur=0,curLang='fr';
+let curRec='ar.alafasy',repMode='off',repCount=2,repCur=0,rangeStart=1,rangeEnd=1,curLang='fr';
 let vData=[],trFr=[],trEn=[],trPh=[];
 let vodData=null,vodGN=0,shareV=null,shareTheme='dark';
 let playCtx='',repTimer=null;
@@ -822,7 +835,7 @@ function loadPrefs(){
   catch(e){return {};}
 }
 function savePrefs(){
-  const p={lang:curLang,theme:isLight?'light':'dark',rec:curRec,surah:curS,phon:showPhon,auto:autoplay,rep:repCount,arSize,audioSpeed};
+  const p={lang:curLang,theme:isLight?'light':'dark',rec:curRec,surah:curS,phon:showPhon,auto:autoplay,rep:repCount,repMode,rangeStart,rangeEnd,arSize,audioSpeed};
   localStorage.setItem(PREF_KEY,JSON.stringify(p));
 }
 function applyPrefs(p){
@@ -831,7 +844,10 @@ function applyPrefs(p){
   curS=Math.max(1,Math.min(114,+p.surah||1));
   showPhon=!!p.phon;
   autoplay=p.auto!==false;
-  repCount=[1,2,3,5,10].includes(+p.rep)?+p.rep:1;
+  repCount=[2,3,5,10].includes(+p.rep)?+p.rep:2;
+  repMode=['off','verse','range'].includes(p.repMode)?p.repMode:'off';
+  rangeStart=Math.max(1,+p.rangeStart||1);
+  rangeEnd=Math.max(1,+p.rangeEnd||rangeStart);
   arSize=Math.max(22,Math.min(42,+p.arSize||30));
   audioSpeed=[.75,1,1.25,1.5].includes(+p.audioSpeed)?+p.audioSpeed:1;
   isLight=p.theme==='light';
@@ -1060,6 +1076,7 @@ async function loadSurah(n){
   document.getElementById('pinfo').textContent=m.ar;
   document.getElementById('ssel').value=n;
   totV=m.v;
+  setRangeBounds(false);
   document.getElementById('loading').style.display='block';
   document.getElementById('errmsg').style.display='none';
   document.getElementById('vlist').innerHTML='';
@@ -1092,6 +1109,7 @@ async function loadSurah(n){
     }
     vData=d1.data.ayahs;trFr=d2.data.ayahs;trEn=d3.data.ayahs;trPh=d4.data.ayahs;
     totV=vData.length;
+    setRangeBounds(false);
     document.getElementById('loading').style.display='none';
     renderV();updateOfflineStatus();
     if(fromOffline)toast('Sourate chargée hors ligne');
@@ -1113,6 +1131,7 @@ function renderV(){
       <div class="vtr" id="vt${v.numberInSurah}">${tr}</div>
       <div class="vacts">
         <button class="vbtn" id="vb${v.numberInSurah}" onclick="event.stopPropagation();playV(${v.numberInSurah})">▶ Écouter</button>
+        <button class="vbtn" onclick="event.stopPropagation();repeatVerse(${v.numberInSurah})">↻ Répéter</button>
         <button class="vbtn ${isFav(curS,v.numberInSurah)?'on':''}" id="fav${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleFav(${i})">${isFav(curS,v.numberInSurah)?'★ Favori':'☆ Favori'}</button>
         <button class="vbtn ${isBookmark(curS,v.numberInSurah)?'on':''}" id="bm${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleBookmark(${i})">${isBookmark(curS,v.numberInSurah)?'◆ Marqué':'◇ Marque-page'}</button>
         <button class="vbtn" onclick="event.stopPropagation();copyV(${i})">⎘ Copier</button>
@@ -1294,10 +1313,12 @@ function toggleTheme(){
 
 /* ── AUDIO ── */
 function gN(s,a){return SS.slice(0,s-1).reduce((x,r)=>x+r.v,0)+a;}
-function playV(n){
-  stopAud();curV=n;
+function playV(n,keepRepeat=false){
+  const cycle=repCur;
+  stopAud(keepRepeat);curV=Math.max(1,Math.min(totV||n,n));
+  if(keepRepeat)repCur=cycle;
   playCtx='verse';
-  repCur=repCount>1?1:0;
+  if(!keepRepeat)repCur=repMode==='off'?0:1;
   updateRepeatUI();
   saveLastRead(curS,n);
   const snap=verseSnapshot(n-1);if(snap)addRecentRead(snap);
@@ -1325,10 +1346,12 @@ function playV(n){
   aud.onerror=()=>{if(curRec!=='ar.alafasy'){aud.onerror=null;aud.src='https://cdn.islamic.network/quran/audio/128/ar.alafasy/'+gn+'.mp3';aud.playbackRate=audioSpeed;aud.play().catch(()=>{});toast('Alafasy utilisé par défaut');}};
   aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{});
 }
-function stopAud(){
+function stopAud(keepRepeat=false){
   clearRepeatTimer();
   aud.pause();aud.src='';isPlaying=false;updPB();
-  playCtx='';repCur=0;updateRepeatUI();
+  playCtx='';
+  if(!keepRepeat)repCur=0;
+  updateRepeatUI();
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
   document.querySelectorAll('[id^="vb"]').forEach(b=>{b.classList.remove('on');b.textContent='▶ Écouter';});
   document.getElementById('progfill').style.width='0%';
@@ -1336,21 +1359,18 @@ function stopAud(){
   document.getElementById('ttot').textContent='0:00';
 }
 function togglePlay(){if(!aud.src){playV(curV);return;}if(isPlaying){aud.pause();isPlaying=false;}else{aud.play();isPlaying=true;}updPB();}
-function updPB(){document.getElementById('playbtn').textContent=isPlaying?'⏸':'▶';}
+function updPB(){
+  document.getElementById('playbtn').textContent=isPlaying?'⏸':'▶';
+  const bar=document.getElementById('pbar');
+  if(bar)bar.classList.toggle('playing',isPlaying);
+}
 function prevV(){if(curV>1)playV(curV-1);else if(curS>1)loadSurah(curS-1).then(()=>setTimeout(()=>playV(totV),800));}
 function nextV(){if(curV<totV)playV(curV+1);else if(curS<114)loadSurah(curS+1).then(()=>setTimeout(()=>playV(1),1200));}
 
 aud.addEventListener('ended',()=>{
   isPlaying=false;updPB();
   if(playCtx!=='verse')return;
-  if(repCount>1&&repCur>0&&repCur<repCount){
-    repCur++;
-    updateRepeatUI();
-    repTimer=setTimeout(()=>{repTimer=null;replayV();},450);
-    return;
-  }
-  if(repCount>1){repCur=repCount;updateRepeatUI();}
-  if(autoplay)nextV();
+  handleVerseEnded();
 });
 aud.addEventListener('timeupdate',()=>{
   if(!aud.duration)return;
@@ -1370,18 +1390,88 @@ function replayV(){
   aud.playbackRate=audioSpeed;
   aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{isPlaying=false;updPB();});
 }
+function repeatVerse(n){
+  setRepeatMode('verse');
+  playV(n);
+}
 function clearRepeatTimer(){if(repTimer){clearTimeout(repTimer);repTimer=null;}}
-function setRep(n){
-  clearRepeatTimer();
-  repCount=[1,2,3,5,10].includes(+n)?+n:1;
-  repCur=repCount>1&&playCtx==='verse'&&aud.src?Math.max(1,repCur||1):0;
+function clearActiveVerseUI(){
+  document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
+  document.querySelectorAll('[id^="vb"]').forEach(b=>{b.classList.remove('on');b.textContent='▶ Écouter';});
+}
+function handleVerseEnded(){
+  if(repMode==='verse'){
+    if(repCur>0&&repCur<repCount){
+      repCur++;
+      updateRepeatUI();
+      repTimer=setTimeout(()=>{repTimer=null;replayV();},450);
+      return;
+    }
+    repCur=repCount;updateRepeatUI();
+    if(autoplay)nextV();else clearActiveVerseUI();
+    return;
+  }
+  if(repMode==='range'){
+    setRangeBounds(false);
+    if(curV<rangeEnd){
+      repTimer=setTimeout(()=>{repTimer=null;playV(curV+1,true);},450);
+      return;
+    }
+    if(repCur>0&&repCur<repCount){
+      repCur++;
+      updateRepeatUI();
+      repTimer=setTimeout(()=>{repTimer=null;playV(rangeStart,true);},650);
+      return;
+    }
+    repCur=repCount;updateRepeatUI();
+    clearActiveVerseUI();
+    return;
+  }
+  if(autoplay)nextV();else clearActiveVerseUI();
+}
+function setRepeatMode(mode){
+  repMode=['off','verse','range'].includes(mode)?mode:'off';
+  if(repMode==='range'){
+    if(rangeStart===1&&rangeEnd===1&&curV>1){rangeStart=curV;rangeEnd=curV;}
+    setRangeBounds(false);
+  }
+  repCur=repMode==='off'?0:(playCtx==='verse'&&aud.src?Math.max(1,repCur||1):0);
   updateRepeatUI();
   savePrefs();
 }
+function setRep(n){
+  clearRepeatTimer();
+  repCount=[2,3,5,10].includes(+n)?+n:2;
+  if(repMode==='off')repMode='verse';
+  repCur=playCtx==='verse'&&aud.src?Math.max(1,repCur||1):0;
+  updateRepeatUI();
+  savePrefs();
+}
+function setRangeBounds(save=true){
+  const s=document.getElementById('rangeStart'),e=document.getElementById('rangeEnd');
+  const max=Math.max(1,totV||SS[curS-1]?.v||1);
+  let a=Math.max(1,Math.min(max,+(s?.value)||rangeStart||curV||1));
+  let b=Math.max(1,Math.min(max,+(e?.value)||rangeEnd||a));
+  if(a>b)[a,b]=[b,a];
+  rangeStart=a;rangeEnd=b;
+  if(s){s.max=max;s.value=a;}
+  if(e){e.max=max;e.value=b;}
+  if(save)savePrefs();
+  updateRepeatUI();
+}
 function updateRepeatUI(){
-  document.querySelectorAll('.rb').forEach(b=>b.classList.toggle('on',+b.dataset.rep===repCount));
+  const off=document.getElementById('rep-off'),verse=document.getElementById('rep-verse'),range=document.getElementById('rep-range'),box=document.getElementById('rangebox');
+  if(off)off.classList.toggle('on',repMode==='off');
+  if(verse)verse.classList.toggle('on',repMode==='verse');
+  if(range)range.classList.toggle('on',repMode==='range');
+  if(box)box.classList.toggle('show',repMode==='range');
+  document.querySelectorAll('.rb[data-rep]').forEach(b=>b.classList.toggle('on',+b.dataset.rep===repCount&&repMode!=='off'));
   const c=document.getElementById('repcount');
-  if(c)c.textContent=repCount>1&&repCur>0?repCur+'/'+repCount:'';
+  if(c){
+    if(repMode==='off')c.textContent='';
+    else if(repMode==='range')c.textContent=rangeStart+'-'+rangeEnd+' · '+(repCur||1)+'/'+repCount;
+    else c.textContent=(repCur>0?repCur+'/':'×')+repCount;
+  }
 }
 function toggleAuto(){autoplay=!autoplay;document.getElementById('autosw').classList.toggle('on',autoplay);savePrefs();}
 function setArabicSize(v,save=true){
