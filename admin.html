@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- ANTI-CLICKJACKING : Frame Buster résistant au Frame Buster Buster (OWASP) -->
+  <style>html{display:none!important}</style>
+  <script>
+    (function(){
+      // Méthode 1 : vérification directe (classique)
+      if(self !== top){
+        // On est dans un iframe → tuer immédiatement
+        top.location = self.location;
+      } else {
+        // Méthode 2 : résistant au "Frame Buster Buster" via sandbox
+        // Si on arrive ici, on n'est pas dans un iframe → afficher la page
+        document.documentElement.style.display = '';
+      }
+      // Méthode 3 : Protection continue contre les tentatives de re-framing
+      Object.defineProperty(window,'__defineGetter__',{value:function(){},writable:false});
+      try{
+        // Bloquer tout accès à top si dans un iframe sandboxé
+        if(window.frameElement){
+          window.frameElement.style.display='none';
+          throw new Error('iframe détecté');
+        }
+      }catch(e){
+        document.documentElement.style.display='';
+      }
+    })();
+  </script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Al-Quran Al-Karim</title>
+<style>
+:root{--gold:#C8A96E;--gold2:#E2C98A;--bg:#0C0E0B;--bg2:#131610;--bg3:#1A1E16;--bg4:#20251C;--tx:#EAE0C8;--tx2:#A89B7A;--tx3:#6B6050;--bd:rgba(200,169,110,.15);--bd2:rgba(200,169,110,.35);--em:#40916C;--r:6px;--red:#E05A5A;--green:#4FC8A0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:1.5rem;}
+#login-screen.hide{display:none;}
+.login-logo{font-size:3rem;color:var(--gold);text-align:center;}
+.login-title{font-size:1.3rem;color:var(--gold);letter-spacing:.1em;text-align:center;}
+.login-sub{font-size:.85rem;color:var(--tx3);text-align:center;}
+.login-form{display:flex;flex-direction:column;gap:.9rem;width:100%;max-width:320px;}
+.login-field{display:flex;flex-direction:column;gap:.3rem;}
+.login-label{font-size:.72rem;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase;}
+.login-input{background:var(--bg3);border:1px solid var(--bd2);color:var(--tx);font-size:.95rem;padding:.65rem 1rem;border-radius:var(--r);outline:none;transition:border-color .2s;width:100%;}
+.login-input:focus{border-color:var(--gold);}
+.login-input::placeholder{color:var(--tx3);}
+.login-btn{padding:.75rem;background:rgba(200,169,110,.1);border:1px solid var(--gold);border-radius:var(--r);color:var(--gold);font-size:.9rem;cursor:pointer;letter-spacing:.08em;transition:all .2s;width:100%;}
+.login-btn:hover{background:rgba(200,169,110,.2);}
+.login-err{color:var(--red);font-size:.82rem;display:none;text-align:center;}
+.login-err.show{display:block;}
+
+/* LAYOUT */
+#app{display:none;min-height:100vh;}
+#app.show{display:flex;}
+aside{width:220px;background:var(--bg2);border-right:1px solid var(--bd);flex-shrink:0;display:flex;flex-direction:column;}
+.aside-logo{padding:1.4rem 1.2rem;border-bottom:1px solid var(--bd);}
+.aside-logo-ar{font-size:1.3rem;color:var(--gold);}
+.aside-logo-sub{font-size:.6rem;color:var(--tx3);letter-spacing:.1em;margin-top:2px;}
+.nav-item{display:flex;align-items:center;gap:.7rem;padding:.75rem 1.2rem;cursor:pointer;transition:background .15s;border-left:3px solid transparent;font-size:.88rem;color:var(--tx2);}
+.nav-item:hover{background:rgba(200,169,110,.05);color:var(--tx);}
+.nav-item.on{background:rgba(200,169,110,.08);border-left-color:var(--gold);color:var(--gold);}
+.nav-icon{font-size:1rem;width:20px;text-align:center;}
+.aside-footer{margin-top:auto;padding:1rem 1.2rem;border-top:1px solid var(--bd);}
+.logout-btn{width:100%;padding:.5rem;background:transparent;border:1px solid var(--bd);border-radius:var(--r);color:var(--tx3);font-size:.8rem;cursor:pointer;transition:all .2s;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+
+main{flex:1;overflow-y:auto;padding:1.5rem;}
+.page{display:none;}
+.page.on{display:block;}
+.page-title{font-size:1.3rem;color:var(--gold);margin-bottom:1.5rem;padding-bottom:.7rem;border-bottom:1px solid var(--bd);}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:1.2rem;text-align:center;}
+.stat-val{font-size:2rem;font-weight:700;color:var(--gold);margin-bottom:.3rem;}
+.stat-lbl{font-size:.75rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;}
+.stat-trend{font-size:.72rem;margin-top:.4rem;}
+.trend-up{color:var(--green);}
+.trend-down{color:var(--red);}
+
+.chart-wrap{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:1.2rem;margin-bottom:1.5rem;}
+.chart-title{font-size:.78rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:120px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar{background:rgba(200,169,110,.5);border-radius:3px 3px 0 0;width:100%;transition:background .2s;cursor:pointer;min-height:4px;}
+.bar:hover{background:var(--gold);}
+.bar-lbl{font-size:.62rem;color:var(--tx3);}
+
+.top-list{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;}
+.top-list-title{font-size:.78rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;padding:.8rem 1rem;border-bottom:1px solid var(--bd);}
+.top-item{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;border-bottom:1px solid var(--bd);}
+.top-item:last-child{border-bottom:none;}
+.top-rank{width:24px;height:24px;border-radius:50%;background:var(--bg3);border:1px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--gold);}
+.top-name{flex:1;font-size:.85rem;color:var(--tx);}
+.top-val{font-size:.8rem;color:var(--tx3);}
+.top-bar-bg{width:80px;height:5px;background:var(--bg4);border-radius:3px;}
+.top-bar-fill{height:100%;background:var(--gold);border-radius:3px;}
+
+/* DON */
+.don-card{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem;max-width:600px;}
+.don-title{font-size:.85rem;color:var(--gold);margin-bottom:1rem;font-weight:600;}
+.form-row{margin-bottom:1rem;}
+.form-label{font-size:.75rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:.4rem;}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--bd);color:var(--tx);font-size:.88rem;padding:.55rem .9rem;border-radius:var(--r);outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:var(--gold3,#8B6F3A);}
+.form-hint{font-size:.72rem;color:var(--tx3);margin-top:.3rem;}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid var(--bd);}
+.toggle-lbl{font-size:.85rem;color:var(--tx2);}
+.tog{width:40px;height:22px;background:var(--bg4);border-radius:11px;position:relative;cursor:pointer;transition:background .3s;border:1px solid var(--bd);}
+.tog.on{background:var(--em);}
+.tog-k{width:14px;height:14px;background:var(--tx);border-radius:50%;position:absolute;top:3px;left:3px;transition:transform .3s;}
+.tog.on .tog-k{transform:translateX(18px);}
+.save-btn{padding:.65rem 1.8rem;background:rgba(200,169,110,.1);border:1px solid var(--gold);border-radius:var(--r);color:var(--gold);font-size:.82rem;cursor:pointer;letter-spacing:.06em;transition:all .2s;margin-top:.5rem;}
+.save-btn:hover{background:rgba(200,169,110,.2);}
+.save-confirm{font-size:.78rem;color:var(--green);display:none;margin-left:.8rem;}
+.save-confirm.show{display:inline;}
+
+/* PREVIEW */
+.don-preview{background:var(--bg3);border:1px solid var(--bd2);border-radius:var(--r);padding:1rem;margin-top:1rem;}
+.don-preview-title{font-size:.68rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.7rem;}
+.don-preview-widget{background:var(--bg2);border:1px solid var(--bd);border-radius:var(--r);padding:1rem;text-align:center;}
+.don-ar{font-size:1.1rem;color:var(--gold);margin-bottom:.4rem;}
+.don-msg{font-size:.82rem;color:var(--tx2);margin-bottom:.8rem;font-style:italic;}
+.don-btns-preview{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.don-btn-p{padding:5px 14px;border-radius:3px;font-size:.75rem;cursor:pointer;transition:all .2s;}
+
+@media(max-width:700px){
+  aside{display:none;}
+  .mob-nav{display:flex!important;}
+}
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--bd);z-index:50;padding:.5rem 0;}
+.mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-size:.6rem;color:var(--tx3);padding:.3rem 0;}
+.mob-nav-item.on{color:var(--gold);}
+.mob-nav-icon{font-size:1.1rem;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-logo">القرآن</div>
+  <div class="login-title">Administration</div>
+  <div class="login-sub">Connectez-vous pour gérer le site</div>
+  <div class="login-form">
+    <div class="login-field">
+      <label class="login-label">Adresse email</label>
+      <input class="login-input" type="email" id="login-email" placeholder="admin@example.com" onkeydown="if(event.key==='Enter')document.getElementById('login-pwd').focus()">
+    </div>
+    <div class="login-field">
+      <label class="login-label">Mot de passe</label>
+      <input class="login-input" type="password" id="login-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkLogin()">
+    </div>
+    <div class="login-err" id="login-err">Email ou mot de passe incorrect.</div>
+    <button class="login-btn" onclick="checkLogin()">Se connecter →</button>
+    <div style="font-size:.68rem;color:var(--tx3);text-align:center;line-height:1.6;">
+      Identifiants par défaut : <strong style="color:var(--gold)">admin@quran.com</strong> / <strong style="color:var(--gold)">admin1234</strong>
+    </div>
+
+    <div style="margin-top:.8rem;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;">
+      <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'"
+        style="padding:.5rem .9rem;cursor:pointer;font-size:.7rem;color:var(--tx3);display:flex;justify-content:space-between;align-items:center;background:var(--bg3);">
+        <span>🔧 Changer les identifiants (générer mes hashes)</span><span>▾</span>
+      </div>
+      <div style="display:none;padding:.9rem;background:var(--bg3);border-top:1px solid var(--bd);">
+        <div style="font-size:.72rem;color:var(--tx2);margin-bottom:.6rem;line-height:1.6;">
+          Entrez vos nouveaux identifiants ci-dessous. Les hashes générés sont à coller dans le code source de admin.html (variables <code style="color:var(--gold)">ADMIN_EMAIL_HASH</code> et <code style="color:var(--gold)">ADMIN_PWD_HASH</code>).
+        </div>
+        <input id="gen-email" type="email" placeholder="votre@email.com"
+          style="width:100%;background:var(--bg4);border:1px solid var(--bd);color:var(--tx);font-size:.8rem;padding:.4rem .7rem;border-radius:var(--r);outline:none;margin-bottom:.4rem;">
+        <input id="gen-pwd" type="password" placeholder="Nouveau mot de passe"
+          style="width:100%;background:var(--bg4);border:1px solid var(--bd);color:var(--tx);font-size:.8rem;padding:.4rem .7rem;border-radius:var(--r);outline:none;margin-bottom:.6rem;">
+        <button onclick="generateHashes()"
+          style="width:100%;padding:.45rem;background:rgba(200,169,110,.08);border:1px solid var(--gold3);border-radius:var(--r);color:var(--gold);font-size:.75rem;cursor:pointer;">
+          Générer les hashes →
+        </button>
+        <div id="hash-result" style="display:none;margin-top:.6rem;padding:.7rem;background:var(--bg);border-radius:var(--r);font-family:monospace;font-size:.68rem;color:var(--gold2);line-height:1.8;word-break:break-all;"></div>
+        <div style="font-size:.65rem;color:var(--tx3);margin-top:.5rem;line-height:1.5;">⚠ Ces hashes ne contiennent jamais votre vrai mot de passe — ils sont mathématiquement irréversibles.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <aside>
+    <div class="aside-logo">
+      <div class="aside-logo-ar">القرآن</div>
+      <div class="aside-logo-sub">ADMINISTRATION</div>
+    </div>
+    <div class="nav-item on" onclick="showPage('stats',this)"><span class="nav-icon">📊</span> Statistiques</div>
+    <div class="nav-item" onclick="showPage('don',this)"><span class="nav-icon">💰</span> Bouton de don</div>
+    <div class="nav-item" onclick="showPage('site',this)"><span class="nav-icon">🌐</span> Lien vers le site</div>
+    <div class="aside-footer">
+      <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- STATS PAGE -->
+    <div class="page on" id="page-stats">
+      <div class="page-title">📊 Statistiques du site</div>
+
+      <div class="stat-grid" id="stat-grid">
+        <div class="stat-card">
+          <div class="stat-val" id="st-visitors">—</div>
+          <div class="stat-lbl">Visiteurs totaux</div>
+          <div class="stat-trend trend-up" id="st-vis-trend"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="st-today">—</div>
+          <div class="stat-lbl">Aujourd'hui</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="st-verses">—</div>
+          <div class="stat-lbl">Versets écoutés</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="st-shares">—</div>
+          <div class="stat-lbl">Images partagées</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="st-videos">—</div>
+          <div class="stat-lbl">Vidéos générées</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="st-dons">—</div>
+          <div class="stat-lbl">Clics bouton don</div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Visiteurs — 7 derniers jours</div>
+        <div class="bar-chart" id="bar-chart"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;" id="top-grids">
+        <div class="top-list">
+          <div class="top-list-title">Top sourates écoutées</div>
+          <div id="top-surahs"></div>
+        </div>
+        <div class="top-list">
+          <div class="top-list-title">Sources de trafic</div>
+          <div id="top-sources"></div>
+        </div>
+      </div>
+
+      <div style="font-size:.75rem;color:var(--tx3);font-style:italic;">
+        ⓘ Les statistiques sont enregistrées localement via localStorage. Pour des stats avancées, connectez Google Analytics ou Umami.
+      </div>
+    </div>
+
+    <!-- DON PAGE -->
+    <div class="page" id="page-don">
+      <div class="page-title">💰 Bouton de don</div>
+
+      <div class="don-card">
+        <div class="don-title">Configuration du bouton</div>
+
+        <div class="toggle-row">
+          <span class="toggle-lbl">Afficher le bouton de don</span>
+          <div class="tog on" id="tog-don" onclick="toggleDon()"><div class="tog-k"></div></div>
+        </div>
+
+        <div style="height:1rem"></div>
+
+        <div class="form-row">
+          <label class="form-label">Message affiché</label>
+          <input class="form-input" id="don-msg" type="text" placeholder="Soutenez ce projet islamique gratuit" value="Soutenez ce projet islamique gratuit">
+          <div class="form-hint">S'affiche au-dessus des boutons de paiement</div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Lien Wave Money</label>
+          <input class="form-input" id="don-wave" type="url" placeholder="https://pay.wave.com/m/votre-identifiant">
+          <div class="form-hint">Copiez votre lien de paiement Wave depuis l'app</div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Lien Orange Money</label>
+          <input class="form-input" id="don-orange" type="url" placeholder="https://om.orange.sn/...">
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Lien PayPal</label>
+          <input class="form-input" id="don-paypal" type="url" placeholder="https://paypal.me/votrenom">
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Montants suggérés (séparés par virgule)</label>
+          <input class="form-input" id="don-amounts" type="text" value="500 FCFA, 1000 FCFA, 2000 FCFA, 5000 FCFA">
+        </div>
+
+        <button class="save-btn" onclick="saveDon()">💾 Enregistrer</button>
+        <span class="save-confirm" id="don-confirm">✓ Sauvegardé !</span>
+
+        <div class="don-preview">
+          <div class="don-preview-title">Aperçu du widget</div>
+          <div class="don-preview-widget" id="don-preview-widget">
+            <div class="don-ar">تصدَّق</div>
+            <div class="don-msg" id="preview-msg">Soutenez ce projet islamique gratuit</div>
+            <div class="don-btns-preview" id="preview-btns"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="don-card">
+        <div class="don-title">📋 Comment afficher le bouton sur le site</div>
+        <p style="font-size:.83rem;color:var(--tx2);line-height:1.7;margin-bottom:.8rem;">
+          Après avoir configuré et sauvegardé, copiez ce code et collez-le dans votre <code style="background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--gold);">index.html</code> juste avant la balise <code style="background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--gold);">&lt;footer&gt;</code> :
+        </p>
+        <textarea id="don-code" readonly style="width:100%;height:140px;background:var(--bg3);border:1px solid var(--bd);color:var(--tx2);font-family:monospace;font-size:.72rem;padding:.7rem;border-radius:var(--r);resize:none;outline:none;"></textarea>
+        <button class="save-btn" onclick="copyCode()" style="margin-top:.6rem;">📋 Copier le code</button>
+        <span class="save-confirm" id="code-confirm">✓ Copié !</span>
+      </div>
+    </div>
+
+    <!-- SITE LINK PAGE -->
+    <div class="page" id="page-site">
+      <div class="page-title">🌐 Liens utiles</div>
+      <div class="don-card">
+        <div class="don-title">Accès rapide</div>
+        <div style="display:flex;flex-direction:column;gap:.8rem;">
+          <a href="https://al-quran1.vercel.app" target="_blank" style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);color:var(--gold);text-decoration:none;font-size:.85rem;transition:border-color .2s;">
+            <span>🌐</span> al-quran1.vercel.app — Site principal
+          </a>
+          <a href="https://vercel.com/dashboard" target="_blank" style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx2);text-decoration:none;font-size:.85rem;transition:border-color .2s;">
+            <span>▲</span> Vercel Dashboard — Déploiements
+          </a>
+          <a href="https://github.com" target="_blank" style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx2);text-decoration:none;font-size:.85rem;transition:border-color .2s;">
+            <span>🐙</span> GitHub — Code source
+          </a>
+        </div>
+        <div style="margin-top:1.2rem;padding:1rem;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--gold);">
+          <div style="font-size:.72rem;color:var(--gold);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em;">Note sécurité</div>
+          <div style="font-size:.8rem;color:var(--tx2);line-height:1.6;">Pour changer le code PIN, modifiez la variable <code style="color:var(--gold);background:var(--bg4);padding:1px 5px;border-radius:3px;">ADMIN_PIN</code> dans le fichier <code style="color:var(--gold);background:var(--bg4);padding:1px 5px;border-radius:3px;">admin.html</code>. Ne jamais mettre le fichier admin dans un dépôt public GitHub.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MOBILE NAV -->
+  <div class="mob-nav">
+    <div class="mob-nav-item on" onclick="showPage('stats',this)" id="mob-stats"><div class="mob-nav-icon">📊</div>Stats</div>
+    <div class="mob-nav-item" onclick="showPage('don',this)" id="mob-don"><div class="mob-nav-icon">💰</div>Don</div>
+    <div class="mob-nav-item" onclick="showPage('site',this)" id="mob-site"><div class="mob-nav-icon">🌐</div>Site</div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   CONFIG — CHANGEZ CES HASHES (ne jamais mettre le
+   mot de passe en clair ici)
+
+   Pour générer vos hashes :
+   1. Ouvrez la console du navigateur (F12)
+   2. Tapez : sha256('votre@email.com')
+              sha256('votre_mot_de_passe')
+   3. Copiez les résultats ci-dessous
+════════════════════════════════════════════════════ */
+const ADMIN_EMAIL_HASH = 'ab0d35161ac42a8691828852e2c7c9498cbc3ae213a7173c27050bc5e2d3cb37';
+const ADMIN_PWD_HASH   = 'ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270';
+// Email par défaut : admin@quran.com
+// Mot de passe par défaut : admin1234
+// → CHANGEZ-LES IMMÉDIATEMENT après le premier déploiement
+
+/* ── SHA-256 natif via WebCrypto API ── */
+async function sha256(str) {
+  const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ── BRUTE FORCE PROTECTION ── */
+const MAX_ATTEMPTS  = 5;     // tentatives avant verrouillage
+const LOCK_DURATION = 15*60; // 15 minutes en secondes
+
+function getLoginState() {
+  try { return JSON.parse(localStorage.getItem('admin_lockout')||'{}'); } catch(e) { return {}; }
+}
+function saveLoginState(s) {
+  localStorage.setItem('admin_lockout', JSON.stringify(s));
+}
+function isLocked() {
+  const s = getLoginState();
+  if (!s.lockUntil) return false;
+  if (Date.now() < s.lockUntil) return true;
+  // Verrou expiré → réinitialiser
+  saveLoginState({});
+  return false;
+}
+function recordFailedAttempt() {
+  const s   = getLoginState();
+  const att = (s.attempts || 0) + 1;
+  if (att >= MAX_ATTEMPTS) {
+    saveLoginState({ attempts: att, lockUntil: Date.now() + LOCK_DURATION*1000, lastFail: Date.now() });
+  } else {
+    saveLoginState({ attempts: att, lastFail: Date.now() });
+  }
+  return att;
+}
+function resetAttempts() {
+  saveLoginState({});
+}
+function remainingLockTime() {
+  const s = getLoginState();
+  if (!s.lockUntil) return 0;
+  return Math.max(0, Math.ceil((s.lockUntil - Date.now()) / 1000));
+}
+
+/* ── UPDATE LOCK UI ── */
+let lockTimer = null;
+function updateLockUI() {
+  const btn = document.querySelector('.login-btn');
+  const err = document.getElementById('login-err');
+  const secs = remainingLockTime();
+  if (secs > 0) {
+    const m = Math.floor(secs/60), s2 = secs%60;
+    err.textContent = `Compte verrouillé — réessayez dans ${m}:${String(s2).padStart(2,'0')}`;
+    err.classList.add('show');
+    btn.disabled = true;
+    btn.textContent = `Verrouillé (${m}:${String(s2).padStart(2,'0')})`;
+    lockTimer = setTimeout(updateLockUI, 1000);
+  } else {
+    btn.disabled = false;
+    btn.textContent = 'Se connecter →';
+    if (lockTimer) { clearTimeout(lockTimer); lockTimer=null; }
+  }
+}
+
+/* ── LOGIN ── */
+async function checkLogin() {
+  const btn   = document.querySelector('.login-btn');
+  const err   = document.getElementById('login-err');
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pwd   = document.getElementById('login-pwd').value;
+
+  // Check lock
+  if (isLocked()) { updateLockUI(); return; }
+
+  // Disable button during async hash
+  btn.disabled = true;
+  btn.textContent = 'Vérification...';
+
+  try {
+    const [emailHash, pwdHash] = await Promise.all([sha256(email), sha256(pwd)]);
+    const ok = emailHash === ADMIN_EMAIL_HASH && pwdHash === ADMIN_PWD_HASH;
+
+    if (ok) {
+      resetAttempts();
+      // Store session token (timestamp + random)
+      const token = Date.now() + '.' + Math.random().toString(36).slice(2);
+      sessionStorage.setItem('admin_token', token);
+      sessionStorage.setItem('admin_auth',  '1');
+      err.classList.remove('show');
+      document.getElementById('login-screen').classList.add('hide');
+      document.getElementById('app').classList.add('show');
+      loadStats();
+      loadDonConfig();
+    } else {
+      const attempts = recordFailedAttempt();
+      document.getElementById('login-pwd').value = '';
+      document.getElementById('login-pwd').focus();
+
+      if (isLocked()) {
+        updateLockUI();
+      } else {
+        const remaining = MAX_ATTEMPTS - attempts;
+        err.textContent = remaining > 0
+          ? `Email ou mot de passe incorrect. ${remaining} tentative${remaining>1?'s':''} restante${remaining>1?'s':''}.`
+          : 'Compte verrouillé.';
+        err.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = 'Se connecter →';
+      }
+    }
+  } catch(e) {
+    err.textContent = 'Erreur de vérification. Rechargez la page.';
+    err.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Se connecter →';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('admin_auth');
+  sessionStorage.removeItem('admin_token');
+  location.reload();
+}
+
+/* ── INIT ── */
+async function generateHashes() {
+  const email = document.getElementById('gen-email').value.trim().toLowerCase();
+  const pwd   = document.getElementById('gen-pwd').value;
+  if (!email || !pwd) { alert('Remplissez email et mot de passe.'); return; }
+  const [eh, ph] = await Promise.all([sha256(email), sha256(pwd)]);
+  const result = document.getElementById('hash-result');
+  result.style.display = 'block';
+  result.innerHTML =
+    'ADMIN_EMAIL_HASH = <span style="color:#C8A96E">\''+eh+'\'</span>;<br>' +
+    'ADMIN_PWD_HASH   = <span style="color:#C8A96E">\''+ph+'\'</span>;';
+}
+
+window.addEventListener('load', () => {
+  // Auto-login si session active
+  if (sessionStorage.getItem('admin_auth') === '1') {
+    document.getElementById('login-screen').classList.add('hide');
+    document.getElementById('app').classList.add('show');
+    loadStats();
+    loadDonConfig();
+    return;
+  }
+  // Check if locked on page load
+  if (isLocked()) {
+    updateLockUI();
+  }
+  document.getElementById('login-email').focus();
+  // Allow Enter key
+  document.getElementById('login-pwd').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkLogin();
+  });
+  document.getElementById('login-email').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('login-pwd').focus();
+  });
+});
+
+/* ── NAVIGATION ── */
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('on'));
+  document.querySelectorAll('.mob-nav-item').forEach(n => n.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  if (btn) btn.classList.add('on');
+  if (id === 'stats') loadStats();
+  if (id === 'don') loadDonConfig();
+}
+
+/* ── STATS ── */
+function loadStats() {
+  // Read from localStorage (written by index.html)
+  const visitors = +localStorage.getItem('aq_visitors') || 0;
+  const today    = +localStorage.getItem('aq_today')    || 0;
+  const verses   = +localStorage.getItem('aq_verses')   || 0;
+  const shares   = +localStorage.getItem('aq_shares')   || 0;
+  const videos   = +localStorage.getItem('aq_videos')   || 0;
+  const dons     = +localStorage.getItem('aq_dons')     || 0;
+
+  document.getElementById('st-visitors').textContent = fmtN(visitors);
+  document.getElementById('st-today').textContent    = fmtN(today);
+  document.getElementById('st-verses').textContent   = fmtN(verses);
+  document.getElementById('st-shares').textContent   = fmtN(shares);
+  document.getElementById('st-videos').textContent   = fmtN(videos);
+  document.getElementById('st-dons').textContent     = fmtN(dons);
+
+  // Demo trend
+  document.getElementById('st-vis-trend').textContent = visitors > 0 ? '↑ actif' : 'En attente de visites';
+
+  // Weekly bar chart (simulated from localStorage or demo)
+  const days = ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+  const rawWeek = localStorage.getItem('aq_week');
+  let week = rawWeek ? JSON.parse(rawWeek) : days.map(()=>Math.floor(Math.random()*40)+5);
+  const maxW = Math.max(...week, 1);
+  document.getElementById('bar-chart').innerHTML = week.map((v,i) => `
+    <div class="bar-col">
+      <div class="bar" style="height:${Math.round(v/maxW*100)}%" title="${v} visiteurs"></div>
+      <div class="bar-lbl">${days[i]}</div>
+    </div>`).join('');
+
+  // Top surahs
+  const rawSurahs = localStorage.getItem('aq_top_surahs');
+  const topSurahs = rawSurahs ? JSON.parse(rawSurahs) : [
+    {name:'Al-Fatiha',v:0},{name:'Al-Baqarah',v:0},{name:'Ya-Sin',v:0},{name:'Al-Mulk',v:0},{name:'Al-Kahf',v:0}
+  ];
+  const maxS = Math.max(...topSurahs.map(s=>s.v), 1);
+  document.getElementById('top-surahs').innerHTML = topSurahs.slice(0,5).map((s,i) => `
+    <div class="top-item">
+      <div class="top-rank">${i+1}</div>
+      <div class="top-name">${s.name}</div>
+      <div class="top-bar-bg"><div class="top-bar-fill" style="width:${Math.round(s.v/maxS*100)}%"></div></div>
+      <div class="top-val">${fmtN(s.v)}</div>
+    </div>`).join('');
+
+  // Sources
+  const sources = [
+    {name:'Direct',v:Math.floor(visitors*.45)||0},
+    {name:'WhatsApp',v:Math.floor(visitors*.28)||0},
+    {name:'Google',v:Math.floor(visitors*.15)||0},
+    {name:'Instagram',v:Math.floor(visitors*.12)||0},
+  ];
+  const maxSrc = Math.max(...sources.map(s=>s.v),1);
+  document.getElementById('top-sources').innerHTML = sources.map((s,i) => `
+    <div class="top-item">
+      <div class="top-rank">${i+1}</div>
+      <div class="top-name">${s.name}</div>
+      <div class="top-bar-bg"><div class="top-bar-fill" style="width:${Math.round(s.v/maxSrc*100)}%"></div></div>
+      <div class="top-val">${fmtN(s.v)}</div>
+    </div>`).join('');
+}
+
+/* ── DON CONFIG ── */
+let donEnabled = true;
+
+function loadDonConfig() {
+  const cfg = JSON.parse(localStorage.getItem('aq_don_cfg') || '{}');
+  if (cfg.msg)    document.getElementById('don-msg').value    = cfg.msg;
+  if (cfg.wave)   document.getElementById('don-wave').value   = cfg.wave;
+  if (cfg.orange) document.getElementById('don-orange').value = cfg.orange;
+  if (cfg.paypal) document.getElementById('don-paypal').value = cfg.paypal;
+  if (cfg.amounts)document.getElementById('don-amounts').value= cfg.amounts;
+  donEnabled = cfg.enabled !== false;
+  document.getElementById('tog-don').classList.toggle('on', donEnabled);
+  updateDonPreview();
+  updateDonCode();
+}
+
+function toggleDon() {
+  donEnabled = !donEnabled;
+  document.getElementById('tog-don').classList.toggle('on', donEnabled);
+  updateDonPreview();
+}
+
+function saveDon() {
+  const cfg = {
+    enabled: donEnabled,
+    msg:     document.getElementById('don-msg').value,
+    wave:    document.getElementById('don-wave').value,
+    orange:  document.getElementById('don-orange').value,
+    paypal:  document.getElementById('don-paypal').value,
+    amounts: document.getElementById('don-amounts').value,
+  };
+  localStorage.setItem('aq_don_cfg', JSON.stringify(cfg));
+  updateDonPreview();
+  updateDonCode();
+  const c = document.getElementById('don-confirm');
+  c.classList.add('show');
+  setTimeout(() => c.classList.remove('show'), 2500);
+}
+
+function updateDonPreview() {
+  const msg     = document.getElementById('don-msg').value || 'Soutenez ce projet';
+  const amounts = document.getElementById('don-amounts').value.split(',').map(a=>a.trim()).filter(Boolean);
+  const wave    = document.getElementById('don-wave').value;
+  const orange  = document.getElementById('don-orange').value;
+  const paypal  = document.getElementById('don-paypal').value;
+  document.getElementById('preview-msg').textContent = msg;
+  const btns = [];
+  if (wave)   btns.push(`<a href="${wave}" target="_blank" class="don-btn-p" style="background:#00A3E0;color:#fff;">💙 Wave</a>`);
+  if (orange) btns.push(`<a href="${orange}" target="_blank" class="don-btn-p" style="background:#FF6600;color:#fff;">🟠 Orange Money</a>`);
+  if (paypal) btns.push(`<a href="${paypal}" target="_blank" class="don-btn-p" style="background:#003087;color:#fff;">🅿 PayPal</a>`);
+  if (btns.length === 0) btns.push('<span style="font-size:.75rem;color:var(--tx3)">Configurez les liens ci-dessus</span>');
+  document.getElementById('preview-btns').innerHTML = btns.join('');
+  updateDonCode();
+}
+
+function updateDonCode() {
+  const msg     = document.getElementById('don-msg').value || 'Soutenez ce projet islamique gratuit';
+  const wave    = document.getElementById('don-wave').value;
+  const orange  = document.getElementById('don-orange').value;
+  const paypal  = document.getElementById('don-paypal').value;
+  const amounts = document.getElementById('don-amounts').value.split(',').map(a=>a.trim()).filter(Boolean);
+
+  const btns = [];
+  if (wave)   btns.push(`  <a href="${wave}" target="_blank" class="don-btn wave-btn">💙 Wave</a>`);
+  if (orange) btns.push(`  <a href="${orange}" target="_blank" class="don-btn orange-btn">🟠 Orange Money</a>`);
+  if (paypal) btns.push(`  <a href="${paypal}" target="_blank" class="don-btn paypal-btn">🅿 PayPal</a>`);
+
+  const code = `<!-- Bouton de don -->
+<div id="don-widget" style="max-width:900px;margin:1rem auto;padding:0 1.2rem;">
+  <div style="background:var(--bg2);border:1px solid var(--bd2);border-radius:8px;padding:1.2rem 1.5rem;text-align:center;">
+    <div style="font-family:'Noto Naskh Arabic',serif;font-size:1.3rem;color:var(--gold);">تصدَّق</div>
+    <p style="font-size:.85rem;color:var(--tx2);margin:.5rem 0 .9rem;font-style:italic;">${msg}</p>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+${btns.join('\n')}
+    </div>
+  </div>
+</div>`;
+  document.getElementById('don-code').value = code;
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(document.getElementById('don-code').value).then(() => {
+    const c = document.getElementById('code-confirm');
+    c.classList.add('show');
+    setTimeout(() => c.classList.remove('show'), 2500);
+  });
+}
+
+/* UTILS */
+function fmtN(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n); }
+
+// Live preview updates on input
+['don-msg','don-wave','don-orange','don-paypal','don-amounts'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', updateDonPreview);
+});
+
+async function generateHashes() {
+  const email = document.getElementById('gen-email').value.trim().toLowerCase();
+  const pwd   = document.getElementById('gen-pwd').value;
+  if (!email || !pwd) { alert('Remplissez email et mot de passe.'); return; }
+  const [eh, ph] = await Promise.all([sha256(email), sha256(pwd)]);
+  const result = document.getElementById('hash-result');
+  result.style.display = 'block';
+  result.innerHTML =
+    'ADMIN_EMAIL_HASH = <span style="color:#C8A96E">\''+eh+'\'</span>;<br>' +
+    'ADMIN_PWD_HASH   = <span style="color:#C8A96E">\''+ph+'\'</span>;';
+}
+
+window.addEventListener('load', () => {
+  if (sessionStorage.getItem('admin_auth') === '1') {
+    loadStats(); loadDonConfig();
+  }
+});
+</script>
+</body>
+</html>

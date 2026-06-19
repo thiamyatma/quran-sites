@@ -1,0 +1,12 @@
+# Local/generated files
+.dist/
+.tmp-*-scripts.js
+
+# Old invalid Git folder backup created during repo repair
+.git.invalid-empty-*/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
