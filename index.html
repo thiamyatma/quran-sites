@@ -171,6 +171,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .sli{display:flex;align-items:center;padding:.6rem 1.1rem;cursor:pointer;gap:.7rem;border-bottom:1px solid var(--bd);transition:background .15s;}
 .sli:hover{background:rgba(200,169,110,.06);}
 .sli.on{background:rgba(200,169,110,.1);}
+.sli.done .slin{border-color:var(--em);color:var(--gold);}
 .slin{font-size:.68rem;color:var(--tx3);min-width:20px;text-align:center;}
 .sliar{font-family:'Noto Naskh Arabic',serif;font-size:1.05rem;color:var(--gold);direction:rtl;flex:1;text-align:right;}
 .slien{font-size:.75rem;color:var(--tx2);max-width:105px;}
@@ -194,6 +195,23 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .subtab{flex:1;background:var(--bg3);border:1px solid var(--bd);border-radius:3px;color:var(--tx3);font-family:'Crimson Pro',serif;font-size:.74rem;padding:4px 8px;cursor:pointer;transition:all .2s;}
 .subtab:hover{border-color:var(--gold3);color:var(--gold);}
 .subtab.on{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,.1);}
+.kstats{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:.7rem 0;}
+.kstat{border:1px solid var(--bd);border-radius:var(--r);background:var(--bg3);padding:.75rem;text-align:center;}
+.kval{font-family:'Cinzel Decorative',serif;font-size:1.15rem;color:var(--gold);line-height:1;}
+.klbl{font-size:.72rem;color:var(--tx3);margin-top:.25rem;}
+.kbar{height:7px;background:var(--bg4);border-radius:999px;overflow:hidden;margin:.8rem 0 .35rem;}
+.kfill{height:100%;width:0%;background:linear-gradient(90deg,var(--em),var(--gold));border-radius:999px;transition:width .3s;}
+.kactions{display:flex;gap:6px;flex-wrap:wrap;margin:.8rem 0 1rem;}
+.klist{border-top:1px solid var(--bd);padding-top:.5rem;}
+.kitem{display:flex;align-items:center;gap:.55rem;padding:.55rem .2rem;border-bottom:1px solid var(--bd);cursor:pointer;}
+.kitem:hover{background:rgba(200,169,110,.04);}
+.kitem.cur{background:rgba(200,169,110,.06);}
+.kcheck{width:22px;height:22px;border:1px solid var(--bd2);border-radius:4px;display:flex;align-items:center;justify-content:center;color:transparent;flex-shrink:0;}
+.kitem.done .kcheck{background:rgba(64,145,108,.18);border-color:var(--em);color:var(--gold);}
+.kname{flex:1;min-width:0;}
+.kname-ar{font-family:'Noto Naskh Arabic',serif;color:var(--gold);font-size:1rem;text-align:right;direction:rtl;}
+.kname-fr{font-size:.76rem;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.kmeta{font-size:.68rem;color:var(--tx3);}
 .toolitem{border:1px solid var(--bd);border-radius:var(--r);padding:.75rem;margin-bottom:.55rem;background:var(--bg3);cursor:pointer;transition:all .2s;}
 .toolitem:hover{border-color:var(--bd2);background:var(--bg4);}
 .toolref{font-family:'Cinzel Decorative',serif;font-size:.62rem;color:var(--gold);letter-spacing:.06em;margin-bottom:.35rem;}
@@ -333,6 +351,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
   <div class="tooltabs">
     <button class="tooltab on" id="tooltab-search" onclick="showTool('search')">Recherche</button>
     <button class="tooltab" id="tooltab-favs" onclick="showTool('favs')">Favoris</button>
+    <button class="tooltab" id="tooltab-khatm" onclick="showTool('khatm')">Khatm</button>
     <button class="tooltab" id="tooltab-settings" onclick="showTool('settings')">Réglages</button>
   </div>
   <div class="toolbody on" id="tool-search">
@@ -350,6 +369,24 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     </div>
     <div class="toolstatus" id="library-status"></div>
     <div id="fav-results"></div>
+  </div>
+  <div class="toolbody" id="tool-khatm">
+    <div class="toolhint">Suivez votre lecture complète du Coran. Cochez les sourates lues et gardez un objectif quotidien.</div>
+    <div class="kstats">
+      <div class="kstat"><div class="kval" id="khatm-surahs">0/114</div><div class="klbl">Sourates lues</div></div>
+      <div class="kstat"><div class="kval" id="khatm-percent">0%</div><div class="klbl">Progression</div></div>
+    </div>
+    <div class="kbar"><div class="kfill" id="khatm-fill"></div></div>
+    <div class="toolstatus" id="khatm-status"></div>
+    <div class="toolrow">
+      <label for="khatm-goal">Objectif/jour</label>
+      <input class="toolfield" id="khatm-goal" type="number" min="1" max="20" value="1" oninput="setKhatmGoal(this.value)">
+    </div>
+    <div class="kactions">
+      <button class="vbtn" onclick="toggleCurrentSurahRead()">Marquer la sourate actuelle</button>
+      <button class="vbtn" onclick="resumeLast()">Reprendre</button>
+    </div>
+    <div class="klist" id="khatm-list"></div>
   </div>
   <div class="toolbody" id="tool-settings">
     <div class="toolrow">
@@ -480,6 +517,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     <select class="ssel" id="ssel" onchange="loadSurah(+this.value)"></select>
     <button class="ibtn" onclick="openTools('search')" aria-label="Recherche" title="Recherche">⌕</button>
     <button class="ibtn" onclick="openTools('favs')" aria-label="Favoris" title="Favoris">☆</button>
+    <button class="ibtn" onclick="openTools('khatm')" aria-label="Progression Khatm" title="Khatm">✓</button>
     <button class="ibtn" onclick="openTools('settings')" aria-label="Réglages" title="Réglages">⚙</button>
     <div class="lsw">
       <button class="lb on" id="lbfr" onclick="setLang('fr')">FR</button>
@@ -603,6 +641,7 @@ const FAV_KEY='aq_favs';
 const BOOKMARK_KEY='aq_bookmarks';
 const RECENT_KEY='aq_recent_reads';
 const LAST_KEY='aq_last_read';
+const KHATM_KEY='aq_khatm';
 const aud=document.getElementById('aud');
 
 /* ── DATA ── */
@@ -751,7 +790,7 @@ window.addEventListener('load',()=>{
   }
   const prefs=loadPrefs();
   applyPrefs(prefs);
-  buildSel();renderSList();renderRec();renderDonWidget();updateResumeBtn();registerSW();loadSurah(curS);loadVod();
+  buildSel();renderSList();renderRec();renderDonWidget();updateResumeBtn();renderKhatm();registerSW();loadSurah(curS);loadVod();
   setTimeout(()=>document.getElementById('greeting').classList.add('hide'),4400);
 });
 
@@ -820,11 +859,12 @@ function registerSW(){
 
 /* ── PANELS ── */
 function renderSList(f=''){
+  const kh=getKhatm();
   document.getElementById('slist').innerHTML=SS.filter(s=>
     s.ar.includes(f)||s.en.toLowerCase().includes(f.toLowerCase())||
     s.fr.toLowerCase().includes(f.toLowerCase())||String(s.n).includes(f)
-  ).map(s=>`<div class="sli ${s.n===curS?'on':''}" onclick="goS(${s.n})">
-    <span class="slin">${s.n}</span><span class="sliar">${s.ar}</span>
+  ).map(s=>`<div class="sli ${s.n===curS?'on':''} ${kh.done[s.n]?'done':''}" onclick="goS(${s.n})">
+    <span class="slin">${kh.done[s.n]?'✓':s.n}</span><span class="sliar">${s.ar}</span>
     <span class="slien">${curLang==='fr'?s.fr:s.en}</span>
   </div>`).join('');
 }
@@ -844,12 +884,13 @@ function closeTools(){
   document.getElementById('overlay').classList.remove('show');
 }
 function showTool(tab){
-  ['search','favs','settings'].forEach(x=>{
+  ['search','favs','khatm','settings'].forEach(x=>{
     document.getElementById('tool-'+x).classList.toggle('on',x===tab);
     document.getElementById('tooltab-'+x).classList.toggle('on',x===tab);
   });
   if(tab==='search')setTimeout(()=>document.getElementById('qsearch').focus(),80);
   if(tab==='favs')renderLibrary();
+  if(tab==='khatm')renderKhatm();
   if(tab==='settings'){setArabicSize(arSize,false);setAudioSpeed(audioSpeed,false);}
 }
 async function searchQuran(q){
@@ -938,7 +979,7 @@ async function loadSurah(n){
   document.getElementById('loading').style.display='block';
   document.getElementById('errmsg').style.display='none';
   document.getElementById('vlist').innerHTML='';
-  renderSList();window.scrollTo({top:0,behavior:'smooth'});
+  renderSList();renderKhatm();window.scrollTo({top:0,behavior:'smooth'});
   try{
     const ck=SURAH_CACHE_PREFIX+n;
     let cached=null;
@@ -1081,6 +1122,55 @@ function updateResumeBtn(){
 async function resumeLast(){
   const last=getLastRead();if(!last)return;
   await goAyah(last.s,last.a);
+}
+
+function getKhatm(){
+  let k={done:{},goal:1,startedAt:Date.now(),updatedAt:Date.now()};
+  try{k={...k,...JSON.parse(localStorage.getItem(KHATM_KEY)||'{}')};}catch(e){}
+  k.done=k.done&&typeof k.done==='object'?k.done:{};
+  k.goal=Math.max(1,Math.min(20,+k.goal||1));
+  return k;
+}
+function saveKhatm(k){
+  k.updatedAt=Date.now();
+  localStorage.setItem(KHATM_KEY,JSON.stringify(k));
+}
+function khatmDoneCount(k=getKhatm()){
+  return SS.reduce((n,s)=>n+(k.done[s.n]?1:0),0);
+}
+function renderKhatm(){
+  const k=getKhatm(),done=khatmDoneCount(k),pct=Math.round(done/114*100),left=114-done;
+  const surahs=document.getElementById('khatm-surahs'),percent=document.getElementById('khatm-percent'),fill=document.getElementById('khatm-fill'),status=document.getElementById('khatm-status'),goal=document.getElementById('khatm-goal'),list=document.getElementById('khatm-list');
+  if(surahs)surahs.textContent=done+'/114';
+  if(percent)percent.textContent=pct+'%';
+  if(fill)fill.style.width=pct+'%';
+  if(goal)goal.value=k.goal;
+  if(status)status.textContent=left?left+' sourate'+(left>1?'s':'')+' restante'+(left>1?'s':'')+' · objectif '+k.goal+'/jour · environ '+Math.ceil(left/k.goal)+' jour'+(Math.ceil(left/k.goal)>1?'s':''):'Khatm terminé. Qu’Allah accepte votre lecture.';
+  if(list)list.innerHTML=SS.map(s=>`
+    <div class="kitem ${k.done[s.n]?'done':''} ${s.n===curS?'cur':''}" onclick="toggleSurahRead(${s.n})">
+      <span class="kcheck">✓</span>
+      <div class="kname">
+        <div class="kname-ar">${s.ar}</div>
+        <div class="kname-fr">${s.n}. ${s.fr}</div>
+      </div>
+      <div class="kmeta">${s.v} versets</div>
+    </div>`).join('');
+}
+function setKhatmGoal(v){
+  const k=getKhatm();
+  k.goal=Math.max(1,Math.min(20,+v||1));
+  saveKhatm(k);renderKhatm();
+}
+function toggleSurahRead(n){
+  const k=getKhatm();
+  k.done[n]=!k.done[n];
+  if(!k.done[n])delete k.done[n];
+  saveKhatm(k);
+  renderKhatm();renderSList();
+  toast(k.done[n]?'Sourate marquée comme lue':'Sourate retirée du Khatm');
+}
+function toggleCurrentSurahRead(){
+  toggleSurahRead(curS);
 }
 
 function setLang(l){
