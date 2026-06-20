@@ -1,8 +1,8 @@
-{
+﻿{
   "name": "Al-Quran Al-Karim",
   "short_name": "Al-Quran",
   "id": "/index.html",
-  "description": "Lecture du Saint Coran avec audio, traductions et favoris.",
+  "description": "Accueil moderne pour lire, écouter, rechercher et reprendre la lecture du Saint Coran.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "/index.html",
@@ -37,8 +37,8 @@
     {
       "name": "Lecture",
       "short_name": "Lire",
-      "description": "Ouvrir la lecture du Coran",
-      "url": "/index.html",
+      "description": "Accueil moderne pour lire, écouter, rechercher et reprendre la lecture du Saint Coran.",
+      "url": "/reader.html",
       "icons": [
         {
           "src": "/icons/site-icon-192.png",

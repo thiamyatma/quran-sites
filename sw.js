@@ -1,13 +1,16 @@
-const SHELL_CACHE = 'al-quran-shell-v3';
+﻿const SHELL_CACHE = 'al-quran-shell-v5';
 const API_CACHE = 'al-quran-api-v1';
 const SHELL = [
   '/',
   '/index.html',
+  '/reader.html',
   '/video.html',
   '/admin.html',
   '/manifest.json',
   '/sw.js',
   '/icons/site-icon.svg',
+  '/assets/site-system.css',
+  '/assets/site-system.js',
   '/icons/site-icon-192.png',
   '/icons/site-icon-512.png'
 ];
