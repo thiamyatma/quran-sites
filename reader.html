@@ -79,7 +79,7 @@
 <div id="spanel">
   <div class="phdr">
     <div class="ptitle">الفهرس — Sourates</div>
-    <button class="pclose" onclick="closePanel()" aria-label="Fermer"><span data-icon="close"></span></button>
+    <button class="pclose" data-action="close-panel" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
   <input class="psearch" type="text" placeholder="Rechercher..." oninput="filterS(this.value)">
   <div class="slist" id="slist"></div>
@@ -89,7 +89,7 @@
 <div id="rpanel">
   <div class="rphdr">
     <div class="rptitle">Choisir le récitateur — اختر القارئ</div>
-    <button class="pclose" onclick="closeRec()" aria-label="Fermer"><span data-icon="close"></span></button>
+    <button class="pclose" data-action="close-rec" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
   <div class="rpgrid" id="rpgrid"></div>
 </div>
@@ -98,13 +98,13 @@
 <div id="toolpanel">
   <div class="phdr">
     <div class="ptitle" id="tooltitle">Outils</div>
-    <button class="pclose" onclick="closeTools()" aria-label="Fermer"><span data-icon="close"></span></button>
+    <button class="pclose" data-action="close-tools" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
   <div class="tooltabs">
-    <button class="tooltab on" id="tooltab-search" onclick="showTool('search')">Recherche</button>
-    <button class="tooltab" id="tooltab-favs" onclick="showTool('favs')">Favoris</button>
-    <button class="tooltab" id="tooltab-khatm" onclick="showTool('khatm')">Khatm</button>
-    <button class="tooltab" id="tooltab-settings" onclick="showTool('settings')">Réglages</button>
+    <button class="tooltab on" id="tooltab-search" data-tool="search">Recherche</button>
+    <button class="tooltab" id="tooltab-favs" data-tool="favs">Favoris</button>
+    <button class="tooltab" id="tooltab-khatm" data-tool="khatm">Khatm</button>
+    <button class="tooltab" id="tooltab-settings" data-tool="settings">Réglages</button>
   </div>
   <div class="toolbody on" id="tool-search">
     <input class="toolfield" id="qsearch" type="search" placeholder="Mot, sourate, ou référence 2:255" oninput="searchQuran(this.value)">
@@ -115,9 +115,9 @@
   <div class="toolbody" id="tool-favs">
     <div class="toolhint">Favoris, marque-pages et derniers versets lus restent sur cet appareil.</div>
     <div class="subtabs">
-      <button class="subtab on" id="libtab-favs" onclick="setLibraryView('favs')">Favoris</button>
-      <button class="subtab" id="libtab-bookmarks" onclick="setLibraryView('bookmarks')">Marque-pages</button>
-      <button class="subtab" id="libtab-recent" onclick="setLibraryView('recent')">Derniers</button>
+      <button class="subtab on" id="libtab-favs" data-library-view="favs">Favoris</button>
+      <button class="subtab" id="libtab-bookmarks" data-library-view="bookmarks">Marque-pages</button>
+      <button class="subtab" id="libtab-recent" data-library-view="recent">Derniers</button>
     </div>
     <div class="toolstatus" id="library-status"></div>
     <div id="fav-results"></div>
@@ -135,8 +135,8 @@
       <input class="toolfield" id="khatm-goal" type="number" min="1" max="20" value="1" oninput="setKhatmGoal(this.value)">
     </div>
     <div class="kactions">
-      <button class="vbtn" onclick="toggleCurrentSurahRead()">Marquer la sourate actuelle</button>
-      <button class="vbtn" onclick="resumeLast()">Reprendre</button>
+      <button class="vbtn" data-action="toggle-current-surah-read">Marquer la sourate actuelle</button>
+      <button class="vbtn" data-action="resume-last">Reprendre</button>
     </div>
     <div class="klist" id="khatm-list"></div>
   </div>
@@ -149,87 +149,87 @@
     <div class="toolrow">
       <label>Vitesse audio</label>
       <div class="speedopts" id="speedopts">
-        <button class="speedbtn" data-speed="0.75" onclick="setAudioSpeed(.75)">0.75×</button>
-        <button class="speedbtn on" data-speed="1" onclick="setAudioSpeed(1)">1×</button>
-        <button class="speedbtn" data-speed="1.25" onclick="setAudioSpeed(1.25)">1.25×</button>
-        <button class="speedbtn" data-speed="1.5" onclick="setAudioSpeed(1.5)">1.5×</button>
+        <button class="speedbtn" data-speed="0.75">0.75×</button>
+        <button class="speedbtn on" data-speed="1">1×</button>
+        <button class="speedbtn" data-speed="1.25">1.25×</button>
+        <button class="speedbtn" data-speed="1.5">1.5×</button>
       </div>
     </div>
     <div class="offlinebox">
       <div class="offlinetitle">Hors ligne</div>
       <div class="offlinestatus" id="offline-status">Cette sourate n'est pas encore disponible hors ligne.</div>
       <div class="offlineactions">
-        <button class="vbtn" onclick="saveCurrentSurahOffline()">Rendre cette sourate disponible</button>
-        <button class="vbtn" onclick="removeCurrentSurahOffline()">Retirer cette sourate</button>
+        <button class="vbtn" data-action="save-current-surah-offline">Rendre cette sourate disponible</button>
+        <button class="vbtn" data-action="remove-current-surah-offline">Retirer cette sourate</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- OVERLAY -->
-<div id="overlay" onclick="closePanel();closeRec();closeTools();"></div>
+<div id="overlay" data-action="close-all-panels"></div>
 
 <!-- SHARE IMAGE MODAL -->
-<div id="sharewrap" onclick="if(event.target===this)closeShare()">
+<div id="sharewrap" data-dismiss="share">
   <div id="sharemodal">
     <div class="shttl">
       <span><span data-icon="share"></span> PARTAGER LE VERSET</span>
-      <button class="modal-close-btn" onclick="closeShare()" aria-label="Fermer"><span data-icon="close"></span></button>
+      <button class="modal-close-btn" data-action="close-share" aria-label="Fermer"><span data-icon="close"></span></button>
     </div>
     <div id="shcanvas-wrap"><canvas id="shcanvas" width="1080" height="1080"></canvas></div>
     <div class="shthemes">
-      <button class="thbtn on" onclick="setShareTheme('dark',this)"><span data-icon="moon"></span> Nuit dorée</button>
-      <button class="thbtn" onclick="setShareTheme('light',this)"><span data-icon="sun"></span> Parchemin</button>
-      <button class="thbtn" onclick="setShareTheme('green',this)"><span data-icon="palette"></span> Émeraude</button>
+      <button class="thbtn on" data-share-theme="dark"><span data-icon="moon"></span> Nuit dorée</button>
+      <button class="thbtn" data-share-theme="light"><span data-icon="sun"></span> Parchemin</button>
+      <button class="thbtn" data-share-theme="green"><span data-icon="palette"></span> Émeraude</button>
     </div>
-    <button class="shdl" onclick="dlShare()"><span data-icon="download"></span> Télécharger PNG</button>
+    <button class="shdl" data-action="download-share"><span data-icon="download"></span> Télécharger PNG</button>
   </div>
 </div>
 
 <!-- VIDEO MODAL -->
-<div id="vidwrap" onclick="if(event.target===this)closeVid()">
+<div id="vidwrap" data-dismiss="video">
   <div id="vidmodal">
     <div class="vidttl">
       <span><span data-icon="video"></span> CRÉER UNE VIDÉO</span>
-      <button class="modal-close-btn" onclick="closeVid()" aria-label="Fermer"><span data-icon="close"></span></button>
+      <button class="modal-close-btn" data-action="close-video" aria-label="Fermer"><span data-icon="close"></span></button>
     </div>
 
     <div class="vsec">
       <div class="vlbl">Ratio / Format</div>
       <div class="vopts">
-        <button class="vopt on" data-w="1080" data-h="1920" onclick="setVO('ratio',this)">📱 9:16 Stories</button>
-        <button class="vopt" data-w="1080" data-h="1080" onclick="setVO('ratio',this)">⬜ 1:1 Instagram</button>
-        <button class="vopt" data-w="1920" data-h="1080" onclick="setVO('ratio',this)">🖥 16:9 YouTube</button>
-        <button class="vopt" data-w="1080" data-h="1350" onclick="setVO('ratio',this)">📸 4:5 Feed</button>
+        <button class="vopt on" data-w="1080" data-h="1920" data-vo-type="ratio">📱 9:16 Stories</button>
+        <button class="vopt" data-w="1080" data-h="1080" data-vo-type="ratio">⬜ 1:1 Instagram</button>
+        <button class="vopt" data-w="1920" data-h="1080" data-vo-type="ratio">🖥 16:9 YouTube</button>
+        <button class="vopt" data-w="1080" data-h="1350" data-vo-type="ratio">📸 4:5 Feed</button>
       </div>
     </div>
 
     <div class="vsec">
       <div class="vlbl">Thème visuel</div>
       <div class="vopts">
-        <button class="vopt on" data-t="dark" onclick="setVO('theme',this)"><span data-icon="moon"></span> Nuit dorée</button>
-        <button class="vopt" data-t="light" onclick="setVO('light',this)"><span data-icon="sun"></span> Parchemin</button>
-        <button class="vopt" data-t="green" onclick="setVO('theme',this)"><span data-icon="palette"></span> Émeraude</button>
-        <button class="vopt" data-t="blue" onclick="setVO('theme',this)"><span data-icon="monitor"></span> Nuit bleue</button>
+        <button class="vopt on" data-t="dark" data-vo-type="theme"><span data-icon="moon"></span> Nuit dorée</button>
+        <button class="vopt" data-t="light" data-vo-type="light"><span data-icon="sun"></span> Parchemin</button>
+        <button class="vopt" data-t="green" data-vo-type="theme"><span data-icon="palette"></span> Émeraude</button>
+        <button class="vopt" data-t="blue" data-vo-type="theme"><span data-icon="monitor"></span> Nuit bleue</button>
       </div>
     </div>
 
     <div class="vsec">
       <div class="vlbl">Animation</div>
       <div class="vopts">
-        <button class="vopt on" data-a="fade" onclick="setVO('anim',this)"><span data-icon="sparkle"></span> Fondu</button>
-        <button class="vopt" data-a="slide" onclick="setVO('anim',this)"><span data-icon="timeline"></span> Glissement</button>
-        <button class="vopt" data-a="typewriter" onclick="setVO('anim',this)"><span data-icon="edit"></span> Machine à écrire</button>
-        <button class="vopt" data-a="zoom" onclick="setVO('anim',this)"><span data-icon="search"></span> Zoom</button>
+        <button class="vopt on" data-a="fade" data-vo-type="anim"><span data-icon="sparkle"></span> Fondu</button>
+        <button class="vopt" data-a="slide" data-vo-type="anim"><span data-icon="timeline"></span> Glissement</button>
+        <button class="vopt" data-a="typewriter" data-vo-type="anim"><span data-icon="edit"></span> Machine à écrire</button>
+        <button class="vopt" data-a="zoom" data-vo-type="anim"><span data-icon="search"></span> Zoom</button>
       </div>
     </div>
 
     <div class="vsec">
       <div class="vlbl">Contenu</div>
       <div class="vopts">
-        <button class="vopt on" data-c="ar+tr" onclick="setVO('content',this)">🌐 Arabe + Traduction</button>
-        <button class="vopt" data-c="ar" onclick="setVO('content',this)">عربي Arabe seul</button>
-        <button class="vopt" data-c="ar+ph" onclick="setVO('content',this)">ABC Arabe + Phonétique</button>
+        <button class="vopt on" data-c="ar+tr" data-vo-type="content">🌐 Arabe + Traduction</button>
+        <button class="vopt" data-c="ar" data-vo-type="content">عربي Arabe seul</button>
+        <button class="vopt" data-c="ar+ph" data-vo-type="content">ABC Arabe + Phonétique</button>
       </div>
     </div>
 
@@ -252,8 +252,8 @@
     </div>
 
     <div class="vacts2">
-      <button class="vact-btn sec" onclick="prevVid()">👁 Aperçu</button>
-      <button class="vact-btn" id="vgenbtn" onclick="genVid()"><span data-icon="download"></span> Générer & Télécharger</button>
+      <button class="vact-btn sec" data-action="preview-video">👁 Aperçu</button>
+      <button class="vact-btn" id="vgenbtn" data-action="generate-video"><span data-icon="download"></span> Générer & Télécharger</button>
     </div>
   </div>
 </div>
@@ -266,55 +266,55 @@
 
   <!-- TOPBAR -->
   <div id="topbar">
-    <button class="ibtn menubtn" onclick="openPanel()" aria-label="Ouvrir la liste des sourates" title="Sourates">
+    <button class="ibtn menubtn" data-action="open-panel" aria-label="Ouvrir la liste des sourates" title="Sourates">
       <span data-icon="menu"></span>
     </button>
     <div class="brand">
       <div class="logo-ar">القرآن</div>
       <div class="logo-sub">Al-Quran Al-Karim</div>
     </div>
-    <div class="mtitle" onclick="openPanel()">
+    <div class="mtitle" data-action="open-panel">
       <div class="mtitle-main" id="mobile-title-ar">الفاتحة</div>
       <div class="mtitle-sub" id="mobile-title-sub">1. L'Ouverture</div>
     </div>
     <div class="tsp"></div>
     <select class="ssel" id="ssel" onchange="loadSurah(+this.value)"></select>
-    <button class="ibtn" onclick="openTools('search')" aria-label="Recherche" title="Recherche"><span data-icon="search"></span></button>
-    <button class="ibtn" onclick="openTools('favs')" aria-label="Favoris" title="Favoris"><span data-icon="heart"></span></button>
-    <button class="ibtn" onclick="openTools('khatm')" aria-label="Progression Khatm" title="Khatm"><span data-icon="target"></span></button>
-    <button class="ibtn" onclick="openTools('settings')" aria-label="Réglages" title="Réglages"><span data-icon="settings"></span></button>
+    <button class="ibtn" data-open-tool="search" aria-label="Recherche" title="Recherche"><span data-icon="search"></span></button>
+    <button class="ibtn" data-open-tool="favs" aria-label="Favoris" title="Favoris"><span data-icon="heart"></span></button>
+    <button class="ibtn" data-open-tool="khatm" aria-label="Progression Khatm" title="Khatm"><span data-icon="target"></span></button>
+    <button class="ibtn" data-open-tool="settings" aria-label="Réglages" title="Réglages"><span data-icon="settings"></span></button>
     <div class="lsw">
-      <button class="lb on" id="lbfr" onclick="setLang('fr')">FR</button>
-      <button class="lb" id="lben" onclick="setLang('en')">EN</button>
-      <button class="lb" id="lbph" onclick="togglePhon()">ABC</button>
+      <button class="lb on" id="lbfr" data-reader-lang="fr">FR</button>
+      <button class="lb" id="lben" data-reader-lang="en">EN</button>
+      <button class="lb" id="lbph" data-action="toggle-phon">ABC</button>
     </div>
-    <button class="ibtn" id="thbtn" onclick="toggleTheme()" aria-label="Thème"><span data-icon="moon"></span></button>
+    <button class="ibtn" id="thbtn" data-action="toggle-theme" aria-label="Thème"><span data-icon="moon"></span></button>
   </div>
 
   <!-- PLAYER BAR -->
   <div id="pbar">
     <div class="pinfo" id="pinfo">—</div>
-    <button class="recbtn resume-btn" id="resumeBtn" onclick="resumeLast()">Reprendre</button>
+    <button class="recbtn resume-btn" id="resumeBtn" data-action="resume-last">Reprendre</button>
     <div class="pctrls">
-      <button class="ctrl" onclick="prevV()" aria-label="Verset précédent"><span data-icon="previous"></span></button>
-      <button class="ctrl big" id="playbtn" onclick="togglePlay()" aria-label="Lecture"><span data-icon="play"></span></button>
-      <button class="ctrl" onclick="nextV()" aria-label="Verset suivant"><span data-icon="next"></span></button>
+      <button class="ctrl" data-action="previous-verse" aria-label="Verset précédent"><span data-icon="previous"></span></button>
+      <button class="ctrl big" id="playbtn" data-action="toggle-play" aria-label="Lecture"><span data-icon="play"></span></button>
+      <button class="ctrl" data-action="next-verse" aria-label="Verset suivant"><span data-icon="next"></span></button>
     </div>
     <div class="pprog">
       <span class="tlbl" id="tcur">0:00</span>
-      <div class="progbar" onclick="seekA(event)"><div class="progfill" id="progfill"></div></div>
+      <div class="progbar" data-action="seek-audio"><div class="progfill" id="progfill"></div></div>
       <span class="tlbl" id="ttot">0:00</span>
     </div>
     <div class="repwrap">
       <span class="replbl" data-icon="repeat"></span>
       <div class="rbopts">
-        <button class="rb on" id="rep-off" onclick="setRepeatMode('off')">Off</button>
-        <button class="rb" id="rep-verse" onclick="setRepeatMode('verse')">Verset</button>
-        <button class="rb" id="rep-range" onclick="setRepeatMode('range')">Plage</button>
-        <button class="rb" data-rep="2" onclick="setRep(2)">2×</button>
-        <button class="rb" data-rep="3" onclick="setRep(3)">3×</button>
-        <button class="rb" data-rep="5" onclick="setRep(5)">5×</button>
-        <button class="rb" data-rep="10" onclick="setRep(10)">10×</button>
+        <button class="rb on" id="rep-off" data-repeat-mode="off">Off</button>
+        <button class="rb" id="rep-verse" data-repeat-mode="verse">Verset</button>
+        <button class="rb" id="rep-range" data-repeat-mode="range">Plage</button>
+        <button class="rb" data-repeat-count="2">2×</button>
+        <button class="rb" data-repeat-count="3">3×</button>
+        <button class="rb" data-repeat-count="5">5×</button>
+        <button class="rb" data-repeat-count="10">10×</button>
       </div>
       <div class="rangebox" id="rangebox">
         <input class="rinput" id="rangeStart" type="number" min="1" value="1" onchange="setRangeBounds()">
@@ -323,67 +323,67 @@
       </div>
       <span class="repcount" id="repcount" aria-live="polite"></span>
     </div>
-    <div class="autotog" onclick="toggleAuto()">
+    <div class="autotog" data-action="toggle-auto">
       <div class="togsw on" id="autosw"><div class="togknob"></div></div>
       <span class="autolbl">Auto</span>
     </div>
-    <button class="recbtn" onclick="openRec()"><span data-icon="microphone"></span> Récitateur</button>
+    <button class="recbtn" data-action="open-rec"><span data-icon="microphone"></span> Récitateur</button>
   </div>
 
   <div class="desktop-shell">
   <aside id="desk-left" aria-label="Navigation des versets">
-    <div class="desk-title"><span>SOURATE</span><button class="pclose" onclick="openPanel()">‹</button></div>
+    <div class="desk-title"><span>SOURATE</span><button class="pclose" data-action="open-panel">‹</button></div>
     <div class="desk-surah-badge">
       <div class="desk-surah-ar" id="desk-surah-ar">الفاتحة</div>
       <div class="desk-surah-name" id="desk-surah-name">1. L'Ouverture</div>
     </div>
     <div class="desk-ayahs" id="desk-ayahs"></div>
-    <button class="desk-goto" onclick="focusVerse(curV)">Aller au verset</button>
+    <button class="desk-goto" data-action="focus-current-verse">Aller au verset</button>
   </aside>
 
   <aside id="desk-right" aria-label="Actions rapides">
-    <div class="desk-tool" onclick="openTafsir()">
+    <div class="desk-tool" data-action="open-tafsir">
       <div class="desk-tool-ico" data-icon="book"></div>
       <div><div class="desk-tool-main">Tafsir</div><div class="desk-tool-sub">Explications</div></div>
     </div>
-    <div class="desk-tool" onclick="openNotes()">
+    <div class="desk-tool" data-action="open-notes">
       <div class="desk-tool-ico" data-icon="edit"></div>
       <div><div class="desk-tool-main">Notes</div><div class="desk-tool-sub">Mes notes</div></div>
     </div>
-    <div class="desk-tool" onclick="openTools('favs')">
+    <div class="desk-tool" data-open-tool="favs">
       <div class="desk-tool-ico" data-icon="bookmark"></div>
       <div><div class="desk-tool-main">Marque-pages</div><div class="desk-tool-sub">Versets enregistrés</div></div>
     </div>
-    <div class="desk-tool" onclick="shareCurrentVerse()">
+    <div class="desk-tool" data-action="share-current-verse">
       <div class="desk-tool-ico" data-icon="share"></div>
       <div><div class="desk-tool-main">Partage</div><div class="desk-tool-sub">Partager le verset</div></div>
     </div>
-    <div class="desk-tool" onclick="downloadCurrentVerseImage()">
+    <div class="desk-tool" data-action="download-current-verse-image">
       <div class="desk-tool-ico" data-icon="download"></div>
       <div><div class="desk-tool-main">Téléchargement</div><div class="desk-tool-sub">Image du verset</div></div>
     </div>
-    <div class="desk-tool" onclick="openRec()">
+    <div class="desk-tool" data-action="open-rec">
       <div class="desk-tool-ico" data-icon="microphone"></div>
       <div><div class="desk-tool-main">Récitateur</div><div class="desk-tool-sub">Changer de récitateur</div></div>
     </div>
-    <div class="desk-tool" onclick="openTools('settings')">
+    <div class="desk-tool" data-open-tool="settings">
       <div class="desk-tool-ico" data-icon="settings"></div>
       <div><div class="desk-tool-main">Paramètres</div><div class="desk-tool-sub">Affichage & Audio</div></div>
     </div>
   </aside>
 
   <div id="mbnav" aria-label="Navigation mobile">
-    <button class="mbitem" onclick="openPanel()" aria-label="Sourates">
+    <button class="mbitem" data-action="open-panel" aria-label="Sourates">
       <span class="mbico" data-icon="open-book"></span><span>Sourates</span>
     </button>
-    <button class="mbitem" onclick="openTools('search')" aria-label="Recherche">
+    <button class="mbitem" data-open-tool="search" aria-label="Recherche">
       <span class="mbico" data-icon="search"></span><span>Recherche</span>
     </button>
-    <button class="mbitem mbplay" id="mbplaybtn" onclick="togglePlay()" aria-label="Lecture"><span data-icon="play"></span></button>
-    <button class="mbitem" onclick="openTools('favs')" aria-label="Favoris">
+    <button class="mbitem mbplay" id="mbplaybtn" data-action="toggle-play" aria-label="Lecture"><span data-icon="play"></span></button>
+    <button class="mbitem" data-open-tool="favs" aria-label="Favoris">
       <span class="mbico" data-icon="heart"></span><span>Favoris</span>
     </button>
-    <button class="mbitem" onclick="openTools('settings')" aria-label="Réglages">
+    <button class="mbitem" data-open-tool="settings" aria-label="Réglages">
       <span class="mbico" data-icon="settings"></span><span>Réglages</span>
     </button>
   </div>
@@ -408,10 +408,10 @@
       <div class="vodph" id="vodph"></div>
       <div class="vodtr" id="vodtr"></div>
       <div class="vodacts">
-        <button class="vbtn" id="vodplaybtn" onclick="playVod()"><span data-icon="headphones"></span> Écouter</button>
-        <button class="vbtn" onclick="toggleVodPh()">ABC</button>
-        <button class="vbtn" onclick="openShare('vod')"><span data-icon="image"></span> Image</button>
-        <button class="vbtn" onclick="openVid('vod')"><span data-icon="video"></span> Vidéo</button>
+        <button class="vbtn" id="vodplaybtn" data-action="play-vod"><span data-icon="headphones"></span> Écouter</button>
+        <button class="vbtn" data-action="toggle-vod-phon">ABC</button>
+        <button class="vbtn" data-open-share="vod"><span data-icon="image"></span> Image</button>
+        <button class="vbtn" data-open-video="vod"><span data-icon="video"></span> Vidéo</button>
         <span class="vodref" id="vodref"></span>
       </div>
     </div>
@@ -427,7 +427,7 @@
     <div id="errmsg">
       <div class="error-mark">⚠</div>
       <div>Erreur de chargement.</div><br>
-      <button class="vbtn retry-btn" onclick="loadSurah(curS)">Réessayer</button>
+      <button class="vbtn retry-btn" data-action="reload-current-surah">Réessayer</button>
     </div>
     <div id="vlist"></div>
   </div>

@@ -1161,6 +1161,130 @@ async function genVid(){
   rec.stop();
 }
 
+function initReaderStaticBindings(){
+  document.addEventListener('click', event => {
+    const dismiss = event.target.closest('[data-dismiss]');
+    if (dismiss && event.target === dismiss) {
+      if (dismiss.dataset.dismiss === 'share') closeShare();
+      if (dismiss.dataset.dismiss === 'video') closeVid();
+      return;
+    }
+
+    const toolButton = event.target.closest('[data-tool]');
+    if (toolButton) {
+      showTool(toolButton.dataset.tool);
+      return;
+    }
+
+    const openToolButton = event.target.closest('[data-open-tool]');
+    if (openToolButton) {
+      openTools(openToolButton.dataset.openTool);
+      return;
+    }
+
+    const langButton = event.target.closest('[data-reader-lang]');
+    if (langButton) {
+      setLang(langButton.dataset.readerLang);
+      return;
+    }
+
+    const libraryButton = event.target.closest('[data-library-view]');
+    if (libraryButton) {
+      setLibraryView(libraryButton.dataset.libraryView);
+      return;
+    }
+
+    const speedButton = event.target.closest('[data-speed]');
+    if (speedButton) {
+      setAudioSpeed(Number(speedButton.dataset.speed));
+      return;
+    }
+
+    const shareThemeButton = event.target.closest('[data-share-theme]');
+    if (shareThemeButton) {
+      setShareTheme(shareThemeButton.dataset.shareTheme, shareThemeButton);
+      return;
+    }
+
+    const openShareButton = event.target.closest('[data-open-share]');
+    if (openShareButton) {
+      openShare(openShareButton.dataset.openShare);
+      return;
+    }
+
+    const openVideoButton = event.target.closest('[data-open-video]');
+    if (openVideoButton) {
+      openVid(openVideoButton.dataset.openVideo);
+      return;
+    }
+
+    const videoOptionButton = event.target.closest('[data-vo-type]');
+    if (videoOptionButton) {
+      setVO(videoOptionButton.dataset.voType, videoOptionButton);
+      return;
+    }
+
+    const repeatModeButton = event.target.closest('[data-repeat-mode]');
+    if (repeatModeButton) {
+      setRepeatMode(repeatModeButton.dataset.repeatMode);
+      return;
+    }
+
+    const repeatCountButton = event.target.closest('[data-repeat-count]');
+    if (repeatCountButton) {
+      setRep(Number(repeatCountButton.dataset.repeatCount));
+      return;
+    }
+
+    const actionButton = event.target.closest('[data-action]');
+    if (!actionButton) return;
+
+    if (actionButton.dataset.action === 'seek-audio') {
+      seekA(event);
+      return;
+    }
+
+    const actions = {
+      'open-panel': openPanel,
+      'open-rec': openRec,
+      'close-panel': closePanel,
+      'close-rec': closeRec,
+      'close-tools': closeTools,
+      'close-all-panels': () => { closePanel(); closeRec(); closeTools(); },
+      'close-share': closeShare,
+      'close-video': closeVid,
+      'download-share': dlShare,
+      'toggle-phon': togglePhon,
+      'toggle-theme': toggleTheme,
+      'toggle-play': togglePlay,
+      'previous-verse': prevV,
+      'next-verse': nextV,
+      'toggle-auto': toggleAuto,
+      'focus-current-verse': () => focusVerse(curV),
+      'open-tafsir': openTafsir,
+      'open-notes': openNotes,
+      'share-current-verse': shareCurrentVerse,
+      'download-current-verse-image': downloadCurrentVerseImage,
+      'play-vod': playVod,
+      'toggle-vod-phon': toggleVodPh,
+      'reload-current-surah': () => loadSurah(curS),
+      'preview-video': prevVid,
+      'generate-video': genVid,
+      'resume-last': resumeLast,
+      'toggle-current-surah-read': toggleCurrentSurahRead,
+      'save-current-surah-offline': saveCurrentSurahOffline,
+      'remove-current-surah-offline': removeCurrentSurahOffline
+    };
+    actions[actionButton.dataset.action]?.();
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initReaderStaticBindings);
+} else {
+  initReaderStaticBindings();
+}
+
 /* ── COPY ── */
 function copyV(i){
   const ar=vData[i]?.text||'';
