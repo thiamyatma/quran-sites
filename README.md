@@ -55,6 +55,17 @@ Le fichier `vercel.json` inclut les protections suivantes :
 ### Mise à jour
 Chaque `git push` (ou upload via l'interface GitHub) redéploie automatiquement le site.
 
+## Vérification locale
+
+Avant un commit ou un déploiement, lancez :
+
+```bash
+node scripts/check.js
+```
+
+Le script vérifie les fichiers HTML, les liens locaux, les scripts JavaScript,
+les fichiers JSON, les icônes déclarées et les ressources mises en cache par la PWA.
+
 ## Avant la mise en ligne — checklist sécurité
 
 - [ ] Changez les identifiants admin par défaut dans `admin.html` (panneau "Changer les identifiants" sur la page de connexion)

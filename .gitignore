@@ -1,6 +1,11 @@
 # Local/generated files
 .dist/
 .tmp-*-scripts.js
+node_modules/
+package-lock.json
+test-results/
+playwright-report/
+.server-pid.tmp
 
 # Old invalid Git folder backup created during repo repair
 .git.invalid-empty-*/
