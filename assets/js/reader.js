@@ -734,6 +734,20 @@ function toggleTheme(){
 
 /* ── AUDIO ── */
 function gN(s,a){return SS.slice(0,s-1).reduce((x,r)=>x+r.v,0)+a;}
+function audioSource(globalAyah,reciter=curRec){
+  return 'https://cdn.islamic.network/quran/audio/128/'+reciter+'/'+globalAyah+'.mp3';
+}
+function safePlayAudio(onFail){
+  aud.playbackRate=audioSpeed;
+  return aud.play().then(()=>{
+    isPlaying=true;
+    updPB();
+  }).catch(err=>{
+    isPlaying=false;
+    updPB();
+    if(onFail)onFail(err);
+  });
+}
 function playV(n,keepRepeat=false){
   const cycle=repCur;
   stopAud(keepRepeat);curV=Math.max(1,Math.min(totV||n,n));
@@ -763,13 +777,24 @@ function playV(n,keepRepeat=false){
   updateDesktopAyahActive();
   const gn=gN(curS,n);
   aud.onerror=null;
-  aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+gn+'.mp3';
-  aud.playbackRate=audioSpeed;
-  aud.onerror=()=>{if(curRec!=='ar.alafasy'){aud.onerror=null;aud.src='https://cdn.islamic.network/quran/audio/128/ar.alafasy/'+gn+'.mp3';aud.playbackRate=audioSpeed;aud.play().catch(()=>{});toast('Alafasy utilisé par défaut');}};
-  aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{});
+  aud.src=audioSource(gn);
+  aud.onerror=()=>{
+    if(curRec!=='ar.alafasy'){
+      aud.onerror=()=>{isPlaying=false;updPB();toast('Audio indisponible pour ce verset');};
+      aud.src=audioSource(gn,'ar.alafasy');
+      safePlayAudio(()=>toast('Audio indisponible pour ce verset'));
+      toast('Alafasy utilisé par défaut');
+      return;
+    }
+    isPlaying=false;
+    updPB();
+    toast('Audio indisponible pour ce verset');
+  };
+  safePlayAudio(()=>toast('Impossible de lancer l’audio'));
 }
 function stopAud(keepRepeat=false){
   clearRepeatTimer();
+  aud.onerror=null;
   aud.pause();aud.src='';isPlaying=false;updPB();
   playCtx='';
   if(!keepRepeat)repCur=0;
@@ -780,7 +805,16 @@ function stopAud(keepRepeat=false){
   document.getElementById('tcur').textContent='0:00';
   document.getElementById('ttot').textContent='0:00';
 }
-function togglePlay(){if(!aud.src){playV(curV);return;}if(isPlaying){aud.pause();isPlaying=false;}else{aud.play();isPlaying=true;}updPB();}
+function togglePlay(){
+  if(!aud.src){playV(curV);return;}
+  if(isPlaying){
+    aud.pause();
+    isPlaying=false;
+    updPB();
+    return;
+  }
+  safePlayAudio(()=>toast('Impossible de lancer l’audio'));
+}
 function updPB(){
   document.getElementById('playbtn').innerHTML=nqIcon(isPlaying?'pause':'play');
   const mb=document.getElementById('mbplaybtn');
@@ -811,8 +845,7 @@ function replayV(){
   if(btn){btn.classList.add('on');setNqIconLabel(btn,'pause','En cours');}
   document.getElementById('progfill').style.width='0%';
   document.getElementById('tcur').textContent='0:00';
-  aud.playbackRate=audioSpeed;
-  aud.play().then(()=>{isPlaying=true;updPB();}).catch(()=>{isPlaying=false;updPB();});
+  safePlayAudio(()=>toast('Impossible de relancer l’audio'));
 }
 function repeatVerse(n){
   setRepeatMode('verse');
@@ -890,7 +923,7 @@ function updateRepeatUI(){
   if(verse)verse.classList.toggle('on',repMode==='verse');
   if(range)range.classList.toggle('on',repMode==='range');
   if(box)box.classList.toggle('show',repMode==='range');
-  document.querySelectorAll('.rb[data-rep]').forEach(b=>b.classList.toggle('on',+b.dataset.rep===repCount&&repMode!=='off'));
+  document.querySelectorAll('.rb[data-repeat-count]').forEach(b=>b.classList.toggle('on',+b.dataset.repeatCount===repCount&&repMode!=='off'));
   const c=document.getElementById('repcount');
   if(c){
     if(repMode==='off')c.textContent='';
@@ -954,9 +987,9 @@ function playVod(){
   const btn=document.getElementById('vodplaybtn');
   if(aud.src.includes('/'+vodGN+'.mp3')&&isPlaying){aud.pause();isPlaying=false;updPB();setNqIconLabel(btn,'headphones','Écouter');return;}
   stopAud();
-  aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+vodGN+'.mp3';
-  aud.playbackRate=audioSpeed;
-  aud.play().then(()=>{isPlaying=true;updPB();setNqIconLabel(btn,'pause','En cours');}).catch(()=>{});
+  aud.onerror=()=>{isPlaying=false;updPB();setNqIconLabel(btn,'headphones','Écouter');toast('Audio indisponible pour ce verset');};
+  aud.src=audioSource(vodGN);
+  safePlayAudio(()=>toast('Impossible de lancer l’audio')).then(()=>{if(isPlaying)setNqIconLabel(btn,'pause','En cours');});
   aud.addEventListener('ended',function h(){setNqIconLabel(btn,'headphones','Écouter');aud.removeEventListener('ended',h);},{once:true});
 }
 function toggleVodPh(){document.getElementById('vodph').classList.toggle('show');}
