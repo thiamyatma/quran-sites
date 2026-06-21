@@ -623,6 +623,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 }
 </style>
 <link rel="stylesheet" href="assets/site-system.css">
+<script src="assets/icons/nq-icons.js"></script>
 <script defer src="assets/site-system.js"></script>
 </head>
 <body>
@@ -639,7 +640,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 <div id="spanel">
   <div class="phdr">
     <div class="ptitle">الفهرس — Sourates</div>
-    <button class="pclose" onclick="closePanel()">✕</button>
+    <button class="pclose" onclick="closePanel()" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
   <input class="psearch" type="text" placeholder="Rechercher..." oninput="filterS(this.value)">
   <div class="slist" id="slist"></div>
@@ -649,7 +650,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 <div id="rpanel">
   <div class="rphdr">
     <div class="rptitle">Choisir le récitateur — اختر القارئ</div>
-    <button class="pclose" onclick="closeRec()">✕</button>
+    <button class="pclose" onclick="closeRec()" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
   <div class="rpgrid" id="rpgrid"></div>
 </div>
@@ -658,7 +659,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 <div id="toolpanel">
   <div class="phdr">
     <div class="ptitle" id="tooltitle">Outils</div>
-    <button class="pclose" onclick="closeTools()">✕</button>
+    <button class="pclose" onclick="closeTools()" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
   <div class="tooltabs">
     <button class="tooltab on" id="tooltab-search" onclick="showTool('search')">Recherche</button>
@@ -733,16 +734,16 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 <div id="sharewrap" onclick="if(event.target===this)closeShare()">
   <div id="sharemodal">
     <div class="shttl">
-      <span>⬡ PARTAGER LE VERSET</span>
-      <button style="background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem" onclick="closeShare()">✕</button>
+      <span><span data-icon="share"></span> PARTAGER LE VERSET</span>
+      <button style="background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem" onclick="closeShare()" aria-label="Fermer"><span data-icon="close"></span></button>
     </div>
     <div id="shcanvas-wrap"><canvas id="shcanvas" width="1080" height="1080"></canvas></div>
     <div class="shthemes">
-      <button class="thbtn on" onclick="setShareTheme('dark',this)">🌙 Nuit dorée</button>
-      <button class="thbtn" onclick="setShareTheme('light',this)">☀️ Parchemin</button>
-      <button class="thbtn" onclick="setShareTheme('green',this)">🌿 Émeraude</button>
+      <button class="thbtn on" onclick="setShareTheme('dark',this)"><span data-icon="moon"></span> Nuit dorée</button>
+      <button class="thbtn" onclick="setShareTheme('light',this)"><span data-icon="sun"></span> Parchemin</button>
+      <button class="thbtn" onclick="setShareTheme('green',this)"><span data-icon="palette"></span> Émeraude</button>
     </div>
-    <button class="shdl" onclick="dlShare()">⬇ Télécharger PNG</button>
+    <button class="shdl" onclick="dlShare()"><span data-icon="download"></span> Télécharger PNG</button>
   </div>
 </div>
 
@@ -750,8 +751,8 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 <div id="vidwrap" onclick="if(event.target===this)closeVid()">
   <div id="vidmodal">
     <div class="vidttl">
-      <span>🎬 CRÉER UNE VIDÉO</span>
-      <button style="background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem" onclick="closeVid()">✕</button>
+      <span><span data-icon="video"></span> CRÉER UNE VIDÉO</span>
+      <button style="background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem" onclick="closeVid()" aria-label="Fermer"><span data-icon="close"></span></button>
     </div>
 
     <div class="vsec">
@@ -767,20 +768,20 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     <div class="vsec">
       <div class="vlbl">Thème visuel</div>
       <div class="vopts">
-        <button class="vopt on" data-t="dark" onclick="setVO('theme',this)">🌙 Nuit dorée</button>
-        <button class="vopt" data-t="light" onclick="setVO('light',this)">☀️ Parchemin</button>
-        <button class="vopt" data-t="green" onclick="setVO('theme',this)">🌿 Émeraude</button>
-        <button class="vopt" data-t="blue" onclick="setVO('theme',this)">🌊 Nuit bleue</button>
+        <button class="vopt on" data-t="dark" onclick="setVO('theme',this)"><span data-icon="moon"></span> Nuit dorée</button>
+        <button class="vopt" data-t="light" onclick="setVO('light',this)"><span data-icon="sun"></span> Parchemin</button>
+        <button class="vopt" data-t="green" onclick="setVO('theme',this)"><span data-icon="palette"></span> Émeraude</button>
+        <button class="vopt" data-t="blue" onclick="setVO('theme',this)"><span data-icon="monitor"></span> Nuit bleue</button>
       </div>
     </div>
 
     <div class="vsec">
       <div class="vlbl">Animation</div>
       <div class="vopts">
-        <button class="vopt on" data-a="fade" onclick="setVO('anim',this)">✨ Fondu</button>
-        <button class="vopt" data-a="slide" onclick="setVO('anim',this)">➡️ Glissement</button>
-        <button class="vopt" data-a="typewriter" onclick="setVO('anim',this)">⌨️ Machine à écrire</button>
-        <button class="vopt" data-a="zoom" onclick="setVO('anim',this)">🔍 Zoom</button>
+        <button class="vopt on" data-a="fade" onclick="setVO('anim',this)"><span data-icon="sparkle"></span> Fondu</button>
+        <button class="vopt" data-a="slide" onclick="setVO('anim',this)"><span data-icon="timeline"></span> Glissement</button>
+        <button class="vopt" data-a="typewriter" onclick="setVO('anim',this)"><span data-icon="edit"></span> Machine à écrire</button>
+        <button class="vopt" data-a="zoom" onclick="setVO('anim',this)"><span data-icon="search"></span> Zoom</button>
       </div>
     </div>
 
@@ -813,7 +814,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 
     <div class="vacts2">
       <button class="vact-btn sec" onclick="prevVid()">👁 Aperçu</button>
-      <button class="vact-btn" id="vgenbtn" onclick="genVid()">⬇ Générer & Télécharger</button>
+      <button class="vact-btn" id="vgenbtn" onclick="genVid()"><span data-icon="download"></span> Générer & Télécharger</button>
     </div>
   </div>
 </div>
@@ -827,7 +828,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
   <!-- TOPBAR -->
   <div id="topbar">
     <button class="ibtn menubtn" onclick="openPanel()" aria-label="Ouvrir la liste des sourates" title="Sourates">
-      <span class="menu-lines" aria-hidden="true"></span>
+      <span data-icon="menu"></span>
     </button>
     <div class="brand">
       <div class="logo-ar">القرآن</div>
@@ -839,16 +840,16 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     </div>
     <div class="tsp"></div>
     <select class="ssel" id="ssel" onchange="loadSurah(+this.value)"></select>
-    <button class="ibtn" onclick="openTools('search')" aria-label="Recherche" title="Recherche">⌕</button>
-    <button class="ibtn" onclick="openTools('favs')" aria-label="Favoris" title="Favoris">☆</button>
-    <button class="ibtn" onclick="openTools('khatm')" aria-label="Progression Khatm" title="Khatm">✓</button>
-    <button class="ibtn" onclick="openTools('settings')" aria-label="Réglages" title="Réglages">⚙</button>
+    <button class="ibtn" onclick="openTools('search')" aria-label="Recherche" title="Recherche"><span data-icon="search"></span></button>
+    <button class="ibtn" onclick="openTools('favs')" aria-label="Favoris" title="Favoris"><span data-icon="heart"></span></button>
+    <button class="ibtn" onclick="openTools('khatm')" aria-label="Progression Khatm" title="Khatm"><span data-icon="target"></span></button>
+    <button class="ibtn" onclick="openTools('settings')" aria-label="Réglages" title="Réglages"><span data-icon="settings"></span></button>
     <div class="lsw">
       <button class="lb on" id="lbfr" onclick="setLang('fr')">FR</button>
       <button class="lb" id="lben" onclick="setLang('en')">EN</button>
       <button class="lb" id="lbph" onclick="togglePhon()">ABC</button>
     </div>
-    <button class="ibtn" id="thbtn" onclick="toggleTheme()">🌙</button>
+    <button class="ibtn" id="thbtn" onclick="toggleTheme()" aria-label="Thème"><span data-icon="moon"></span></button>
   </div>
 
   <!-- PLAYER BAR -->
@@ -856,9 +857,9 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     <div class="pinfo" id="pinfo">—</div>
     <button class="recbtn resume-btn" id="resumeBtn" onclick="resumeLast()">Reprendre</button>
     <div class="pctrls">
-      <button class="ctrl" onclick="prevV()">⏮</button>
-      <button class="ctrl big" id="playbtn" onclick="togglePlay()">▶</button>
-      <button class="ctrl" onclick="nextV()">⏭</button>
+      <button class="ctrl" onclick="prevV()" aria-label="Verset précédent"><span data-icon="previous"></span></button>
+      <button class="ctrl big" id="playbtn" onclick="togglePlay()" aria-label="Lecture"><span data-icon="play"></span></button>
+      <button class="ctrl" onclick="nextV()" aria-label="Verset suivant"><span data-icon="next"></span></button>
     </div>
     <div class="pprog">
       <span class="tlbl" id="tcur">0:00</span>
@@ -866,7 +867,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
       <span class="tlbl" id="ttot">0:00</span>
     </div>
     <div class="repwrap">
-      <span class="replbl">↻</span>
+      <span class="replbl" data-icon="repeat"></span>
       <div class="rbopts">
         <button class="rb on" id="rep-off" onclick="setRepeatMode('off')">Off</button>
         <button class="rb" id="rep-verse" onclick="setRepeatMode('verse')">Verset</button>
@@ -878,7 +879,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
       </div>
       <div class="rangebox" id="rangebox">
         <input class="rinput" id="rangeStart" type="number" min="1" value="1" onchange="setRangeBounds()">
-        <span class="replbl">→</span>
+        <span class="replbl" data-icon="timeline"></span>
         <input class="rinput" id="rangeEnd" type="number" min="1" value="1" onchange="setRangeBounds()">
       </div>
       <span class="repcount" id="repcount" aria-live="polite"></span>
@@ -887,7 +888,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
       <div class="togsw on" id="autosw"><div class="togknob"></div></div>
       <span class="autolbl">Auto</span>
     </div>
-    <button class="recbtn" onclick="openRec()">🎙 Récitateur</button>
+    <button class="recbtn" onclick="openRec()"><span data-icon="microphone"></span> Récitateur</button>
   </div>
 
   <div class="desktop-shell">
@@ -902,49 +903,49 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
   </aside>
 
   <aside id="desk-right" aria-label="Actions rapides">
-    <div class="desk-tool" onclick="openTools('search')">
-      <div class="desk-tool-ico">☷</div>
+    <div class="desk-tool" onclick="openTafsir()">
+      <div class="desk-tool-ico" data-icon="book"></div>
       <div><div class="desk-tool-main">Tafsir</div><div class="desk-tool-sub">Explications</div></div>
     </div>
-    <div class="desk-tool" onclick="openTools('settings')">
-      <div class="desk-tool-ico">✎</div>
+    <div class="desk-tool" onclick="openNotes()">
+      <div class="desk-tool-ico" data-icon="edit"></div>
       <div><div class="desk-tool-main">Notes</div><div class="desk-tool-sub">Mes notes</div></div>
     </div>
     <div class="desk-tool" onclick="openTools('favs')">
-      <div class="desk-tool-ico">▱</div>
+      <div class="desk-tool-ico" data-icon="bookmark"></div>
       <div><div class="desk-tool-main">Marque-pages</div><div class="desk-tool-sub">Versets enregistrés</div></div>
     </div>
-    <div class="desk-tool" onclick="copyV(Math.max(0,curV-1))">
-      <div class="desk-tool-ico">⌯</div>
+    <div class="desk-tool" onclick="shareCurrentVerse()">
+      <div class="desk-tool-ico" data-icon="share"></div>
       <div><div class="desk-tool-main">Partage</div><div class="desk-tool-sub">Partager le verset</div></div>
     </div>
-    <div class="desk-tool" onclick="openShare('verse')">
-      <div class="desk-tool-ico">⇩</div>
+    <div class="desk-tool" onclick="downloadCurrentVerseImage()">
+      <div class="desk-tool-ico" data-icon="download"></div>
       <div><div class="desk-tool-main">Téléchargement</div><div class="desk-tool-sub">Image du verset</div></div>
     </div>
     <div class="desk-tool" onclick="openRec()">
-      <div class="desk-tool-ico">🎙</div>
+      <div class="desk-tool-ico" data-icon="microphone"></div>
       <div><div class="desk-tool-main">Récitateur</div><div class="desk-tool-sub">Changer de récitateur</div></div>
     </div>
     <div class="desk-tool" onclick="openTools('settings')">
-      <div class="desk-tool-ico">⚙</div>
+      <div class="desk-tool-ico" data-icon="settings"></div>
       <div><div class="desk-tool-main">Paramètres</div><div class="desk-tool-sub">Affichage & Audio</div></div>
     </div>
   </aside>
 
   <div id="mbnav" aria-label="Navigation mobile">
     <button class="mbitem" onclick="openPanel()" aria-label="Sourates">
-      <span class="mbico">☰</span><span>Sourates</span>
+      <span class="mbico" data-icon="open-book"></span><span>Sourates</span>
     </button>
     <button class="mbitem" onclick="openTools('search')" aria-label="Recherche">
-      <span class="mbico">⌕</span><span>Recherche</span>
+      <span class="mbico" data-icon="search"></span><span>Recherche</span>
     </button>
-    <button class="mbitem mbplay" id="mbplaybtn" onclick="togglePlay()" aria-label="Lecture">▶</button>
+    <button class="mbitem mbplay" id="mbplaybtn" onclick="togglePlay()" aria-label="Lecture"><span data-icon="play"></span></button>
     <button class="mbitem" onclick="openTools('favs')" aria-label="Favoris">
-      <span class="mbico">☆</span><span>Favoris</span>
+      <span class="mbico" data-icon="heart"></span><span>Favoris</span>
     </button>
     <button class="mbitem" onclick="openTools('settings')" aria-label="Réglages">
-      <span class="mbico">⚙</span><span>Réglages</span>
+      <span class="mbico" data-icon="settings"></span><span>Réglages</span>
     </button>
   </div>
 
@@ -968,10 +969,10 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
       <div class="vodph" id="vodph"></div>
       <div class="vodtr" id="vodtr"></div>
       <div class="vodacts">
-        <button class="vbtn" id="vodplaybtn" onclick="playVod()">▶ Écouter</button>
+        <button class="vbtn" id="vodplaybtn" onclick="playVod()"><span data-icon="headphones"></span> Écouter</button>
         <button class="vbtn" onclick="toggleVodPh()">ABC</button>
-        <button class="vbtn" onclick="openShare('vod')">⬡ Image</button>
-        <button class="vbtn" onclick="openVid('vod')">🎬 Vidéo</button>
+        <button class="vbtn" onclick="openShare('vod')"><span data-icon="image"></span> Image</button>
+        <button class="vbtn" onclick="openVid('vod')"><span data-icon="video"></span> Vidéo</button>
         <span class="vodref" id="vodref"></span>
       </div>
     </div>
@@ -1005,7 +1006,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
     <div style="font-family:'Noto Naskh Arabic',serif;font-size:1.1rem;color:var(--gold);margin-bottom:5px;">صَدَقَ اللَّهُ الْعَظِيمُ</div>
     Allah le Très-Grand a dit la vérité · <span id="frec">Mishary Rashid Alafasy</span>
     <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--bd);">
-      <a href="video.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;background:rgba(200,169,110,.08);border:1px solid var(--bd2);border-radius:var(--r);color:var(--gold);text-decoration:none;font-size:.78rem;margin-bottom:.8rem;">🎬 Générateur de vidéo</a>
+      <a href="video.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;background:rgba(200,169,110,.08);border:1px solid var(--bd2);border-radius:var(--r);color:var(--gold);text-decoration:none;font-size:.78rem;margin-bottom:.8rem;"><span data-icon="video"></span> Générateur de vidéo</a>
     <br>
     Conçu avec ❤️ par <strong style="color:var(--gold)">Yatus</strong> — Dakar, Sénégal
     <br>
@@ -1036,6 +1037,21 @@ const RECENT_KEY='aq_recent_reads';
 const LAST_KEY='aq_last_read';
 const KHATM_KEY='aq_khatm';
 const aud=document.getElementById('aud');
+function nqIcon(name,label=''){
+  return window.NQIcon?window.NQIcon.svg(name,label):'';
+}
+function nqIconLabel(name,label){
+  return nqIcon(name)+' '+label;
+}
+function setNqIconLabel(el,name,label){
+  if(el)el.innerHTML=nqIconLabel(name,label);
+}
+function resetVersePlayButtons(){
+  document.querySelectorAll('[id^="vb"]').forEach(b=>{
+    b.classList.remove('on');
+    setNqIconLabel(b,'headphones','Écouter');
+  });
+}
 
 /* ── DATA ── */
 const SS=[
@@ -1244,7 +1260,7 @@ function applyPrefs(p){
   isLight=actualTheme==='light';
   document.body.classList.toggle('light',isLight);
   document.body.dataset.theme=actualTheme;
-  document.getElementById('thbtn').textContent=isLight?'☀️':'🌙';
+  document.getElementById('thbtn').innerHTML=nqIcon(isLight?'sun':'moon');
   document.getElementById('lbfr').classList.toggle('on',curLang==='fr');
   document.getElementById('lben').classList.toggle('on',curLang==='en');
   document.getElementById('lbph').classList.toggle('on',showPhon);
@@ -1526,13 +1542,13 @@ function renderV(){
       <div class="vph ${showPhon?'show':''}" id="vp${v.numberInSurah}">${ph}</div>
       <div class="vtr" id="vt${v.numberInSurah}">${tr}</div>
       <div class="vacts">
-        <button class="vbtn" id="vb${v.numberInSurah}" onclick="event.stopPropagation();playV(${v.numberInSurah})">▶ Écouter</button>
-        <button class="vbtn" onclick="event.stopPropagation();repeatVerse(${v.numberInSurah})">↻ Répéter</button>
-        <button class="vbtn ${isFav(curS,v.numberInSurah)?'on':''}" id="fav${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleFav(${i})">${isFav(curS,v.numberInSurah)?'★ Favori':'☆ Favori'}</button>
-        <button class="vbtn ${isBookmark(curS,v.numberInSurah)?'on':''}" id="bm${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleBookmark(${i})">${isBookmark(curS,v.numberInSurah)?'◆ Marqué':'◇ Marque-page'}</button>
-        <button class="vbtn" onclick="event.stopPropagation();copyV(${i})">⎘ Copier</button>
-        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openShare('verse')">⬡ Image</button>
-        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openVid('verse')">🎬 Vidéo</button>
+        <button class="vbtn" id="vb${v.numberInSurah}" onclick="event.stopPropagation();playV(${v.numberInSurah})">${nqIconLabel('headphones','Écouter')}</button>
+        <button class="vbtn" onclick="event.stopPropagation();repeatVerse(${v.numberInSurah})">${nqIconLabel('repeat','Répéter')}</button>
+        <button class="vbtn ${isFav(curS,v.numberInSurah)?'on':''}" id="fav${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleFav(${i})">${nqIconLabel('heart','Favori')}</button>
+        <button class="vbtn ${isBookmark(curS,v.numberInSurah)?'on':''}" id="bm${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleBookmark(${i})">${nqIconLabel('bookmark',isBookmark(curS,v.numberInSurah)?'Marqué':'Marque-page')}</button>
+        <button class="vbtn" onclick="event.stopPropagation();copyV(${i})">${nqIconLabel('copy','Copier')}</button>
+        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openShare('verse')">${nqIconLabel('image','Image')}</button>
+        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openVid('verse')">${nqIconLabel('video','Vidéo')}</button>
       </div>
     </div>`;
   }).join('');
@@ -1585,7 +1601,7 @@ function toggleFav(i){
   }
   saveFavs(favs.slice(0,250));
   const btn=document.getElementById('fav'+curS+'_'+item.a);
-  if(btn){const on=idx<0;btn.classList.toggle('on',on);btn.textContent=on?'★ Favori':'☆ Favori';}
+  if(btn){const on=idx<0;btn.classList.toggle('on',on);setNqIconLabel(btn,'heart','Favori');}
   renderLibrary();
 }
 function toggleBookmark(i){
@@ -1602,7 +1618,7 @@ function toggleBookmark(i){
   }
   saveBookmarks(marks.slice(0,250));
   const btn=document.getElementById('bm'+curS+'_'+item.a);
-  if(btn){const on=idx<0;btn.classList.toggle('on',on);btn.textContent=on?'◆ Marqué':'◇ Marque-page';}
+  if(btn){const on=idx<0;btn.classList.toggle('on',on);setNqIconLabel(btn,'bookmark',on?'Marqué':'Marque-page');}
   renderLibrary();
 }
 function setLibraryView(v){
@@ -1730,7 +1746,7 @@ function toggleTheme(){
   const mode=isLight?'light':'dark';
   document.body.classList.toggle('light',isLight);
   document.body.dataset.theme=mode;
-  document.getElementById('thbtn').textContent=isLight?'☀️':'🌙';
+  document.getElementById('thbtn').innerHTML=nqIcon(isLight?'sun':'moon');
   localStorage.setItem('aq_theme',mode);
   localStorage.setItem('aq_home_theme',mode);
   savePrefs();
@@ -1761,10 +1777,10 @@ function playV(n,keepRepeat=false){
   const m=SS[curS-1];
   document.getElementById('pinfo').textContent=m.ar+' — '+toAr(n);
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
-  document.querySelectorAll('[id^="vb"]').forEach(b=>{b.classList.remove('on');b.textContent='▶ Écouter';});
+  resetVersePlayButtons();
   const card=document.getElementById('vc'+n),btn=document.getElementById('vb'+n);
   if(card){card.classList.add('playing');card.scrollIntoView({behavior:'smooth',block:'center'});}
-  if(btn){btn.classList.add('on');btn.textContent='⏸ En cours';}
+  if(btn){btn.classList.add('on');setNqIconLabel(btn,'pause','En cours');}
   updateDesktopAyahActive();
   const gn=gN(curS,n);
   aud.onerror=null;
@@ -1780,16 +1796,16 @@ function stopAud(keepRepeat=false){
   if(!keepRepeat)repCur=0;
   updateRepeatUI();
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
-  document.querySelectorAll('[id^="vb"]').forEach(b=>{b.classList.remove('on');b.textContent='▶ Écouter';});
+  resetVersePlayButtons();
   document.getElementById('progfill').style.width='0%';
   document.getElementById('tcur').textContent='0:00';
   document.getElementById('ttot').textContent='0:00';
 }
 function togglePlay(){if(!aud.src){playV(curV);return;}if(isPlaying){aud.pause();isPlaying=false;}else{aud.play();isPlaying=true;}updPB();}
 function updPB(){
-  document.getElementById('playbtn').textContent=isPlaying?'⏸':'▶';
+  document.getElementById('playbtn').innerHTML=nqIcon(isPlaying?'pause':'play');
   const mb=document.getElementById('mbplaybtn');
-  if(mb){mb.textContent=isPlaying?'⏸':'▶';mb.classList.toggle('on',isPlaying);}
+  if(mb){mb.innerHTML=nqIcon(isPlaying?'pause':'play');mb.classList.toggle('on',isPlaying);}
   const bar=document.getElementById('pbar');
   if(bar)bar.classList.toggle('playing',isPlaying);
 }
@@ -1813,7 +1829,7 @@ function replayV(){
   if(playCtx!=='verse'||!aud.src)return;
   try{aud.currentTime=0;}catch(e){}
   const btn=document.getElementById('vb'+curV);
-  if(btn){btn.classList.add('on');btn.textContent='⏸ En cours';}
+  if(btn){btn.classList.add('on');setNqIconLabel(btn,'pause','En cours');}
   document.getElementById('progfill').style.width='0%';
   document.getElementById('tcur').textContent='0:00';
   aud.playbackRate=audioSpeed;
@@ -1826,7 +1842,7 @@ function repeatVerse(n){
 function clearRepeatTimer(){if(repTimer){clearTimeout(repTimer);repTimer=null;}}
 function clearActiveVerseUI(){
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
-  document.querySelectorAll('[id^="vb"]').forEach(b=>{b.classList.remove('on');b.textContent='▶ Écouter';});
+  resetVersePlayButtons();
   updateDesktopAyahActive();
 }
 function handleVerseEnded(){
@@ -1957,12 +1973,12 @@ async function loadVod(){
 }
 function playVod(){
   const btn=document.getElementById('vodplaybtn');
-  if(aud.src.includes('/'+vodGN+'.mp3')&&isPlaying){aud.pause();isPlaying=false;updPB();btn.textContent='▶ Écouter';return;}
+  if(aud.src.includes('/'+vodGN+'.mp3')&&isPlaying){aud.pause();isPlaying=false;updPB();setNqIconLabel(btn,'headphones','Écouter');return;}
   stopAud();
   aud.src='https://cdn.islamic.network/quran/audio/128/'+curRec+'/'+vodGN+'.mp3';
   aud.playbackRate=audioSpeed;
-  aud.play().then(()=>{isPlaying=true;updPB();btn.textContent='⏸ En cours';}).catch(()=>{});
-  aud.addEventListener('ended',function h(){btn.textContent='▶ Écouter';aud.removeEventListener('ended',h);},{once:true});
+  aud.play().then(()=>{isPlaying=true;updPB();setNqIconLabel(btn,'pause','En cours');}).catch(()=>{});
+  aud.addEventListener('ended',function h(){setNqIconLabel(btn,'headphones','Écouter');aud.removeEventListener('ended',h);},{once:true});
 }
 function toggleVodPh(){document.getElementById('vodph').classList.toggle('show');}
 
@@ -2000,6 +2016,38 @@ function drawShare(){
   ctx.font='24px Georgia,serif';ctx.fillStyle=T.bd;ctx.fillText('al-quran1.vercel.app',W/2,H-105);
 }
 function dlShare(){drawShare();const a=document.createElement('a');a.download='verset-quran.png';a.href=document.getElementById('shcanvas').toDataURL('image/png');a.click();}
+
+function currentVersePayload(){
+  const i=Math.max(0,Math.min((curV||1)-1,(vData.length||1)-1));
+  const meta=SS[curS-1]||SS[0];
+  const ar=vData[i]?.text||'';
+  const tr=curLang==='fr'?(trFr[i]?.text||''):(trEn[i]?.text||'');
+  const ref=curS+':'+(i+1);
+  const url=location.origin+location.pathname+'?s='+curS+'&a='+(i+1);
+  return {i,meta,ar,tr,ref,url};
+}
+function openTafsir(){
+  openTools('search');
+  showTool('search');
+  toast('Tafsir bientôt disponible. Recherche ouverte pour ce verset.');
+}
+function openNotes(){
+  openTools('settings');
+  showTool('settings');
+  toast('Notes locales bientôt disponibles.');
+}
+async function shareCurrentVerse(){
+  const v=currentVersePayload();
+  const text=[v.ar,v.tr,'— '+v.meta.ar+' '+v.ref,v.url].filter(Boolean).join('\n\n');
+  try{
+    if(navigator.share)await navigator.share({title:'NoorQuran '+v.ref,text,url:v.url});
+    else{await navigator.clipboard.writeText(text);toast('Lien et verset copiés ✓');}
+  }catch(e){toast('Partage annulé');}
+}
+function downloadCurrentVerseImage(){
+  openShare('verse');
+  toast('Prévisualisation image ouverte');
+}
 
 /* ── VIDEO GENERATOR ── */
 const VT={

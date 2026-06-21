@@ -151,6 +151,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 </style>
 <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 <link rel="stylesheet" href="assets/site-system.css">
+<script src="assets/icons/nq-icons.js"></script>
 <script defer src="assets/site-system.js"></script>
 </head>
 <body>
@@ -178,8 +179,8 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
         <select class="ssel" id="ssel" onchange="loadSurah()"></select>
         <div id="vst" class="sttxt" style="display:none"><div class="spin"></div> Chargement...</div>
         <div class="selrow" id="selrow" style="display:none">
-          <button class="sbtn" onclick="selAll()">✓ Tout sélectionner</button>
-          <button class="sbtn" onclick="deselAll()">✕ Tout désélectionner</button>
+          <button class="sbtn" onclick="selAll()"><span data-icon="grid"></span> Tout sélectionner</button>
+          <button class="sbtn" onclick="deselAll()"><span data-icon="close"></span> Tout désélectionner</button>
         </div>
         <div class="vlist" id="vlist" style="display:none"><div id="vitems"></div></div>
       </div>
@@ -202,10 +203,10 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
       <div class="s">
         <div class="slbl">Thème</div>
         <div class="ogrp" id="og-theme">
-          <button class="o on" data-t="dark"  onclick="setO('theme',this)">🌙 Nuit dorée</button>
-          <button class="o"    data-t="light" onclick="setO('theme',this)">☀️ Parchemin</button>
-          <button class="o"    data-t="green" onclick="setO('theme',this)">🌿 Émeraude</button>
-          <button class="o"    data-t="blue"  onclick="setO('theme',this)">🌊 Nuit bleue</button>
+          <button class="o on" data-t="dark"  onclick="setO('theme',this)"><span data-icon="moon"></span> Nuit dorée</button>
+          <button class="o"    data-t="light" onclick="setO('theme',this)"><span data-icon="sun"></span> Parchemin</button>
+          <button class="o"    data-t="green" onclick="setO('theme',this)"><span data-icon="palette"></span> Émeraude</button>
+          <button class="o"    data-t="blue"  onclick="setO('theme',this)"><span data-icon="monitor"></span> Nuit bleue</button>
         </div>
       </div>
       <div class="s">
@@ -248,13 +249,13 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
       <div class="s">
         <div class="slbl">Format d'export</div>
         <div class="ogrp" id="og-fmt">
-          <button class="o on" data-f="mp4"  onclick="setO('fmt',this)">🎬 MP4 (recommandé)</button>
+          <button class="o on" data-f="mp4"  onclick="setO('fmt',this)"><span data-icon="video"></span> MP4 (recommandé)</button>
           <button class="o"    data-f="webm" onclick="setO('fmt',this)">📦 WebM (rapide)</button>
         </div>
         <div style="font-size:.68rem;color:var(--tx3);margin-top:.4rem;line-height:1.5;">MP4 : compatible partout (Windows, iPhone, Android). Conversion automatique après enregistrement.</div>
       </div>
 
-      <button class="genbtn" id="genbtn" onclick="generate()">🎬 GÉNÉRER LA VIDÉO</button>
+      <button class="genbtn" id="genbtn" onclick="generate()"><span data-icon="video"></span> GÉNÉRER LA VIDÉO</button>
       <div style="font-size:.68rem;color:var(--tx3);text-align:center;margin-top:.35rem;">Export WebM avec audio synchronisé</div>
 
       <div class="prog" id="progwrap">
@@ -459,7 +460,7 @@ function renderQueue(){
       <span class="qi-i">${i+1}</span>
       <span class="qi-ar">${v.ar}</span>
       <span class="qi-ref">${v.ref}</span>
-      <button class="qi-rm" onclick="rmQ(${i})">✕</button>
+      <button class="qi-rm" onclick="rmQ(${i})">${window.NQIcon?NQIcon.svg('close'):''}</button>
     </div>`).join('');
   document.getElementById('qtot').textContent=queue.length+' verset'+(queue.length>1?'s':'');
 }
