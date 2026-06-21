@@ -47,20 +47,31 @@
 </head>
 <body>
 
-<div class="topbar">
-  <div class="logo">القرآن</div>
-  <span class="topbar-sub">GÉNÉRATEUR VIDÉO</span>
-  <a href="index.html" class="back">← Retour</a>
-</div>
+<header class="site-header video-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">NQ</span>
+      <span>
+        <span class="brand-name">NoorQuran</span>
+        <span class="brand-sub">Générateur vidéo</span>
+      </span>
+    </a>
+    <div class="spacer"></div>
+    <nav class="actions">
+      <a class="pill" href="reader.html"><span data-icon="open-book"></span> Lecteur</a>
+      <a class="icon-btn" href="index.html" aria-label="Accueil" title="Accueil"><span data-icon="home"></span></a>
+    </nav>
+  </div>
+</header>
 
 <div class="wrap">
 
   <!-- LEFT -->
   <div class="left">
-    <div class="tabs">
-      <div class="tab on"  id="t1" data-tab="1">① Versets</div>
-      <div class="tab"     id="t2" data-tab="2">② Options</div>
-      <div class="tab"     id="t3" data-tab="3">③ File <span id="qbadge" class="qbadge"></span></div>
+      <div class="tabs">
+      <button class="tab on"  id="t1" type="button" data-tab="1"><span data-icon="document"></span> Versets</button>
+      <button class="tab"     id="t2" type="button" data-tab="2"><span data-icon="settings"></span> Options</button>
+      <button class="tab"     id="t3" type="button" data-tab="3"><span data-icon="playlist"></span> File <span id="qbadge" class="qbadge"></span></button>
     </div>
 
     <!-- TAB 1 : SELECT VERSES -->
@@ -76,7 +87,7 @@
         <div class="vlist is-hidden" id="vlist"><div id="vitems"></div></div>
       </div>
       <div class="video-help-note">
-        ✓ Cochez plusieurs versets — ils seront enchaînés dans la vidéo avec leur audio. Faites glisser dans la file pour réordonner.
+        Cochez plusieurs versets. Ils seront enchaînés dans la vidéo avec leur audio. Faites glisser dans la file pour réordonner.
       </div>
     </div>
 
@@ -85,10 +96,10 @@
       <div class="s">
         <div class="slbl">Format</div>
         <div class="ogrp" id="og-ratio">
-          <button class="o on" data-w="1080" data-h="1920" data-option="ratio">📱 9:16 Stories</button>
-          <button class="o"    data-w="1080" data-h="1080" data-option="ratio">⬜ 1:1 Instagram</button>
-          <button class="o"    data-w="1920" data-h="1080" data-option="ratio">🖥 16:9 YouTube</button>
-          <button class="o"    data-w="1080" data-h="1350" data-option="ratio">📸 4:5 Feed</button>
+          <button class="o on" data-w="1080" data-h="1920" data-option="ratio"><span data-icon="video"></span> 9:16 Stories</button>
+          <button class="o"    data-w="1080" data-h="1080" data-option="ratio"><span data-icon="image"></span> 1:1 Instagram</button>
+          <button class="o"    data-w="1920" data-h="1080" data-option="ratio"><span data-icon="monitor"></span> 16:9 YouTube</button>
+          <button class="o"    data-w="1080" data-h="1350" data-option="ratio"><span data-icon="image"></span> 4:5 Feed</button>
         </div>
       </div>
       <div class="s">
@@ -103,7 +114,7 @@
       <div class="s">
         <div class="slbl">Contenu</div>
         <div class="ogrp" id="og-content">
-          <button class="o on" data-c="ar+tr" data-option="content">🌐 Arabe + Traduction</button>
+          <button class="o on" data-c="ar+tr" data-option="content"><span data-icon="translate"></span> Arabe + Traduction</button>
           <button class="o"    data-c="ar"    data-option="content">عربي Arabe seul</button>
           <button class="o"    data-c="ar+ph" data-option="content">ABC Phonétique</button>
         </div>
@@ -126,7 +137,7 @@
           <span class="rv" id="fdurv">8s</span>
         </div>
       </div>
-      <button class="prevbtn" data-action="draw-preview">👁 Rafraîchir l'aperçu</button>
+      <button class="prevbtn" data-action="draw-preview"><span data-icon="image"></span> Rafraîchir l'aperçu</button>
     </div>
 
     <!-- TAB 3 : QUEUE + GENERATE -->
@@ -141,7 +152,7 @@
         <div class="slbl">Format d'export</div>
         <div class="ogrp" id="og-fmt">
           <button class="o on" data-f="mp4"  data-option="fmt"><span data-icon="video"></span> MP4 (recommandé)</button>
-          <button class="o"    data-f="webm" data-option="fmt">📦 WebM (rapide)</button>
+          <button class="o"    data-f="webm" data-option="fmt"><span data-icon="download"></span> WebM (rapide)</button>
         </div>
         <div class="video-muted-note">MP4 : compatible partout (Windows, iPhone, Android). Conversion automatique après enregistrement.</div>
       </div>

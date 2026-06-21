@@ -47,9 +47,15 @@
 
 <!-- LOGIN -->
 <div id="login-screen">
-  <div class="login-logo">القرآن</div>
-  <div class="login-title">Administration</div>
-  <div class="login-sub">Connectez-vous pour gérer le site</div>
+  <a class="login-brand" href="index.html">
+    <span class="brand-mark">NQ</span>
+    <span>
+      <span class="brand-name">NoorQuran</span>
+      <span class="brand-sub">Administration</span>
+    </span>
+  </a>
+  <div class="login-title">Espace admin</div>
+  <div class="login-sub">Connectez-vous pour gérer les statistiques et le widget de don.</div>
   <div class="login-form">
     <div class="login-field">
       <label class="login-label">Adresse email</label>
@@ -60,14 +66,14 @@
       <input class="login-input" type="password" id="login-pwd" placeholder="••••••••">
     </div>
     <div class="login-err" id="login-err">Email ou mot de passe incorrect.</div>
-    <button class="login-btn" data-action="check-login">Se connecter →</button>
+    <button class="login-btn" data-action="check-login"><span data-icon="login"></span> Se connecter</button>
     <div class="admin-help">
       Identifiants par défaut : <strong>admin@quran.com</strong> / <strong>admin1234</strong>
     </div>
 
     <div class="hash-panel">
       <button class="hash-toggle" type="button" data-action="toggle-hash-panel">
-        <span>🔧 Changer les identifiants (générer mes hashes)</span><span>▾</span>
+        <span><span data-icon="settings"></span> Changer les identifiants</span><span>▾</span>
       </button>
       <div class="hash-body" id="hash-body">
         <div class="hash-desc">
@@ -76,10 +82,10 @@
         <input class="hash-input" id="gen-email" type="email" placeholder="votre@email.com">
         <input class="hash-input hash-input-last" id="gen-pwd" type="password" placeholder="Nouveau mot de passe">
         <button class="hash-generate" type="button" data-action="generate-hashes">
-          Générer les hashes →
+          Générer les hashes
         </button>
         <div id="hash-result" class="hash-result"></div>
-        <div class="hash-warning">⚠ Ces hashes ne contiennent jamais votre vrai mot de passe — ils sont mathématiquement irréversibles.</div>
+        <div class="hash-warning">Ces hashes ne contiennent jamais votre vrai mot de passe. Ils sont mathématiquement irréversibles.</div>
       </div>
     </div>
   </div>
@@ -89,21 +95,27 @@
 <div id="app">
   <aside>
     <div class="aside-logo">
-      <div class="aside-logo-ar">القرآن</div>
-      <div class="aside-logo-sub">ADMINISTRATION</div>
+      <a class="brand" href="index.html">
+        <span class="brand-mark">NQ</span>
+        <span>
+          <span class="brand-name">NoorQuran</span>
+          <span class="brand-sub">Administration</span>
+        </span>
+      </a>
     </div>
-    <div class="nav-item on" data-page="stats"><span class="nav-icon">📊</span> Statistiques</div>
-    <div class="nav-item" data-page="don"><span class="nav-icon">💰</span> Bouton de don</div>
-    <div class="nav-item" data-page="site"><span class="nav-icon">🌐</span> Lien vers le site</div>
+    <div class="nav-item on" data-page="stats"><span class="nav-icon" data-icon="target"></span> Statistiques</div>
+    <div class="nav-item" data-page="don"><span class="nav-icon" data-icon="heart"></span> Bouton de don</div>
+    <div class="nav-item" data-page="site"><span class="nav-icon" data-icon="globe"></span> Lien vers le site</div>
     <div class="aside-footer">
-      <button class="logout-btn" data-action="logout">Déconnexion</button>
+      <a class="logout-btn" href="index.html"><span data-icon="home"></span> Accueil</a>
+      <button class="logout-btn" data-action="logout"><span data-icon="login"></span> Déconnexion</button>
     </div>
   </aside>
 
   <main>
     <!-- STATS PAGE -->
     <div class="page on" id="page-stats">
-      <div class="page-title">📊 Statistiques du site</div>
+      <div class="page-title"><span data-icon="target"></span> Statistiques du site</div>
 
       <div class="stat-grid" id="stat-grid">
         <div class="stat-card">
@@ -150,13 +162,13 @@
       </div>
 
       <div class="admin-note">
-        ⓘ Les statistiques sont enregistrées localement via localStorage. Pour des stats avancées, connectez Google Analytics ou Umami.
+        Les statistiques sont enregistrées localement via localStorage. Pour des stats avancées, connectez Google Analytics ou Umami.
       </div>
     </div>
 
     <!-- DON PAGE -->
     <div class="page" id="page-don">
-      <div class="page-title">💰 Bouton de don</div>
+      <div class="page-title"><span data-icon="heart"></span> Bouton de don</div>
 
       <div class="don-card">
         <div class="don-title">Configuration du bouton</div>
@@ -195,7 +207,7 @@
           <input class="form-input" id="don-amounts" type="text" value="500 FCFA, 1000 FCFA, 2000 FCFA, 5000 FCFA">
         </div>
 
-        <button class="save-btn" data-action="save-don">💾 Enregistrer</button>
+        <button class="save-btn" data-action="save-don"><span data-icon="download"></span> Enregistrer</button>
         <span class="save-confirm" id="don-confirm">✓ Sauvegardé !</span>
 
         <div class="don-preview">
@@ -209,30 +221,30 @@
       </div>
 
       <div class="don-card">
-        <div class="don-title">📋 Comment afficher le bouton sur le site</div>
+        <div class="don-title"><span data-icon="document"></span> Comment afficher le bouton sur le site</div>
         <p class="don-help">
           Après avoir configuré et sauvegardé, copiez ce code et collez-le dans votre <code>index.html</code> juste avant la balise <code>&lt;footer&gt;</code> :
         </p>
         <textarea id="don-code" class="don-code" readonly></textarea>
-        <button class="save-btn save-btn-gap" data-action="copy-code">📋 Copier le code</button>
+        <button class="save-btn save-btn-gap" data-action="copy-code"><span data-icon="copy"></span> Copier le code</button>
         <span class="save-confirm" id="code-confirm">✓ Copié !</span>
       </div>
     </div>
 
     <!-- SITE LINK PAGE -->
     <div class="page" id="page-site">
-      <div class="page-title">🌐 Liens utiles</div>
+      <div class="page-title"><span data-icon="globe"></span> Liens utiles</div>
       <div class="don-card">
         <div class="don-title">Accès rapide</div>
         <div class="quick-links">
           <a class="quick-link quick-link-primary" href="https://al-quran1.vercel.app" target="_blank">
-            <span>🌐</span> al-quran1.vercel.app — Site principal
+            <span data-icon="globe"></span> al-quran1.vercel.app — Site principal
           </a>
           <a class="quick-link" href="https://vercel.com/dashboard" target="_blank">
-            <span>▲</span> Vercel Dashboard — Déploiements
+            <span data-icon="monitor"></span> Vercel Dashboard — Déploiements
           </a>
           <a class="quick-link" href="https://github.com" target="_blank">
-            <span>🐙</span> GitHub — Code source
+            <span data-icon="code"></span> GitHub — Code source
           </a>
         </div>
         <div class="security-note">
@@ -245,9 +257,9 @@
 
   <!-- MOBILE NAV -->
   <div class="mob-nav">
-    <div class="mob-nav-item on" data-page="stats" id="mob-stats"><div class="mob-nav-icon">📊</div>Stats</div>
-    <div class="mob-nav-item" data-page="don" id="mob-don"><div class="mob-nav-icon">💰</div>Don</div>
-    <div class="mob-nav-item" data-page="site" id="mob-site"><div class="mob-nav-icon">🌐</div>Site</div>
+    <div class="mob-nav-item on" data-page="stats" id="mob-stats"><div class="mob-nav-icon" data-icon="target"></div>Stats</div>
+    <div class="mob-nav-item" data-page="don" id="mob-don"><div class="mob-nav-icon" data-icon="heart"></div>Don</div>
+    <div class="mob-nav-item" data-page="site" id="mob-site"><div class="mob-nav-icon" data-icon="globe"></div>Site</div>
   </div>
 </div>
 
