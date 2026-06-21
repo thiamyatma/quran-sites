@@ -122,7 +122,7 @@
         <div class="slbl">Durée par verset si audio indisponible</div>
         <div class="rrow">
           <input type="range" class="ri" id="fdur" min="3" max="20" value="8" step="1"
-            oninput="cfg.fallback=+this.value;document.getElementById('fdurv').textContent=this.value+'s'">
+            data-input="fallback-duration">
           <span class="rv" id="fdurv">8s</span>
         </div>
       </div>

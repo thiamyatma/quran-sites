@@ -1277,6 +1277,33 @@ function initReaderStaticBindings(){
     };
     actions[actionButton.dataset.action]?.();
   });
+
+  document.addEventListener('input', event => {
+    const input = event.target.closest('[data-input]');
+    if (!input) return;
+    const handlers = {
+      'filter-surahs': () => filterS(input.value),
+      'search-quran': () => searchQuran(input.value),
+      'khatm-goal': () => setKhatmGoal(input.value),
+      'arabic-size': () => setArabicSize(Number(input.value)),
+      'video-duration': () => {
+        vidCfg.dur = Number(input.value);
+        document.getElementById('vdur-val').textContent = input.value + 's';
+        prevVid();
+      }
+    };
+    handlers[input.dataset.input]?.();
+  });
+
+  document.addEventListener('change', event => {
+    const input = event.target.closest('[data-change]');
+    if (!input) return;
+    const handlers = {
+      'load-surah': () => loadSurah(Number(input.value)),
+      'range-bounds': () => setRangeBounds()
+    };
+    handlers[input.dataset.change]?.();
+  });
 }
 
 if (document.readyState === 'loading') {

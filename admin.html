@@ -53,20 +53,20 @@
   <div class="login-form">
     <div class="login-field">
       <label class="login-label">Adresse email</label>
-      <input class="login-input" type="email" id="login-email" placeholder="admin@example.com" onkeydown="if(event.key==='Enter')document.getElementById('login-pwd').focus()">
+      <input class="login-input" type="email" id="login-email" placeholder="admin@example.com">
     </div>
     <div class="login-field">
       <label class="login-label">Mot de passe</label>
-      <input class="login-input" type="password" id="login-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')checkLogin()">
+      <input class="login-input" type="password" id="login-pwd" placeholder="••••••••">
     </div>
     <div class="login-err" id="login-err">Email ou mot de passe incorrect.</div>
-    <button class="login-btn" onclick="checkLogin()">Se connecter →</button>
+    <button class="login-btn" data-action="check-login">Se connecter →</button>
     <div class="admin-help">
       Identifiants par défaut : <strong>admin@quran.com</strong> / <strong>admin1234</strong>
     </div>
 
     <div class="hash-panel">
-      <button class="hash-toggle" type="button" onclick="toggleHashPanel()">
+      <button class="hash-toggle" type="button" data-action="toggle-hash-panel">
         <span>🔧 Changer les identifiants (générer mes hashes)</span><span>▾</span>
       </button>
       <div class="hash-body" id="hash-body">
@@ -75,7 +75,7 @@
         </div>
         <input class="hash-input" id="gen-email" type="email" placeholder="votre@email.com">
         <input class="hash-input hash-input-last" id="gen-pwd" type="password" placeholder="Nouveau mot de passe">
-        <button class="hash-generate" type="button" onclick="generateHashes()">
+        <button class="hash-generate" type="button" data-action="generate-hashes">
           Générer les hashes →
         </button>
         <div id="hash-result" class="hash-result"></div>
@@ -92,11 +92,11 @@
       <div class="aside-logo-ar">القرآن</div>
       <div class="aside-logo-sub">ADMINISTRATION</div>
     </div>
-    <div class="nav-item on" onclick="showPage('stats',this)"><span class="nav-icon">📊</span> Statistiques</div>
-    <div class="nav-item" onclick="showPage('don',this)"><span class="nav-icon">💰</span> Bouton de don</div>
-    <div class="nav-item" onclick="showPage('site',this)"><span class="nav-icon">🌐</span> Lien vers le site</div>
+    <div class="nav-item on" data-page="stats"><span class="nav-icon">📊</span> Statistiques</div>
+    <div class="nav-item" data-page="don"><span class="nav-icon">💰</span> Bouton de don</div>
+    <div class="nav-item" data-page="site"><span class="nav-icon">🌐</span> Lien vers le site</div>
     <div class="aside-footer">
-      <button class="logout-btn" onclick="logout()">Déconnexion</button>
+      <button class="logout-btn" data-action="logout">Déconnexion</button>
     </div>
   </aside>
 
@@ -163,7 +163,7 @@
 
         <div class="toggle-row">
           <span class="toggle-lbl">Afficher le bouton de don</span>
-          <div class="tog on" id="tog-don" onclick="toggleDon()"><div class="tog-k"></div></div>
+          <div class="tog on" id="tog-don" data-action="toggle-don"><div class="tog-k"></div></div>
         </div>
 
         <div class="admin-spacer"></div>
@@ -195,7 +195,7 @@
           <input class="form-input" id="don-amounts" type="text" value="500 FCFA, 1000 FCFA, 2000 FCFA, 5000 FCFA">
         </div>
 
-        <button class="save-btn" onclick="saveDon()">💾 Enregistrer</button>
+        <button class="save-btn" data-action="save-don">💾 Enregistrer</button>
         <span class="save-confirm" id="don-confirm">✓ Sauvegardé !</span>
 
         <div class="don-preview">
@@ -214,7 +214,7 @@
           Après avoir configuré et sauvegardé, copiez ce code et collez-le dans votre <code>index.html</code> juste avant la balise <code>&lt;footer&gt;</code> :
         </p>
         <textarea id="don-code" class="don-code" readonly></textarea>
-        <button class="save-btn save-btn-gap" onclick="copyCode()">📋 Copier le code</button>
+        <button class="save-btn save-btn-gap" data-action="copy-code">📋 Copier le code</button>
         <span class="save-confirm" id="code-confirm">✓ Copié !</span>
       </div>
     </div>
@@ -245,9 +245,9 @@
 
   <!-- MOBILE NAV -->
   <div class="mob-nav">
-    <div class="mob-nav-item on" onclick="showPage('stats',this)" id="mob-stats"><div class="mob-nav-icon">📊</div>Stats</div>
-    <div class="mob-nav-item" onclick="showPage('don',this)" id="mob-don"><div class="mob-nav-icon">💰</div>Don</div>
-    <div class="mob-nav-item" onclick="showPage('site',this)" id="mob-site"><div class="mob-nav-icon">🌐</div>Site</div>
+    <div class="mob-nav-item on" data-page="stats" id="mob-stats"><div class="mob-nav-icon">📊</div>Stats</div>
+    <div class="mob-nav-item" data-page="don" id="mob-don"><div class="mob-nav-icon">💰</div>Don</div>
+    <div class="mob-nav-item" data-page="site" id="mob-site"><div class="mob-nav-icon">🌐</div>Site</div>
   </div>
 </div>
 

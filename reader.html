@@ -81,7 +81,7 @@
     <div class="ptitle">الفهرس — Sourates</div>
     <button class="pclose" data-action="close-panel" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
-  <input class="psearch" type="text" placeholder="Rechercher..." oninput="filterS(this.value)">
+  <input class="psearch" type="text" placeholder="Rechercher..." data-input="filter-surahs">
   <div class="slist" id="slist"></div>
 </div>
 
@@ -107,7 +107,7 @@
     <button class="tooltab" id="tooltab-settings" data-tool="settings">Réglages</button>
   </div>
   <div class="toolbody on" id="tool-search">
-    <input class="toolfield" id="qsearch" type="search" placeholder="Mot, sourate, ou référence 2:255" oninput="searchQuran(this.value)">
+    <input class="toolfield" id="qsearch" type="search" placeholder="Mot, sourate, ou référence 2:255" data-input="search-quran">
     <div class="toolhint">Recherche dans les textes arabe, français et anglais. Le premier chargement peut prendre quelques secondes.</div>
     <div class="toolstatus" id="search-status"></div>
     <div id="search-results"></div>
@@ -132,7 +132,7 @@
     <div class="toolstatus" id="khatm-status"></div>
     <div class="toolrow">
       <label for="khatm-goal">Objectif/jour</label>
-      <input class="toolfield" id="khatm-goal" type="number" min="1" max="20" value="1" oninput="setKhatmGoal(this.value)">
+      <input class="toolfield" id="khatm-goal" type="number" min="1" max="20" value="1" data-input="khatm-goal">
     </div>
     <div class="kactions">
       <button class="vbtn" data-action="toggle-current-surah-read">Marquer la sourate actuelle</button>
@@ -143,7 +143,7 @@
   <div class="toolbody" id="tool-settings">
     <div class="toolrow">
       <label for="ar-size">Texte arabe</label>
-      <input class="toolrange" id="ar-size" type="range" min="22" max="42" step="1" value="30" oninput="setArabicSize(+this.value)">
+      <input class="toolrange" id="ar-size" type="range" min="22" max="42" step="1" value="30" data-input="arabic-size">
       <span class="toolval" id="ar-size-val">30px</span>
     </div>
     <div class="toolrow">
@@ -237,7 +237,7 @@
       <div class="vlbl">Durée</div>
       <div class="vrange-row">
         <input type="range" class="vrange" id="vdur" min="5" max="30" value="10" step="1"
-          oninput="vidCfg.dur=+this.value;document.getElementById('vdur-val').textContent=this.value+'s';prevVid()">
+          data-input="video-duration">
         <span class="vrange-val" id="vdur-val">10s</span>
       </div>
     </div>
@@ -278,7 +278,7 @@
       <div class="mtitle-sub" id="mobile-title-sub">1. L'Ouverture</div>
     </div>
     <div class="tsp"></div>
-    <select class="ssel" id="ssel" onchange="loadSurah(+this.value)"></select>
+    <select class="ssel" id="ssel" data-change="load-surah"></select>
     <button class="ibtn" data-open-tool="search" aria-label="Recherche" title="Recherche"><span data-icon="search"></span></button>
     <button class="ibtn" data-open-tool="favs" aria-label="Favoris" title="Favoris"><span data-icon="heart"></span></button>
     <button class="ibtn" data-open-tool="khatm" aria-label="Progression Khatm" title="Khatm"><span data-icon="target"></span></button>
@@ -317,9 +317,9 @@
         <button class="rb" data-repeat-count="10">10×</button>
       </div>
       <div class="rangebox" id="rangebox">
-        <input class="rinput" id="rangeStart" type="number" min="1" value="1" onchange="setRangeBounds()">
+        <input class="rinput" id="rangeStart" type="number" min="1" value="1" data-change="range-bounds">
         <span class="replbl" data-icon="timeline"></span>
-        <input class="rinput" id="rangeEnd" type="number" min="1" value="1" onchange="setRangeBounds()">
+        <input class="rinput" id="rangeEnd" type="number" min="1" value="1" data-change="range-bounds">
       </div>
       <span class="repcount" id="repcount" aria-live="polite"></span>
     </div>

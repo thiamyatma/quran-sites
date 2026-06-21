@@ -25,6 +25,36 @@ function toggleHashPanel() {
   document.getElementById('hash-body')?.classList.toggle('show');
 }
 
+function initAdminBindings() {
+  document.addEventListener('click', event => {
+    const pageButton = event.target.closest('[data-page]');
+    if (pageButton) {
+      showPage(pageButton.dataset.page, pageButton);
+      return;
+    }
+
+    const actionButton = event.target.closest('[data-action]');
+    if (!actionButton) return;
+
+    const actions = {
+      'check-login': checkLogin,
+      'toggle-hash-panel': toggleHashPanel,
+      'generate-hashes': generateHashes,
+      'logout': logout,
+      'toggle-don': toggleDon,
+      'save-don': saveDon,
+      'copy-code': copyCode
+    };
+    actions[actionButton.dataset.action]?.();
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAdminBindings);
+} else {
+  initAdminBindings();
+}
+
 /* ── BRUTE FORCE PROTECTION ── */
 const MAX_ATTEMPTS  = 5;     // tentatives avant verrouillage
 const LOCK_DURATION = 15*60; // 15 minutes en secondes

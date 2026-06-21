@@ -113,6 +113,15 @@ function initVideoBindings(){
   document.addEventListener('change', event => {
     if (event.target.matches('[data-action="load-surah"]')) loadSurah();
   });
+
+  document.addEventListener('input', event => {
+    const input = event.target.closest('[data-input]');
+    if (!input) return;
+    if (input.dataset.input === 'fallback-duration') {
+      cfg.fallback = Number(input.value);
+      document.getElementById('fdurv').textContent = input.value + 's';
+    }
+  });
 }
 
 if (document.readyState === 'loading') {
