@@ -1277,3 +1277,194 @@ body {
     flex-basis: 100% !important;
   }
 }
+
+/* NoorQuran color alignment for reader panels, donation block and footer. */
+#spanel,
+#toolpanel,
+#rpanel,
+.sharebox,
+.vidbox {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.phdr,
+.tooltabs,
+.rphdr,
+.shttl,
+.vidttl {
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+.ptitle,
+.rptitle,
+.shttl,
+.vidttl {
+  color: var(--text) !important;
+  font-family: var(--font-ui) !important;
+  letter-spacing: 0 !important;
+}
+
+.pclose,
+.modal-close-btn {
+  color: var(--text-muted) !important;
+}
+
+.pclose:hover,
+.modal-close-btn:hover {
+  color: var(--accent-hover) !important;
+  background: color-mix(in srgb, var(--accent-hover) 12%, transparent) !important;
+}
+
+.psearch,
+.toolfield,
+.tooltab,
+.subtab,
+.speedbtn,
+.vopt,
+.thbtn {
+  background: var(--surface-soft) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 12px !important;
+}
+
+.psearch::placeholder {
+  color: var(--text-soft) !important;
+}
+
+.psearch:focus,
+.toolfield:focus,
+.tooltab:hover,
+.tooltab.on,
+.subtab:hover,
+.subtab.on,
+.speedbtn:hover,
+.speedbtn.on,
+.vopt:hover,
+.vopt.on,
+.thbtn.on {
+  border-color: color-mix(in srgb, var(--accent-hover) 55%, transparent) !important;
+  color: var(--accent-hover) !important;
+  background: color-mix(in srgb, var(--accent-hover) 12%, var(--surface-soft)) !important;
+}
+
+.slist::-webkit-scrollbar-thumb,
+.toolbody::-webkit-scrollbar-thumb {
+  background: var(--border) !important;
+}
+
+.sli,
+.kitem {
+  border-color: var(--border) !important;
+}
+
+.sli:hover,
+.kitem:hover,
+.toolitem:hover {
+  background: color-mix(in srgb, var(--accent-hover) 8%, var(--surface)) !important;
+}
+
+.sli.on,
+.kitem.cur,
+.ritem.on {
+  background: color-mix(in srgb, var(--accent-hover) 13%, var(--surface)) !important;
+  border-color: color-mix(in srgb, var(--accent-hover) 35%, var(--border)) !important;
+}
+
+.slin,
+.sliar,
+.kname-ar,
+.toolref,
+.toolval,
+.toolstatus,
+.offlinetitle,
+.rav,
+.rchk,
+.kval {
+  color: var(--accent-hover) !important;
+}
+
+.slien,
+.toolhint,
+.tooltr,
+.kname-fr,
+.kmeta,
+.offlinestatus,
+.emptymsg {
+  color: var(--text-muted) !important;
+}
+
+.toolitem,
+.kstat,
+.offlinebox,
+.ritem {
+  background: var(--surface-soft) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 14px !important;
+}
+
+.kfill,
+.vprogfill {
+  background: var(--accent-hover) !important;
+}
+
+.toolrange,
+.vrange {
+  accent-color: var(--accent-hover) !important;
+}
+
+#don-widget,
+footer {
+  max-width: 1120px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.donbox,
+footer {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-lg) !important;
+  color: var(--text-muted) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.donar,
+.footer-arabic,
+.footer-author {
+  color: var(--text) !important;
+}
+
+.donmsg,
+.footer-copy {
+  color: var(--text-muted) !important;
+}
+
+.donamt {
+  background: var(--surface-soft) !important;
+  border-color: var(--border) !important;
+  color: var(--text-muted) !important;
+}
+
+.footer-video-link,
+.footer-admin-link,
+.shdl,
+.vact-btn {
+  background: var(--surface-soft) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+  border-radius: 12px !important;
+}
+
+.footer-video-link:hover,
+.footer-admin-link:hover,
+.shdl:hover,
+.vact-btn:hover {
+  border-color: color-mix(in srgb, var(--accent-hover) 55%, transparent) !important;
+  color: var(--accent-hover) !important;
+}
