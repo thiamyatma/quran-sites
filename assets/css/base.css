@@ -1,5 +1,7 @@
 /* NoorQuran base reset, body, typography and focus states. */
+*,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
+html,body{max-width:100%;overflow-x:hidden}
 body{background:var(--bg)!important;color:var(--text)!important;font-family:var(--font-ui);accent-color:var(--accent)}
 a{color:inherit}
 button,input,select,textarea{font-family:inherit}
