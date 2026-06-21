@@ -2,6 +2,7 @@
 :root{--gold:#C8A96E;--gold2:#E2C98A;--gold3:#8B6F3A;--em:#40916C;--bg:#0C0E0B;--bg2:#131610;--bg3:#1A1E16;--bg4:#20251C;--tx:#EAE0C8;--tx2:#A89B7A;--tx3:#6B6050;--bd:rgba(200,169,110,.15);--bd2:rgba(200,169,110,.35);--r:6px;--red:#E05A5A;--green:#4FC8A0;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-height:100vh;}
+.error-text{color:var(--red);}
 
 .topbar{background:var(--bg2);border-bottom:1px solid var(--bd);padding:.7rem 1.4rem;display:flex;align-items:center;gap:1rem;}
 .logo{font-family:'Noto Naskh Arabic',serif;font-size:1.3rem;color:var(--gold);}

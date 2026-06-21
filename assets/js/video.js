@@ -98,6 +98,18 @@ function initVideoBindings(){
       return;
     }
 
+    const verse = event.target.closest('[data-toggle-verse]');
+    if (verse) {
+      toggleV(Number(verse.dataset.surah), Number(verse.dataset.ayah), Number(verse.dataset.index));
+      return;
+    }
+
+    const remove = event.target.closest('[data-remove-queue]');
+    if (remove) {
+      rmQ(Number(remove.dataset.removeQueue));
+      return;
+    }
+
     const action = event.target.closest('[data-action]');
     if (!action) return;
 
@@ -121,6 +133,18 @@ function initVideoBindings(){
       cfg.fallback = Number(input.value);
       document.getElementById('fdurv').textContent = input.value + 's';
     }
+  });
+
+  document.addEventListener('dragstart', event => {
+    const item = event.target.closest('[data-queue-index]');
+    if (item) dstart(event, Number(item.dataset.queueIndex));
+  });
+  document.addEventListener('dragover', event => {
+    if (event.target.closest('[data-queue-index]')) dover(event);
+  });
+  document.addEventListener('drop', event => {
+    const item = event.target.closest('[data-queue-index]');
+    if (item) ddrop(event, Number(item.dataset.queueIndex));
   });
 }
 
@@ -160,7 +184,7 @@ async function loadSurah(){
     document.getElementById('selrow').style.display='flex';
     renderVList(n);
   }catch(e){
-    document.getElementById('vst').innerHTML='<span style="color:var(--red)">Erreur de chargement</span>';
+    document.getElementById('vst').innerHTML='<span class="error-text">Erreur de chargement</span>';
   }
 }
 
@@ -168,7 +192,7 @@ function renderVList(sN){
   document.getElementById('vitems').innerHTML=vData.map((v,i)=>{
     const id=sN+'_'+v.numberInSurah;
     const on=selIds.has(id);
-    return `<div class="vli ${on?'on':''}" id="vli${id}" onclick="toggleV(${sN},${v.numberInSurah},${i})">
+    return `<div class="vli ${on?'on':''}" id="vli${id}" data-toggle-verse data-surah="${sN}" data-ayah="${v.numberInSurah}" data-index="${i}">
       <div class="vli-n">${v.numberInSurah}</div>
       <div class="vli-ar">${v.text}</div>
       <div class="vck">${on?'✓':''}</div>
@@ -221,12 +245,11 @@ function renderQueue(){
   const el=document.getElementById('qlist');
   if(!queue.length){el.innerHTML='<div class="qempty">Aucun verset.<br>Allez dans ① pour en sélectionner.</div>';document.getElementById('qtot').textContent='';return;}
   el.innerHTML=queue.map((v,i)=>`
-    <div class="qi" draggable="true" data-i="${i}"
-      ondragstart="dstart(event,${i})" ondragover="dover(event)" ondrop="ddrop(event,${i})">
+    <div class="qi" draggable="true" data-i="${i}" data-queue-index="${i}">
       <span class="qi-i">${i+1}</span>
       <span class="qi-ar">${v.ar}</span>
       <span class="qi-ref">${v.ref}</span>
-      <button class="qi-rm" onclick="rmQ(${i})">${window.NQIcon?NQIcon.svg('close'):''}</button>
+      <button class="qi-rm" data-remove-queue="${i}">${window.NQIcon?NQIcon.svg('close'):''}</button>
     </div>`).join('');
   document.getElementById('qtot').textContent=queue.length+' verset'+(queue.length>1?'s':'');
 }

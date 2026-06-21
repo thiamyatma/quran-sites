@@ -257,9 +257,9 @@ function renderDonWidget(){
   const wrap=document.getElementById('don-widget');
   const btns=[];
   const wave=safeUrl(cfg.wave),orange=safeUrl(cfg.orange),paypal=safeUrl(cfg.paypal);
-  if(wave)btns.push(`<a class="donbtn wave" href="${escAttr(wave)}" target="_blank" rel="noopener" onclick="trackDon()">Wave</a>`);
-  if(orange)btns.push(`<a class="donbtn orange" href="${escAttr(orange)}" target="_blank" rel="noopener" onclick="trackDon()">Orange Money</a>`);
-  if(paypal)btns.push(`<a class="donbtn paypal" href="${escAttr(paypal)}" target="_blank" rel="noopener" onclick="trackDon()">PayPal</a>`);
+  if(wave)btns.push(`<a class="donbtn wave" href="${escAttr(wave)}" target="_blank" rel="noopener" data-action="track-don">Wave</a>`);
+  if(orange)btns.push(`<a class="donbtn orange" href="${escAttr(orange)}" target="_blank" rel="noopener" data-action="track-don">Orange Money</a>`);
+  if(paypal)btns.push(`<a class="donbtn paypal" href="${escAttr(paypal)}" target="_blank" rel="noopener" data-action="track-don">PayPal</a>`);
   wrap.classList.toggle('show',cfg.enabled!==false&&btns.length>0);
   document.getElementById('don-msg-main').textContent=cfg.msg||'Soutenez ce projet islamique gratuit';
   document.getElementById('don-amts-main').innerHTML=(cfg.amounts||'').split(',').map(a=>a.trim()).filter(Boolean).map(a=>`<span class="donamt">${esc(a)}</span>`).join('');
@@ -351,7 +351,7 @@ function renderSList(f=''){
   document.getElementById('slist').innerHTML=SS.filter(s=>
     s.ar.includes(f)||s.en.toLowerCase().includes(f.toLowerCase())||
     s.fr.toLowerCase().includes(f.toLowerCase())||String(s.n).includes(f)
-  ).map(s=>`<div class="sli ${s.n===curS?'on':''} ${kh.done[s.n]?'done':''}" onclick="goS(${s.n})">
+  ).map(s=>`<div class="sli ${s.n===curS?'on':''} ${kh.done[s.n]?'done':''}" data-go-surah="${s.n}">
     <span class="slin">${kh.done[s.n]?'✓':s.n}</span><span class="sliar">${s.ar}</span>
     <span class="slien">${curLang==='fr'?s.fr:s.en}</span>
   </div>`).join('');
@@ -428,7 +428,7 @@ async function ensureSearchIndex(){
 }
 function renderToolItem(v){
   const tr=curLang==='fr'?(v.fr||v.en):(v.en||v.fr);
-  return `<div class="toolitem" onclick="goAyah(${v.s},${v.a})">
+  return `<div class="toolitem" data-go-ayah="${v.s}:${v.a}">
     <div class="toolref">${esc(v.ref)}</div>
     <div class="toolar">${esc(v.ar)}</div>
     <div class="tooltr">${esc(tr)}</div>
@@ -516,19 +516,19 @@ function renderV(){
   document.getElementById('vlist').innerHTML=vData.map((v,i)=>{
     const tr=curLang==='fr'?(trFr[i]?.text||''):(trEn[i]?.text||'');
     const ph=trPh[i]?.text||'';
-    return `<div class="vc" id="vc${v.numberInSurah}" onclick="playV(${v.numberInSurah})">
+    return `<div class="vc" id="vc${v.numberInSurah}" data-play-verse="${v.numberInSurah}">
       <div class="vn">${v.numberInSurah}</div>
       <div class="var">${v.text}</div>
       <div class="vph ${showPhon?'show':''}" id="vp${v.numberInSurah}">${ph}</div>
       <div class="vtr" id="vt${v.numberInSurah}">${tr}</div>
       <div class="vacts">
-        <button class="vbtn" id="vb${v.numberInSurah}" onclick="event.stopPropagation();playV(${v.numberInSurah})">${nqIconLabel('headphones','Écouter')}</button>
-        <button class="vbtn" onclick="event.stopPropagation();repeatVerse(${v.numberInSurah})">${nqIconLabel('repeat','Répéter')}</button>
-        <button class="vbtn ${isFav(curS,v.numberInSurah)?'on':''}" id="fav${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleFav(${i})">${nqIconLabel('heart','Favori')}</button>
-        <button class="vbtn ${isBookmark(curS,v.numberInSurah)?'on':''}" id="bm${curS}_${v.numberInSurah}" onclick="event.stopPropagation();toggleBookmark(${i})">${nqIconLabel('bookmark',isBookmark(curS,v.numberInSurah)?'Marqué':'Marque-page')}</button>
-        <button class="vbtn" onclick="event.stopPropagation();copyV(${i})">${nqIconLabel('copy','Copier')}</button>
-        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openShare('verse')">${nqIconLabel('image','Image')}</button>
-        <button class="vbtn" onclick="event.stopPropagation();curV=${v.numberInSurah};openVid('verse')">${nqIconLabel('video','Vidéo')}</button>
+        <button class="vbtn" id="vb${v.numberInSurah}" data-verse-action="play" data-verse="${v.numberInSurah}">${nqIconLabel('headphones','Écouter')}</button>
+        <button class="vbtn" data-verse-action="repeat" data-verse="${v.numberInSurah}">${nqIconLabel('repeat','Répéter')}</button>
+        <button class="vbtn ${isFav(curS,v.numberInSurah)?'on':''}" id="fav${curS}_${v.numberInSurah}" data-verse-action="fav" data-index="${i}">${nqIconLabel('heart','Favori')}</button>
+        <button class="vbtn ${isBookmark(curS,v.numberInSurah)?'on':''}" id="bm${curS}_${v.numberInSurah}" data-verse-action="bookmark" data-index="${i}">${nqIconLabel('bookmark',isBookmark(curS,v.numberInSurah)?'Marqué':'Marque-page')}</button>
+        <button class="vbtn" data-verse-action="copy" data-index="${i}">${nqIconLabel('copy','Copier')}</button>
+        <button class="vbtn" data-verse-action="share" data-verse="${v.numberInSurah}">${nqIconLabel('image','Image')}</button>
+        <button class="vbtn" data-verse-action="video" data-verse="${v.numberInSurah}">${nqIconLabel('video','Vidéo')}</button>
       </div>
     </div>`;
   }).join('');
@@ -545,7 +545,7 @@ function renderDesktopAyahs(){
   if(!box)return;
   box.innerHTML=Array.from({length:totV||SS[curS-1].v},(_,i)=>{
     const n=i+1;
-    return `<button class="desk-ayah ${n===curV?'on':''}" onclick="focusVerse(${n});playV(${n})">${n}</button>`;
+    return `<button class="desk-ayah ${n===curV?'on':''}" data-focus-play-verse="${n}">${n}</button>`;
   }).join('');
   updateDesktopAyahActive();
 }
@@ -614,11 +614,11 @@ function renderLibrary(){
   const label=libraryView==='bookmarks'?'marque-page':(libraryView==='recent'?'verset récent':'favori');
   if(status)status.textContent=data.length?data.length+' '+label+(data.length>1?'s':''):'';
   out.innerHTML=data.length?data.map(v=>`
-    <div class="toolitem" onclick="goAyah(${v.s},${v.a})">
+    <div class="toolitem" data-go-ayah="${v.s}:${v.a}">
       <div class="toolref">${esc(v.ref)}</div>
       <div class="toolar">${esc(v.ar)}</div>
       <div class="tooltr">${esc(curLang==='fr'?(v.fr||v.en):(v.en||v.fr))}</div>
-      ${libraryView==='recent'?'':`<button class="vbtn" style="margin-top:.55rem" onclick="event.stopPropagation();removeLibraryItem('${escAttr(v.id)}')">Retirer</button>`}
+      ${libraryView==='recent'?'':`<button class="vbtn library-remove-btn" data-remove-library="${escAttr(v.id)}">Retirer</button>`}
     </div>`).join(''):`<div class="emptymsg">Aucun ${label} pour le moment.</div>`;
 }
 function removeLibraryItem(id){
@@ -672,7 +672,7 @@ function renderKhatm(){
   if(goal)goal.value=k.goal;
   if(status)status.textContent=left?left+' sourate'+(left>1?'s':'')+' restante'+(left>1?'s':'')+' · objectif '+k.goal+'/jour · environ '+Math.ceil(left/k.goal)+' jour'+(Math.ceil(left/k.goal)>1?'s':''):'Khatm terminé. Qu’Allah accepte votre lecture.';
   if(list)list.innerHTML=SS.map(s=>`
-    <div class="kitem ${k.done[s.n]?'done':''} ${s.n===curS?'cur':''}" onclick="toggleSurahRead(${s.n})">
+    <div class="kitem ${k.done[s.n]?'done':''} ${s.n===curS?'cur':''}" data-toggle-surah-read="${s.n}">
       <span class="kcheck">✓</span>
       <div class="kname">
         <div class="kname-ar">${s.ar}</div>
@@ -918,7 +918,7 @@ function setAudioSpeed(v,save=true){
 /* ── RECITER ── */
 function renderRec(){
   document.getElementById('rpgrid').innerHTML=RECS.map(r=>`
-    <div class="ritem ${r.id===curRec?'on':''}" data-id="${r.id}" data-name="${r.name}" onclick="selRec(this.dataset.id,this.dataset.name)">
+    <div class="ritem ${r.id===curRec?'on':''}" data-id="${r.id}" data-name="${r.name}" data-reciter>
       <div class="rav">${r.ar.split(' ').slice(0,2).map(w=>w[0]).join('')}</div>
       <div><div class="rname">${r.name}</div><div class="rstyle">${r.style}</div></div>
       <div class="rchk">✓</div>
@@ -1236,6 +1236,70 @@ function initReaderStaticBindings(){
       return;
     }
 
+    const verseActionButton = event.target.closest('[data-verse-action]');
+    if (verseActionButton) {
+      event.stopPropagation();
+      const verse = Number(verseActionButton.dataset.verse);
+      const index = Number(verseActionButton.dataset.index);
+      const verseActions = {
+        play: () => playV(verse),
+        repeat: () => repeatVerse(verse),
+        fav: () => toggleFav(index),
+        bookmark: () => toggleBookmark(index),
+        copy: () => copyV(index),
+        share: () => { curV = verse; openShare('verse'); },
+        video: () => { curV = verse; openVid('verse'); }
+      };
+      verseActions[verseActionButton.dataset.verseAction]?.();
+      return;
+    }
+
+    const removeLibraryButton = event.target.closest('[data-remove-library]');
+    if (removeLibraryButton) {
+      event.stopPropagation();
+      removeLibraryItem(removeLibraryButton.dataset.removeLibrary);
+      return;
+    }
+
+    const reciterButton = event.target.closest('[data-reciter]');
+    if (reciterButton) {
+      selRec(reciterButton.dataset.id, reciterButton.dataset.name);
+      return;
+    }
+
+    const surahButton = event.target.closest('[data-go-surah]');
+    if (surahButton) {
+      goS(Number(surahButton.dataset.goSurah));
+      return;
+    }
+
+    const ayahButton = event.target.closest('[data-go-ayah]');
+    if (ayahButton) {
+      const [s, a] = ayahButton.dataset.goAyah.split(':').map(Number);
+      goAyah(s, a);
+      return;
+    }
+
+    const focusPlayButton = event.target.closest('[data-focus-play-verse]');
+    if (focusPlayButton) {
+      const verse = Number(focusPlayButton.dataset.focusPlayVerse);
+      focusVerse(verse);
+      playV(verse);
+      return;
+    }
+
+    const toggleSurahReadButton = event.target.closest('[data-toggle-surah-read]');
+    if (toggleSurahReadButton) {
+      toggleSurahRead(Number(toggleSurahReadButton.dataset.toggleSurahRead));
+      return;
+    }
+
+    const playVerseCard = event.target.closest('[data-play-verse]');
+    if (playVerseCard) {
+      playV(Number(playVerseCard.dataset.playVerse));
+      return;
+    }
+
     const actionButton = event.target.closest('[data-action]');
     if (!actionButton) return;
 
@@ -1271,6 +1335,7 @@ function initReaderStaticBindings(){
       'preview-video': prevVid,
       'generate-video': genVid,
       'resume-last': resumeLast,
+      'track-don': trackDon,
       'toggle-current-surah-read': toggleCurrentSurahRead,
       'save-current-surah-offline': saveCurrentSurahOffline,
       'remove-current-surah-offline': removeCurrentSurahOffline

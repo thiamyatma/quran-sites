@@ -371,6 +371,7 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .kmeta{font-size:.68rem;color:var(--tx3);}
 .toolitem{border:1px solid var(--bd);border-radius:var(--r);padding:.75rem;margin-bottom:.55rem;background:var(--bg3);cursor:pointer;transition:all .2s;}
 .toolitem:hover{border-color:var(--bd2);background:var(--bg4);}
+.library-remove-btn{margin-top:.55rem;}
 .toolref{font-family:'Cinzel Decorative',serif;font-size:.62rem;color:var(--gold);letter-spacing:.06em;margin-bottom:.35rem;}
 .toolar{font-family:'Noto Naskh Arabic',serif;font-size:1.05rem;line-height:1.8;direction:rtl;text-align:right;color:var(--tx);margin-bottom:.25rem;}
 .tooltr{font-size:.82rem;line-height:1.5;color:var(--tx2);font-style:italic;}

@@ -38,4 +38,5 @@ body{padding-bottom:0}.site-header{background:color-mix(in srgb,var(--bg) 92%,tr
 .searchbar .clear-search{border:0!important;background:transparent!important;color:var(--muted)!important;border-radius:999px!important}
 .search-results .nq-icon,.search-results .icon{width:18px!important;height:18px!important;max-width:18px!important;max-height:18px!important}
 .search-recent-main,.search-item{min-height:44px!important;padding:9px 11px!important}
+.search-muted{color:var(--muted)}
 @media(max-width:720px){.site-header .header-inner{min-height:58px}.site-header .brand-mark{width:36px!important;height:36px!important}.site-header .icon-btn{width:36px!important;min-height:36px!important}}
