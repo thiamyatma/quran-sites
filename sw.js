@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'noorquran-shell-v10';
+const SHELL_CACHE = 'noorquran-shell-v11';
 const API_CACHE = 'noorquran-api-v2';
 const OFFLINE_URL = '/offline.html';
 const SHELL = [
@@ -72,6 +72,11 @@ self.addEventListener('fetch', event => {
 
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
     event.respondWith(networkFirst(req, SHELL_CACHE, OFFLINE_URL));
+    return;
+  }
+
+  if (['style', 'script', 'worker', 'image'].includes(req.destination)) {
+    event.respondWith(networkFirst(req, SHELL_CACHE));
     return;
   }
 
