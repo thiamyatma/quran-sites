@@ -623,6 +623,127 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 }
 </style>
 <link rel="stylesheet" href="assets/site-system.css">
+<style id="reader-icon-layout-fix">
+  #app svg.nq-icon, #app .nq-icon, #app .icon,
+  #topbar svg.nq-icon, #topbar .nq-icon, #topbar .icon,
+  #pbar svg.nq-icon, #pbar .nq-icon, #pbar .icon {
+    width: 20px !important;
+    height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    flex: 0 0 20px !important;
+    display: inline-block !important;
+  }
+  #pbar .ctrl svg.nq-icon,
+  #pbar .ctrl .nq-icon,
+  .mbplay svg.nq-icon,
+  .mbplay .nq-icon {
+    width: 22px !important;
+    height: 22px !important;
+    max-width: 22px !important;
+    max-height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    flex-basis: 22px !important;
+  }
+  #pbar .ctrl.big svg.nq-icon,
+  #pbar .ctrl.big .nq-icon {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    flex-basis: 24px !important;
+  }
+  #topbar .ibtn,
+  #topbar .menubtn,
+  #topbar #thbtn {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #topbar .nq-icon-wrap,
+  #pbar .nq-icon-wrap,
+  #app .nq-icon-wrap {
+    width: auto !important;
+    height: auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    line-height: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  #app .vacts {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 10px !important;
+    overflow: visible !important;
+    padding: 16px 0 0 !important;
+    border-top: 1px solid rgba(255,255,255,.08) !important;
+  }
+  #app .vacts .vbtn,
+  #vodwrap .vbtn,
+  #toolpanel .vbtn {
+    min-height: 40px !important;
+    height: 40px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 0 14px !important;
+    border-radius: 12px !important;
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+    font-size: .9rem !important;
+    overflow: visible !important;
+  }
+  #app .vacts .vbtn + .vbtn {
+    border-left: 1px solid rgba(255,255,255,.1) !important;
+    padding-left: 14px !important;
+  }
+  #pbar {
+    position: sticky !important;
+    top: 74px !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    z-index: 90 !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 0 18px !important;
+    grid-column: 1 / -1 !important;
+  }
+  #app, #app #vwrap {
+    padding-bottom: 120px !important;
+  }
+  @media (max-width: 760px) {
+    #app .vacts .vbtn {
+      height: 38px !important;
+      min-height: 38px !important;
+      padding: 0 10px !important;
+      font-size: .78rem !important;
+    }
+    #pbar {
+      position: relative !important;
+      top: auto !important;
+      margin: .5rem 1rem 1rem !important;
+    }
+  }
+</style>
 <script src="assets/icons/nq-icons.js"></script>
 <script defer src="assets/site-system.js"></script>
 </head>
