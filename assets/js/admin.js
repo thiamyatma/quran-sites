@@ -246,9 +246,10 @@ function loadStats() {
   const maxW = Math.max(...week, 1);
   document.getElementById('bar-chart').innerHTML = week.map((v,i) => `
     <div class="bar-col">
-      <div class="bar" style="height:${Math.round(v/maxW*100)}%" title="${v} visiteurs"></div>
+      <div class="bar" data-height="${Math.round(v/maxW*100)}" title="${v} visiteurs"></div>
       <div class="bar-lbl">${days[i]}</div>
     </div>`).join('');
+  applyMetricBars(document.getElementById('bar-chart'), 'height');
 
   // Top surahs
   const rawSurahs = localStorage.getItem('aq_top_surahs');
@@ -260,9 +261,10 @@ function loadStats() {
     <div class="top-item">
       <div class="top-rank">${i+1}</div>
       <div class="top-name">${s.name}</div>
-      <div class="top-bar-bg"><div class="top-bar-fill" style="width:${Math.round(s.v/maxS*100)}%"></div></div>
+      <div class="top-bar-bg"><div class="top-bar-fill" data-width="${Math.round(s.v/maxS*100)}"></div></div>
       <div class="top-val">${fmtN(s.v)}</div>
     </div>`).join('');
+  applyMetricBars(document.getElementById('top-surahs'), 'width');
 
   // Sources
   const sources = [
@@ -276,9 +278,10 @@ function loadStats() {
     <div class="top-item">
       <div class="top-rank">${i+1}</div>
       <div class="top-name">${s.name}</div>
-      <div class="top-bar-bg"><div class="top-bar-fill" style="width:${Math.round(s.v/maxSrc*100)}%"></div></div>
+      <div class="top-bar-bg"><div class="top-bar-fill" data-width="${Math.round(s.v/maxSrc*100)}"></div></div>
       <div class="top-val">${fmtN(s.v)}</div>
     </div>`).join('');
+  applyMetricBars(document.getElementById('top-sources'), 'width');
 }
 
 /* ── DON CONFIG ── */
@@ -323,14 +326,14 @@ function saveDon() {
 function updateDonPreview() {
   const msg     = document.getElementById('don-msg').value || 'Soutenez ce projet';
   const amounts = document.getElementById('don-amounts').value.split(',').map(a=>a.trim()).filter(Boolean);
-  const wave    = document.getElementById('don-wave').value;
-  const orange  = document.getElementById('don-orange').value;
-  const paypal  = document.getElementById('don-paypal').value;
+  const wave    = safeUrl(document.getElementById('don-wave').value);
+  const orange  = safeUrl(document.getElementById('don-orange').value);
+  const paypal  = safeUrl(document.getElementById('don-paypal').value);
   document.getElementById('preview-msg').textContent = msg;
   const btns = [];
-  if (wave)   btns.push(`<a href="${wave}" target="_blank" class="don-btn-p don-btn-wave">💙 Wave</a>`);
-  if (orange) btns.push(`<a href="${orange}" target="_blank" class="don-btn-p don-btn-orange">🟠 Orange Money</a>`);
-  if (paypal) btns.push(`<a href="${paypal}" target="_blank" class="don-btn-p don-btn-paypal">🅿 PayPal</a>`);
+  if (wave)   btns.push(`<a href="${escAttr(wave)}" target="_blank" rel="noopener" class="don-btn-p don-btn-wave">Wave</a>`);
+  if (orange) btns.push(`<a href="${escAttr(orange)}" target="_blank" rel="noopener" class="don-btn-p don-btn-orange">Orange Money</a>`);
+  if (paypal) btns.push(`<a href="${escAttr(paypal)}" target="_blank" rel="noopener" class="don-btn-p don-btn-paypal">PayPal</a>`);
   if (btns.length === 0) btns.push('<span class="don-empty">Configurez les liens ci-dessus</span>');
   document.getElementById('preview-btns').innerHTML = btns.join('');
   updateDonCode();
@@ -338,22 +341,22 @@ function updateDonPreview() {
 
 function updateDonCode() {
   const msg     = document.getElementById('don-msg').value || 'Soutenez ce projet islamique gratuit';
-  const wave    = document.getElementById('don-wave').value;
-  const orange  = document.getElementById('don-orange').value;
-  const paypal  = document.getElementById('don-paypal').value;
+  const wave    = safeUrl(document.getElementById('don-wave').value);
+  const orange  = safeUrl(document.getElementById('don-orange').value);
+  const paypal  = safeUrl(document.getElementById('don-paypal').value);
   const amounts = document.getElementById('don-amounts').value.split(',').map(a=>a.trim()).filter(Boolean);
 
   const btns = [];
-  if (wave)   btns.push(`  <a href="${wave}" target="_blank" class="don-btn wave-btn">💙 Wave</a>`);
-  if (orange) btns.push(`  <a href="${orange}" target="_blank" class="don-btn orange-btn">🟠 Orange Money</a>`);
-  if (paypal) btns.push(`  <a href="${paypal}" target="_blank" class="don-btn paypal-btn">🅿 PayPal</a>`);
+  if (wave)   btns.push(`      <a href="${escAttr(wave)}" target="_blank" rel="noopener" class="donbtn wave">Wave</a>`);
+  if (orange) btns.push(`      <a href="${escAttr(orange)}" target="_blank" rel="noopener" class="donbtn orange">Orange Money</a>`);
+  if (paypal) btns.push(`      <a href="${escAttr(paypal)}" target="_blank" rel="noopener" class="donbtn paypal">PayPal</a>`);
 
   const code = `<!-- Bouton de don -->
-<div id="don-widget" style="max-width:900px;margin:1rem auto;padding:0 1.2rem;">
-  <div style="background:var(--bg2);border:1px solid var(--bd2);border-radius:8px;padding:1.2rem 1.5rem;text-align:center;">
-    <div style="font-family:'Noto Naskh Arabic',serif;font-size:1.3rem;color:var(--gold);">تصدَّق</div>
-    <p style="font-size:.85rem;color:var(--tx2);margin:.5rem 0 .9rem;font-style:italic;">${msg}</p>
-    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+<div id="don-widget" class="show">
+  <div class="donbox">
+    <div class="donar">تصدَّق</div>
+    <p class="donmsg">${esc(msg)}</p>
+    <div class="donbtns">
 ${btns.join('\n')}
     </div>
   </div>
@@ -371,6 +374,27 @@ function copyCode() {
 
 /* UTILS */
 function fmtN(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n); }
+function clampPct(value) { return Math.max(0, Math.min(100, Number(value) || 0)); }
+function applyMetricBars(root, prop) {
+  if (!root) return;
+  root.querySelectorAll(`[data-${prop}]`).forEach(bar => {
+    bar.style[prop] = clampPct(bar.dataset[prop]) + '%';
+  });
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escAttr(s) {
+  return esc(s).replace(/`/g, '&#96;');
+}
+function safeUrl(u) {
+  try {
+    const x = new URL(String(u || ''));
+    return /^https?:$/.test(x.protocol) ? x.href : '';
+  } catch(e) {
+    return '';
+  }
+}
 
 // Live preview updates on input
 ['don-msg','don-wave','don-orange','don-paypal','don-amounts'].forEach(id => {
