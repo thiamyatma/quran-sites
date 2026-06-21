@@ -114,3 +114,8 @@ body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-he
 .tlbar{flex:1;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;}
 .tlfill{height:100%;background:var(--gold);width:0%;transition:width .1s;}
 .tldur{font-size:.62rem;color:var(--tx3);}
+.is-hidden{display:none;}
+.qbadge{color:var(--gold);}
+.video-help-note{padding:.75rem;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--gold3);font-size:.73rem;color:var(--tx2);line-height:1.6;}
+.video-muted-note{font-size:.68rem;color:var(--tx3);margin-top:.4rem;line-height:1.5;}
+.video-export-note{font-size:.68rem;color:var(--tx3);text-align:center;margin-top:.35rem;}

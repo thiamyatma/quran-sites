@@ -60,7 +60,7 @@
     <div class="tabs">
       <div class="tab on"  id="t1" onclick="showTab(1)">① Versets</div>
       <div class="tab"     id="t2" onclick="showTab(2)">② Options</div>
-      <div class="tab"     id="t3" onclick="showTab(3)">③ File <span id="qbadge" style="color:var(--gold)"></span></div>
+      <div class="tab"     id="t3" onclick="showTab(3)">③ File <span id="qbadge" class="qbadge"></span></div>
     </div>
 
     <!-- TAB 1 : SELECT VERSES -->
@@ -68,20 +68,20 @@
       <div class="s">
         <div class="slbl">Sourate</div>
         <select class="ssel" id="ssel" onchange="loadSurah()"></select>
-        <div id="vst" class="sttxt" style="display:none"><div class="spin"></div> Chargement...</div>
-        <div class="selrow" id="selrow" style="display:none">
+        <div id="vst" class="sttxt is-hidden"><div class="spin"></div> Chargement...</div>
+        <div class="selrow is-hidden" id="selrow">
           <button class="sbtn" onclick="selAll()"><span data-icon="grid"></span> Tout sélectionner</button>
           <button class="sbtn" onclick="deselAll()"><span data-icon="close"></span> Tout désélectionner</button>
         </div>
-        <div class="vlist" id="vlist" style="display:none"><div id="vitems"></div></div>
+        <div class="vlist is-hidden" id="vlist"><div id="vitems"></div></div>
       </div>
-      <div style="padding:.75rem;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--gold3);font-size:.73rem;color:var(--tx2);line-height:1.6;">
+      <div class="video-help-note">
         ✓ Cochez plusieurs versets — ils seront enchaînés dans la vidéo avec leur audio. Faites glisser dans la file pour réordonner.
       </div>
     </div>
 
     <!-- TAB 2 : OPTIONS -->
-    <div class="body" id="b2" style="display:none">
+    <div class="body is-hidden" id="b2">
       <div class="s">
         <div class="slbl">Format</div>
         <div class="ogrp" id="og-ratio">
@@ -130,7 +130,7 @@
     </div>
 
     <!-- TAB 3 : QUEUE + GENERATE -->
-    <div class="body" id="b3" style="display:none">
+    <div class="body is-hidden" id="b3">
       <div class="s">
         <div class="slbl">File de versets (<span id="qcnt">0</span>)</div>
         <div id="qlist"><div class="qempty">Aucun verset sélectionné</div></div>
@@ -143,11 +143,11 @@
           <button class="o on" data-f="mp4"  onclick="setO('fmt',this)"><span data-icon="video"></span> MP4 (recommandé)</button>
           <button class="o"    data-f="webm" onclick="setO('fmt',this)">📦 WebM (rapide)</button>
         </div>
-        <div style="font-size:.68rem;color:var(--tx3);margin-top:.4rem;line-height:1.5;">MP4 : compatible partout (Windows, iPhone, Android). Conversion automatique après enregistrement.</div>
+        <div class="video-muted-note">MP4 : compatible partout (Windows, iPhone, Android). Conversion automatique après enregistrement.</div>
       </div>
 
       <button class="genbtn" id="genbtn" onclick="generate()"><span data-icon="video"></span> GÉNÉRER LA VIDÉO</button>
-      <div style="font-size:.68rem;color:var(--tx3);text-align:center;margin-top:.35rem;">Export WebM avec audio synchronisé</div>
+      <div class="video-export-note">Export WebM avec audio synchronisé</div>
 
       <div class="prog" id="progwrap">
         <div class="pbar"><div class="pfill" id="pfill"></div></div>
@@ -162,7 +162,7 @@
   <div class="right">
     <div class="cvframe"><canvas id="pcv"></canvas></div>
     <div class="pmeta" id="pmeta">Sélectionnez des versets pour commencer</div>
-    <div class="tl" id="tlwrap" style="display:none">
+    <div class="tl is-hidden" id="tlwrap">
       <div class="tltitle">Ordre de lecture</div>
       <div id="tlitems"></div>
     </div>
