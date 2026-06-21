@@ -60,7 +60,7 @@
     const key=aliases[name]||name;
     const body=paths[key]||paths.info;
     const aria=label?`role="img" aria-label="${String(label).replace(/"/g,'&quot;')}"`:'aria-hidden="true" focusable="false"';
-    return `<svg class="nq-icon" viewBox="0 0 24 24" ${aria} ${attrs}>${body}</svg>`;
+    return `<svg class="icon nq-icon" viewBox="0 0 24 24" ${aria} ${attrs}>${body}</svg>`;
   }
   function enhance(root=document){
     root.querySelectorAll('[data-icon]').forEach(el=>{
