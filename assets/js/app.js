@@ -11,4 +11,7 @@
   function init(){applyTheme();applyLang();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
   else init();
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+  }
 })();

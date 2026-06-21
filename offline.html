@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1E222B">
+<title>NoorQuran — Hors ligne</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="assets/css/variables.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<script src="assets/icons/nq-icons.js"></script>
+<style>
+  body{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at top,color-mix(in srgb,var(--accent) 18%,transparent),transparent 36%),var(--bg)}
+  .offline-card{width:min(560px,100%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);padding:28px;text-align:center}
+  .offline-mark{width:64px;height:64px;margin:0 auto 18px;border-radius:20px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 14%,var(--surface));border:1px solid var(--accent);color:var(--accent)}
+  h1{margin:0 0 10px;font-size:clamp(1.8rem,5vw,2.6rem)}
+  p{color:var(--text-muted);line-height:1.65;margin:0 0 20px}
+  .offline-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .offline-actions a{min-height:44px;padding:0 16px;border-radius:var(--radius-md);border:1px solid var(--border);display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+  .offline-actions a:first-child{background:var(--accent);border-color:var(--accent);color:#061113;font-weight:800}
+</style>
+</head>
+<body>
+  <main class="offline-card">
+    <div class="offline-mark" data-icon="monitor"></div>
+    <h1>Mode hors ligne</h1>
+    <p>La connexion semble indisponible. Les pages déjà ouvertes peuvent rester accessibles, et les sourates mises en cache pourront être relues.</p>
+    <div class="offline-actions">
+      <a href="index.html"><span data-icon="home"></span> Accueil</a>
+      <a href="reader.html"><span data-icon="open-book"></span> Lecteur</a>
+    </div>
+  </main>
+</body>
+</html>

@@ -204,7 +204,7 @@ window.addEventListener('load',()=>{
   applyPrefs(prefs);
   const initialRoute=readInitialRoute();
   if(initialRoute.s)curS=initialRoute.s;
-  buildSel();renderSList();renderRec();renderDonWidget();updateResumeBtn();renderKhatm();registerSW();
+  buildSel();renderSList();renderRec();renderDonWidget();updateResumeBtn();renderKhatm();
   loadSurah(curS).then(()=>applyInitialRoute(initialRoute));loadVod();
 });
 
@@ -273,12 +273,6 @@ function safeUrl(u){
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function escAttr(s){return esc(s).replace(/`/g,'&#96;');}
-function registerSW(){
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  }
-}
-
 function readJsonStore(store,key,fallback=null){
   try{
     const raw=store.getItem(key);

@@ -1,8 +1,8 @@
-﻿{
-  "name": "Al-Quran Al-Karim",
-  "short_name": "Al-Quran",
+{
+  "name": "NoorQuran",
+  "short_name": "NoorQuran",
   "id": "/index.html",
-  "description": "Accueil moderne pour lire, écouter, rechercher et reprendre la lecture du Saint Coran.",
+  "description": "Lire, écouter, rechercher et reprendre la lecture du Saint Coran.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "/index.html",
@@ -37,7 +37,7 @@
     {
       "name": "Lecture",
       "short_name": "Lire",
-      "description": "Accueil moderne pour lire, écouter, rechercher et reprendre la lecture du Saint Coran.",
+      "description": "Ouvrir directement l'interface de lecture NoorQuran.",
       "url": "/reader.html",
       "icons": [
         {

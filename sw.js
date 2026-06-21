@@ -1,11 +1,13 @@
-const SHELL_CACHE = 'al-quran-shell-v8';
-const API_CACHE = 'al-quran-api-v1';
+const SHELL_CACHE = 'noorquran-shell-v10';
+const API_CACHE = 'noorquran-api-v2';
+const OFFLINE_URL = '/offline.html';
 const SHELL = [
   '/',
   '/index.html',
   '/reader.html',
   '/video.html',
   '/admin.html',
+  OFFLINE_URL,
   '/manifest.json',
   '/sw.js',
   '/icons/site-icon.svg',
@@ -37,7 +39,7 @@ const API_HOSTS = new Set(['api.alquran.cloud']);
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(SHELL_CACHE)
-      .then(cache => cache.addAll(SHELL))
+      .then(cache => Promise.allSettled(SHELL.map(url => cache.add(url))))
       .then(() => self.skipWaiting())
   );
 });
@@ -57,6 +59,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
+  if (req.headers.get('range')) return;
 
   const url = new URL(req.url);
 
@@ -68,7 +71,7 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return;
 
   if (req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html')) {
-    event.respondWith(networkFirst(req, SHELL_CACHE, '/index.html'));
+    event.respondWith(networkFirst(req, SHELL_CACHE, OFFLINE_URL));
     return;
   }
 
@@ -103,7 +106,9 @@ async function cacheFirst(req, cacheName) {
 async function cacheResponse(cacheName, req, resp) {
   if (!resp || !resp.ok) return;
   const cache = await caches.open(cacheName);
-  await cache.put(req, resp.clone());
+  try {
+    await cache.put(req, resp.clone());
+  } catch (e) {}
 }
 
 
