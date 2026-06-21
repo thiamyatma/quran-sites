@@ -689,6 +689,46 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
       margin: .5rem 1rem 1rem !important;
     }
   }
+  @media (min-width: 1024px) {
+    #pbar {
+      position: fixed !important;
+      top: auto !important;
+      left: 24px !important;
+      right: 24px !important;
+      bottom: 18px !important;
+      width: auto !important;
+      max-width: none !important;
+      margin: 0 auto !important;
+      padding: .65rem .9rem !important;
+      flex-wrap: nowrap !important;
+      gap: .55rem .75rem !important;
+    }
+    #pbar .pinfo {
+      flex: 0 1 160px !important;
+      min-width: 120px !important;
+    }
+    #pbar .resume-btn {
+      flex: 0 0 auto !important;
+    }
+    #pbar .pprog {
+      flex: 1 1 260px !important;
+      min-width: 220px !important;
+    }
+    #pbar .repwrap {
+      flex: 0 1 330px !important;
+      flex-wrap: nowrap !important;
+    }
+    #pbar .rbopts {
+      flex-wrap: nowrap !important;
+    }
+    #pbar .replbl {
+      display: none !important;
+    }
+    #desk-left,
+    #desk-right {
+      top: 92px !important;
+    }
+  }
 .reader-app{position:relative;z-index:1;min-height:100vh;}
 .modal-close-btn{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;justify-content:center;padding:.25rem;border-radius:var(--r);}
 .modal-close-btn:hover{color:var(--gold);background:rgba(200,169,110,.08);}
