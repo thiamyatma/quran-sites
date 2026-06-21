@@ -724,6 +724,189 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
 .reader-app{position:relative;z-index:1;min-height:100vh;}
 .modal-close-btn{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;justify-content:center;padding:.25rem;border-radius:var(--r);}
 .modal-close-btn:hover{color:var(--gold);background:rgba(200,169,110,.08);}
+
+/* Desktop reader cleanup: remove the heavy left rail and keep every block in flow. */
+@media (min-width: 1024px) {
+  #app {
+    grid-template-columns: minmax(0, 1120px) !important;
+    justify-content: center !important;
+    max-width: 1240px !important;
+    padding: 0 clamp(20px, 3vw, 32px) 72px !important;
+    row-gap: 18px !important;
+  }
+
+  #topbar {
+    grid-column: 1 !important;
+    width: 100% !important;
+  }
+
+  #desk-left,
+  #shdr {
+    display: none !important;
+  }
+
+  #pbar {
+    grid-column: 1 !important;
+    position: sticky !important;
+    top: 72px !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 95 !important;
+    width: 100% !important;
+    max-width: 1120px !important;
+    margin: 14px auto 18px !important;
+    padding: .72rem .9rem !important;
+    border-radius: 16px !important;
+    flex-wrap: wrap !important;
+    box-shadow: 0 14px 34px rgba(0,0,0,.28) !important;
+  }
+
+  #pbar .pinfo {
+    flex: 0 1 180px !important;
+    min-width: 130px !important;
+    max-width: 220px !important;
+  }
+
+  #pbar .pprog {
+    flex: 1 1 280px !important;
+    min-width: min(260px, 100%) !important;
+  }
+
+  #pbar .repwrap {
+    flex: 0 1 360px !important;
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+  }
+
+  #desk-right {
+    grid-column: 1 !important;
+    position: relative !important;
+    top: auto !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 1120px !important;
+    margin: 0 auto 2px !important;
+    padding: 18px 22px !important;
+    overflow: visible !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0 24px !important;
+  }
+
+  #desk-right .desk-tool {
+    min-width: 0 !important;
+    min-height: 60px !important;
+    padding: .75rem 0 !important;
+    border-bottom: 0 !important;
+  }
+
+  #desk-right .desk-tool:nth-child(n+5) {
+    border-top: 1px solid rgba(255,255,255,.08) !important;
+  }
+
+  .desk-tool-ico {
+    flex: 0 0 38px !important;
+  }
+
+  .desk-tool-main,
+  .desk-tool-sub {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #app #vwrap,
+  #loading,
+  #errmsg,
+  footer {
+    grid-column: 1 !important;
+    width: 100% !important;
+    max-width: 1120px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  #app #vwrap {
+    padding: 0 0 64px !important;
+  }
+
+  #app .vc {
+    margin-bottom: 18px !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  #pbar {
+    flex-wrap: nowrap !important;
+    gap: .45rem !important;
+  }
+
+  #pbar .repwrap,
+  #pbar .rbopts {
+    flex-wrap: nowrap !important;
+  }
+
+  #pbar .pinfo {
+    flex: 0 1 110px !important;
+    min-width: 82px !important;
+    max-width: 120px !important;
+  }
+
+  #pbar .resume-btn.show {
+    height: 34px !important;
+    padding: 0 12px !important;
+  }
+
+  #pbar .ctrl {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  #pbar .ctrl.big {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  #pbar .pprog {
+    flex: 1 1 220px !important;
+    min-width: 190px !important;
+  }
+
+  #pbar .repwrap {
+    flex: 0 0 auto !important;
+    gap: .32rem !important;
+  }
+
+  #pbar .rb {
+    min-width: 38px !important;
+    height: 32px !important;
+    padding: 0 .55rem !important;
+  }
+
+  #pbar .autolbl {
+    display: none !important;
+  }
+
+  #pbar > .recbtn:not(.resume-btn) {
+    height: 34px !important;
+    padding: 0 .75rem !important;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  #desk-right {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #desk-right .desk-tool:nth-child(n+3) {
+    border-top: 1px solid rgba(255,255,255,.08) !important;
+  }
+
+  #pbar .repwrap {
+    flex: 1 1 100% !important;
+  }
+}
 .error-mark{font-size:2rem;margin-bottom:1rem;}
 .retry-btn{margin:auto;display:block;}
 .footer-arabic{font-family:'Noto Naskh Arabic',serif;font-size:1.1rem;color:var(--gold);margin-bottom:5px;}
