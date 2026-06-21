@@ -84,6 +84,43 @@ window.addEventListener('load',()=>{
   loadSurah();
 });
 
+function initVideoBindings(){
+  document.addEventListener('click', event => {
+    const tab = event.target.closest('[data-tab]');
+    if (tab) {
+      showTab(Number(tab.dataset.tab));
+      return;
+    }
+
+    const option = event.target.closest('[data-option]');
+    if (option) {
+      setO(option.dataset.option, option);
+      return;
+    }
+
+    const action = event.target.closest('[data-action]');
+    if (!action) return;
+
+    const actions = {
+      'select-all': selAll,
+      'deselect-all': deselAll,
+      'draw-preview': drawPrev,
+      'generate-video': generate
+    };
+    actions[action.dataset.action]?.();
+  });
+
+  document.addEventListener('change', event => {
+    if (event.target.matches('[data-action="load-surah"]')) loadSurah();
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initVideoBindings);
+} else {
+  initVideoBindings();
+}
+
 /* TABS */
 function showTab(n){
   [1,2,3].forEach(i=>{
