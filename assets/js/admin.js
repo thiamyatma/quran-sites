@@ -1,4 +1,4 @@
-// Extracted from admin.html script block 1
+// NoorQuran admin dashboard.
 /* ════════════════════════════════════════════════════
    CONFIG — CHANGEZ CES HASHES (ne jamais mettre le
    mot de passe en clair ici)
@@ -19,6 +19,10 @@ const ADMIN_PWD_HASH   = 'ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596
 async function sha256(str) {
   const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function toggleHashPanel() {
+  document.getElementById('hash-body')?.classList.toggle('show');
 }
 
 /* ── BRUTE FORCE PROTECTION ── */
@@ -145,10 +149,10 @@ async function generateHashes() {
   if (!email || !pwd) { alert('Remplissez email et mot de passe.'); return; }
   const [eh, ph] = await Promise.all([sha256(email), sha256(pwd)]);
   const result = document.getElementById('hash-result');
-  result.style.display = 'block';
+  result.classList.add('show');
   result.innerHTML =
-    'ADMIN_EMAIL_HASH = <span style="color:#C8A96E">\''+eh+'\'</span>;<br>' +
-    'ADMIN_PWD_HASH   = <span style="color:#C8A96E">\''+ph+'\'</span>;';
+    'ADMIN_EMAIL_HASH = <span class="hash-code">\''+eh+'\'</span>;<br>' +
+    'ADMIN_PWD_HASH   = <span class="hash-code">\''+ph+'\'</span>;';
 }
 
 window.addEventListener('load', () => {
@@ -294,10 +298,10 @@ function updateDonPreview() {
   const paypal  = document.getElementById('don-paypal').value;
   document.getElementById('preview-msg').textContent = msg;
   const btns = [];
-  if (wave)   btns.push(`<a href="${wave}" target="_blank" class="don-btn-p" style="background:#00A3E0;color:#fff;">💙 Wave</a>`);
-  if (orange) btns.push(`<a href="${orange}" target="_blank" class="don-btn-p" style="background:#FF6600;color:#fff;">🟠 Orange Money</a>`);
-  if (paypal) btns.push(`<a href="${paypal}" target="_blank" class="don-btn-p" style="background:#003087;color:#fff;">🅿 PayPal</a>`);
-  if (btns.length === 0) btns.push('<span style="font-size:.75rem;color:var(--tx3)">Configurez les liens ci-dessus</span>');
+  if (wave)   btns.push(`<a href="${wave}" target="_blank" class="don-btn-p don-btn-wave">💙 Wave</a>`);
+  if (orange) btns.push(`<a href="${orange}" target="_blank" class="don-btn-p don-btn-orange">🟠 Orange Money</a>`);
+  if (paypal) btns.push(`<a href="${paypal}" target="_blank" class="don-btn-p don-btn-paypal">🅿 PayPal</a>`);
+  if (btns.length === 0) btns.push('<span class="don-empty">Configurez les liens ci-dessus</span>');
   document.getElementById('preview-btns').innerHTML = btns.join('');
   updateDonCode();
 }
@@ -342,18 +346,6 @@ function fmtN(n) { return n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n); }
 ['don-msg','don-wave','don-orange','don-paypal','don-amounts'].forEach(id => {
   document.getElementById(id)?.addEventListener('input', updateDonPreview);
 });
-
-async function generateHashes() {
-  const email = document.getElementById('gen-email').value.trim().toLowerCase();
-  const pwd   = document.getElementById('gen-pwd').value;
-  if (!email || !pwd) { alert('Remplissez email et mot de passe.'); return; }
-  const [eh, ph] = await Promise.all([sha256(email), sha256(pwd)]);
-  const result = document.getElementById('hash-result');
-  result.style.display = 'block';
-  result.innerHTML =
-    'ADMIN_EMAIL_HASH = <span style="color:#C8A96E">\''+eh+'\'</span>;<br>' +
-    'ADMIN_PWD_HASH   = <span style="color:#C8A96E">\''+ph+'\'</span>;';
-}
 
 window.addEventListener('load', () => {
   if (sessionStorage.getItem('admin_auth') === '1') {

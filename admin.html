@@ -61,29 +61,25 @@
     </div>
     <div class="login-err" id="login-err">Email ou mot de passe incorrect.</div>
     <button class="login-btn" onclick="checkLogin()">Se connecter →</button>
-    <div style="font-size:.68rem;color:var(--tx3);text-align:center;line-height:1.6;">
-      Identifiants par défaut : <strong style="color:var(--gold)">admin@quran.com</strong> / <strong style="color:var(--gold)">admin1234</strong>
+    <div class="admin-help">
+      Identifiants par défaut : <strong>admin@quran.com</strong> / <strong>admin1234</strong>
     </div>
 
-    <div style="margin-top:.8rem;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;">
-      <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'"
-        style="padding:.5rem .9rem;cursor:pointer;font-size:.7rem;color:var(--tx3);display:flex;justify-content:space-between;align-items:center;background:var(--bg3);">
+    <div class="hash-panel">
+      <button class="hash-toggle" type="button" onclick="toggleHashPanel()">
         <span>🔧 Changer les identifiants (générer mes hashes)</span><span>▾</span>
-      </div>
-      <div style="display:none;padding:.9rem;background:var(--bg3);border-top:1px solid var(--bd);">
-        <div style="font-size:.72rem;color:var(--tx2);margin-bottom:.6rem;line-height:1.6;">
-          Entrez vos nouveaux identifiants ci-dessous. Les hashes générés sont à coller dans le code source de admin.html (variables <code style="color:var(--gold)">ADMIN_EMAIL_HASH</code> et <code style="color:var(--gold)">ADMIN_PWD_HASH</code>).
+      </button>
+      <div class="hash-body" id="hash-body">
+        <div class="hash-desc">
+          Entrez vos nouveaux identifiants ci-dessous. Les hashes générés sont à coller dans le code source de admin.html (variables <code>ADMIN_EMAIL_HASH</code> et <code>ADMIN_PWD_HASH</code>).
         </div>
-        <input id="gen-email" type="email" placeholder="votre@email.com"
-          style="width:100%;background:var(--bg4);border:1px solid var(--bd);color:var(--tx);font-size:.8rem;padding:.4rem .7rem;border-radius:var(--r);outline:none;margin-bottom:.4rem;">
-        <input id="gen-pwd" type="password" placeholder="Nouveau mot de passe"
-          style="width:100%;background:var(--bg4);border:1px solid var(--bd);color:var(--tx);font-size:.8rem;padding:.4rem .7rem;border-radius:var(--r);outline:none;margin-bottom:.6rem;">
-        <button onclick="generateHashes()"
-          style="width:100%;padding:.45rem;background:rgba(200,169,110,.08);border:1px solid var(--gold3);border-radius:var(--r);color:var(--gold);font-size:.75rem;cursor:pointer;">
+        <input class="hash-input" id="gen-email" type="email" placeholder="votre@email.com">
+        <input class="hash-input hash-input-last" id="gen-pwd" type="password" placeholder="Nouveau mot de passe">
+        <button class="hash-generate" type="button" onclick="generateHashes()">
           Générer les hashes →
         </button>
-        <div id="hash-result" style="display:none;margin-top:.6rem;padding:.7rem;background:var(--bg);border-radius:var(--r);font-family:monospace;font-size:.68rem;color:var(--gold2);line-height:1.8;word-break:break-all;"></div>
-        <div style="font-size:.65rem;color:var(--tx3);margin-top:.5rem;line-height:1.5;">⚠ Ces hashes ne contiennent jamais votre vrai mot de passe — ils sont mathématiquement irréversibles.</div>
+        <div id="hash-result" class="hash-result"></div>
+        <div class="hash-warning">⚠ Ces hashes ne contiennent jamais votre vrai mot de passe — ils sont mathématiquement irréversibles.</div>
       </div>
     </div>
   </div>
@@ -142,7 +138,7 @@
         <div class="bar-chart" id="bar-chart"></div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;" id="top-grids">
+      <div class="top-grids" id="top-grids">
         <div class="top-list">
           <div class="top-list-title">Top sourates écoutées</div>
           <div id="top-surahs"></div>
@@ -153,7 +149,7 @@
         </div>
       </div>
 
-      <div style="font-size:.75rem;color:var(--tx3);font-style:italic;">
+      <div class="admin-note">
         ⓘ Les statistiques sont enregistrées localement via localStorage. Pour des stats avancées, connectez Google Analytics ou Umami.
       </div>
     </div>
@@ -170,7 +166,7 @@
           <div class="tog on" id="tog-don" onclick="toggleDon()"><div class="tog-k"></div></div>
         </div>
 
-        <div style="height:1rem"></div>
+        <div class="admin-spacer"></div>
 
         <div class="form-row">
           <label class="form-label">Message affiché</label>
@@ -214,11 +210,11 @@
 
       <div class="don-card">
         <div class="don-title">📋 Comment afficher le bouton sur le site</div>
-        <p style="font-size:.83rem;color:var(--tx2);line-height:1.7;margin-bottom:.8rem;">
-          Après avoir configuré et sauvegardé, copiez ce code et collez-le dans votre <code style="background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--gold);">index.html</code> juste avant la balise <code style="background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--gold);">&lt;footer&gt;</code> :
+        <p class="don-help">
+          Après avoir configuré et sauvegardé, copiez ce code et collez-le dans votre <code>index.html</code> juste avant la balise <code>&lt;footer&gt;</code> :
         </p>
-        <textarea id="don-code" readonly style="width:100%;height:140px;background:var(--bg3);border:1px solid var(--bd);color:var(--tx2);font-family:monospace;font-size:.72rem;padding:.7rem;border-radius:var(--r);resize:none;outline:none;"></textarea>
-        <button class="save-btn" onclick="copyCode()" style="margin-top:.6rem;">📋 Copier le code</button>
+        <textarea id="don-code" class="don-code" readonly></textarea>
+        <button class="save-btn save-btn-gap" onclick="copyCode()">📋 Copier le code</button>
         <span class="save-confirm" id="code-confirm">✓ Copié !</span>
       </div>
     </div>
@@ -228,20 +224,20 @@
       <div class="page-title">🌐 Liens utiles</div>
       <div class="don-card">
         <div class="don-title">Accès rapide</div>
-        <div style="display:flex;flex-direction:column;gap:.8rem;">
-          <a href="https://al-quran1.vercel.app" target="_blank" style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);color:var(--gold);text-decoration:none;font-size:.85rem;transition:border-color .2s;">
+        <div class="quick-links">
+          <a class="quick-link quick-link-primary" href="https://al-quran1.vercel.app" target="_blank">
             <span>🌐</span> al-quran1.vercel.app — Site principal
           </a>
-          <a href="https://vercel.com/dashboard" target="_blank" style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx2);text-decoration:none;font-size:.85rem;transition:border-color .2s;">
+          <a class="quick-link" href="https://vercel.com/dashboard" target="_blank">
             <span>▲</span> Vercel Dashboard — Déploiements
           </a>
-          <a href="https://github.com" target="_blank" style="display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);color:var(--tx2);text-decoration:none;font-size:.85rem;transition:border-color .2s;">
+          <a class="quick-link" href="https://github.com" target="_blank">
             <span>🐙</span> GitHub — Code source
           </a>
         </div>
-        <div style="margin-top:1.2rem;padding:1rem;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--gold);">
-          <div style="font-size:.72rem;color:var(--gold);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.08em;">Note sécurité</div>
-          <div style="font-size:.8rem;color:var(--tx2);line-height:1.6;">Pour changer le code PIN, modifiez la variable <code style="color:var(--gold);background:var(--bg4);padding:1px 5px;border-radius:3px;">ADMIN_PIN</code> dans le fichier <code style="color:var(--gold);background:var(--bg4);padding:1px 5px;border-radius:3px;">admin.html</code>. Ne jamais mettre le fichier admin dans un dépôt public GitHub.</div>
+        <div class="security-note">
+          <div class="security-note-title">Note sécurité</div>
+          <div class="security-note-text">Pour changer le code PIN, modifiez la variable <code>ADMIN_PIN</code> dans le fichier <code>admin.html</code>. Ne jamais mettre le fichier admin dans un dépôt public GitHub.</div>
         </div>
       </div>
     </div>
