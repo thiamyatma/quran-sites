@@ -1,4 +1,4 @@
-﻿const SHELL_CACHE = 'al-quran-shell-v7';
+const SHELL_CACHE = 'al-quran-shell-v8';
 const API_CACHE = 'al-quran-api-v1';
 const SHELL = [
   '/',
@@ -9,9 +9,6 @@ const SHELL = [
   '/manifest.json',
   '/sw.js',
   '/icons/site-icon.svg',
-  '/assets/site-system.css',
-  '/assets/site-system.js',
-  '/assets/quran-api.js',
   '/assets/css/variables.css',
   '/assets/css/base.css',
   '/assets/css/layout.css',

@@ -1,4 +1,4 @@
-// Extracted from assets/quran-api.js during migration.
+// NoorQuran API helpers.
 (function(){
   const BASE='https://api.alquran.cloud/v1';
   const CACHE_PREFIX='nq_api_cache:';
