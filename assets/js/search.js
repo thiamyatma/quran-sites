@@ -1,1 +1,1 @@
-// search.js - reserved for the next migration step.
+// NoorQuran shared search helpers placeholder.

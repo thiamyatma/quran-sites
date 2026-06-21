@@ -1,4 +1,4 @@
-// Extracted from reader.html script block 1
+// NoorQuran reader page interactions.
 /* ── STATE ── */
 let curS=1,curV=1,totV=0,isPlaying=false,autoplay=true,showPhon=false,isLight=false;
 let curRec='ar.alafasy',repMode='off',repCount=2,repCur=0,rangeStart=1,rangeEnd=1,curLang='fr';

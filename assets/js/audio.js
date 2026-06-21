@@ -1,1 +1,1 @@
-// audio.js - reserved for the next migration step.
+// NoorQuran shared audio helpers placeholder.

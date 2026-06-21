@@ -1,4 +1,4 @@
-/* Extracted from reader.html style block 1 */
+/* NoorQuran reader page styles. */
 :root{--gold:#C8A96E;--gold2:#E2C98A;--gold3:#8B6F3A;--em:#40916C;--em2:#1B4332;--bg:#0C0E0B;--bg2:#131610;--bg3:#1A1E16;--bg4:#20251C;--tx:#EAE0C8;--tx2:#A89B7A;--tx3:#6B6050;--bd:rgba(200,169,110,.15);--bd2:rgba(200,169,110,.35);--r:6px;}
 .light{--bg:#F5F0E8;--bg2:#EDE6D6;--bg3:#E4DBC8;--bg4:#D9CEB8;--tx:#1C1A14;--tx2:#5A4E35;--tx3:#8B7A55;--bd:rgba(139,111,58,.2);--bd2:rgba(139,111,58,.45);}
 *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
@@ -568,7 +568,7 @@ footer{text-align:center;padding:1.5rem;color:var(--tx3);font-size:.78rem;font-s
   .desk-ayahs{max-height:220px;}
 }
 
-/* Extracted from reader.html style block 2 */
+/* Reader mobile layout refinements. */
 #app svg.nq-icon, #app .nq-icon, #app .icon,
   #topbar svg.nq-icon, #topbar .nq-icon, #topbar .icon,
   #pbar svg.nq-icon, #pbar .nq-icon, #pbar .icon {

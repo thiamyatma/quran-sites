@@ -1,4 +1,4 @@
-// Extracted from index.html script block 0
+// NoorQuran home page interactions.
 const SS=[
   {n:1,ar:'الفاتحة',en:'Al-Fatiha',fr:"L'Ouverture",v:7,t:'Mecquoise'},
   {n:2,ar:'البقرة',en:'Al-Baqarah',fr:'La Vache',v:286,t:'Médinoise'},

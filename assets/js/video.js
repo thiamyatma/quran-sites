@@ -1,4 +1,4 @@
-// Extracted from video.html script block 1
+// NoorQuran video generator interactions.
 /* STATE */
 let exportFmt = 'mp4'; // 'mp4' or 'webm'
 let ffmpegReady = false;
