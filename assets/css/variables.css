@@ -1,1 +1,12 @@
-/* NoorQuran design tokens. Source-compatible variables are currently kept in components.css during migration. */
+/* NoorQuran design tokens and theme variables. */
+:root{
+  --bg:#1e222b;--bg-soft:#171b22;--surface:#252a33;--surface-soft:#2a303a;--surface-raised:#323946;
+  --text:#f4f1ea;--text-muted:#b9c0cb;--text-soft:#8f98a6;--accent:#35c7cc;--accent-hover:#4dd58a;
+  --border:#3b424e;--radius-sm:10px;--radius-md:14px;--radius-lg:22px;--shadow-soft:0 18px 48px rgba(0,0,0,.24);
+  --font-ui:Inter,Segoe UI,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;--font-arabic:Georgia,'Times New Roman',serif;
+  --space-page:clamp(16px,3vw,40px);--max-page:1440px;
+  --card:var(--surface);--card2:var(--surface-soft);--line:var(--border);--muted:var(--text-muted);--soft:var(--text-soft);--shadow:var(--shadow-soft);
+  --tx:var(--text);--tx2:var(--text-muted);--tx3:var(--text-soft);--bd:color-mix(in srgb,var(--border) 72%,transparent);--bd2:color-mix(in srgb,var(--accent) 48%,transparent);--em:var(--accent-hover);--em2:#1b4d42;--gold:var(--accent);--gold2:var(--accent-hover);--gold3:var(--text-soft);--bg2:var(--bg-soft);--bg3:var(--surface);--bg4:var(--surface-soft);--r:var(--radius-sm);
+}
+body[data-theme="light"],body.light{--bg:#f5f7fb;--bg-soft:#edf2f7;--surface:#fff;--surface-soft:#eef2f6;--surface-raised:#e5ebf1;--text:#18202b;--text-muted:#536070;--text-soft:#6d7786;--accent:#087f8c;--accent-hover:#128a5d;--border:#d7dee8;--shadow-soft:0 16px 38px rgba(35,45,65,.10);--card:var(--surface);--card2:var(--surface-soft);--line:var(--border);--muted:var(--text-muted);--soft:var(--text-soft);--tx:var(--text);--tx2:var(--text-muted);--tx3:var(--text-soft);--bd:color-mix(in srgb,var(--border) 76%,transparent);--bd2:color-mix(in srgb,var(--accent) 48%,transparent);--em:var(--accent-hover);--gold:var(--accent);--gold2:var(--accent-hover);--gold3:var(--text-soft);--bg2:var(--bg-soft);--bg3:var(--surface);--bg4:var(--surface-soft)}
+body[data-theme="sepia"]{--bg:#eee4d2;--bg-soft:#eadbc4;--surface:#fbf3e4;--surface-soft:#f3e7d2;--surface-raised:#ead9bd;--text:#2d261d;--text-muted:#6d604f;--text-soft:#81715d;--accent:#1f7d72;--accent-hover:#2f8b5f;--border:#d8c5a8;--shadow-soft:0 16px 38px rgba(73,55,30,.12);--card:var(--surface);--card2:var(--surface-soft);--line:var(--border);--muted:var(--text-muted);--soft:var(--text-soft);--tx:var(--text);--tx2:var(--text-muted);--tx3:var(--text-soft);--bd:color-mix(in srgb,var(--border) 76%,transparent);--bd2:color-mix(in srgb,var(--accent) 48%,transparent);--em:var(--accent-hover);--gold:var(--accent);--gold2:var(--accent-hover);--gold3:var(--text-soft);--bg2:var(--bg-soft);--bg3:var(--surface);--bg4:var(--surface-soft)}
