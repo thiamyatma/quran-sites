@@ -1,4 +1,4 @@
-﻿const SHELL_CACHE = 'al-quran-shell-v6';
+﻿const SHELL_CACHE = 'al-quran-shell-v7';
 const API_CACHE = 'al-quran-api-v1';
 const SHELL = [
   '/',
@@ -12,6 +12,26 @@ const SHELL = [
   '/assets/site-system.css',
   '/assets/site-system.js',
   '/assets/quran-api.js',
+  '/assets/css/variables.css',
+  '/assets/css/base.css',
+  '/assets/css/layout.css',
+  '/assets/css/components.css',
+  '/assets/css/home.css',
+  '/assets/css/reader.css',
+  '/assets/css/admin.css',
+  '/assets/css/video.css',
+  '/assets/js/app.js',
+  '/assets/js/api.js',
+  '/assets/js/theme.js',
+  '/assets/js/i18n.js',
+  '/assets/js/search.js',
+  '/assets/js/audio.js',
+  '/assets/js/storage.js',
+  '/assets/js/home.js',
+  '/assets/js/reader.js',
+  '/assets/js/admin.js',
+  '/assets/js/video.js',
+  '/assets/icons/nq-icons.js',
   '/icons/site-icon-192.png',
   '/icons/site-icon-512.png'
 ];
@@ -88,3 +108,5 @@ async function cacheResponse(cacheName, req, resp) {
   const cache = await caches.open(cacheName);
   await cache.put(req, resp.clone());
 }
+
+
