@@ -4,16 +4,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
 body{font-family:'Crimson Pro',serif;background:var(--bg);color:var(--tx);min-height:100vh;transition:background .4s,color .4s;overflow-x:hidden;}
 
-/* GREETING */
-#greeting{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:1.2rem;animation:gOut .8s ease 3.5s forwards;}
-#greeting.hide{display:none;}
-.gbism{font-family:'Noto Naskh Arabic',serif;font-size:clamp(2rem,7vw,4.5rem);color:var(--gold);text-shadow:0 0 60px rgba(200,169,110,.4);animation:gUp .9s ease .2s both;}
-.gsalam{font-family:'Noto Naskh Arabic',serif;font-size:clamp(1.4rem,4vw,2.8rem);color:var(--tx);animation:gUp .9s ease .6s both;}
-.gsub{font-style:italic;font-size:1rem;color:var(--tx2);animation:gUp .9s ease 1s both;}
-.gline{width:160px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:gUp .9s ease 1.3s both;}
-@keyframes gUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-@keyframes gOut{to{opacity:0;pointer-events:none}}
-
 /* TOPBAR */
 #topbar{position:sticky;top:0;z-index:100;background:var(--bg2);border-bottom:1px solid var(--bd);padding:.75rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
 .logo-ar{font-family:'Noto Naskh Arabic',serif;font-size:1.4rem;font-weight:700;color:var(--gold);line-height:1;}

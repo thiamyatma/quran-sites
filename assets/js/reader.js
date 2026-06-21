@@ -206,7 +206,6 @@ window.addEventListener('load',()=>{
   if(initialRoute.s)curS=initialRoute.s;
   buildSel();renderSList();renderRec();renderDonWidget();updateResumeBtn();renderKhatm();registerSW();
   loadSurah(curS).then(()=>applyInitialRoute(initialRoute));loadVod();
-  setTimeout(()=>document.getElementById('greeting').classList.add('hide'),4400);
 });
 
 function buildSel(){
