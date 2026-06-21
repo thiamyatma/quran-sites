@@ -32,6 +32,12 @@ function resetVersePlayButtons(){
     setNqIconLabel(b,'headphones','Écouter');
   });
 }
+function updateCurrentVersePlayButton(){
+  const btn=document.getElementById('vb'+curV);
+  if(!btn||playCtx!=='verse'||!aud.src)return;
+  btn.classList.add('on');
+  setNqIconLabel(btn,isPlaying?'pause':'play',isPlaying?'En cours':'Reprendre');
+}
 
 /* ── DATA ── */
 const SS=[
@@ -784,7 +790,15 @@ function playV(n,keepRepeat=false){
     updPB();
     toast('Audio indisponible pour ce verset');
   };
-  safePlayAudio(()=>toast('Impossible de lancer l’audio'));
+  safePlayAudio(()=>toast('Impossible de lancer l’audio')).then(updateCurrentVersePlayButton);
+}
+function toggleVersePlay(n){
+  n=Math.max(1,Math.min(totV||n,n));
+  if(playCtx==='verse'&&curV===n&&aud.src){
+    togglePlay();
+    return;
+  }
+  playV(n);
 }
 function stopAud(keepRepeat=false){
   clearRepeatTimer();
@@ -805,9 +819,10 @@ function togglePlay(){
     aud.pause();
     isPlaying=false;
     updPB();
+    updateCurrentVersePlayButton();
     return;
   }
-  safePlayAudio(()=>toast('Impossible de lancer l’audio'));
+  safePlayAudio(()=>toast('Impossible de lancer l’audio')).then(updateCurrentVersePlayButton);
 }
 function updPB(){
   document.getElementById('playbtn').innerHTML=nqIcon(isPlaying?'pause':'play');
@@ -839,7 +854,7 @@ function replayV(){
   if(btn){btn.classList.add('on');setNqIconLabel(btn,'pause','En cours');}
   document.getElementById('progfill').style.width='0%';
   document.getElementById('tcur').textContent='0:00';
-  safePlayAudio(()=>toast('Impossible de relancer l’audio'));
+  safePlayAudio(()=>toast('Impossible de relancer l’audio')).then(updateCurrentVersePlayButton);
 }
 function repeatVerse(n){
   setRepeatMode('verse');
@@ -1268,7 +1283,7 @@ function initReaderStaticBindings(){
       const verse = Number(verseActionButton.dataset.verse);
       const index = Number(verseActionButton.dataset.index);
       const verseActions = {
-        play: () => playV(verse),
+        play: () => toggleVersePlay(verse),
         repeat: () => repeatVerse(verse),
         fav: () => toggleFav(index),
         bookmark: () => toggleBookmark(index),
@@ -1310,7 +1325,7 @@ function initReaderStaticBindings(){
     if (focusPlayButton) {
       const verse = Number(focusPlayButton.dataset.focusPlayVerse);
       focusVerse(verse);
-      playV(verse);
+      toggleVersePlay(verse);
       return;
     }
 
@@ -1322,7 +1337,7 @@ function initReaderStaticBindings(){
 
     const playVerseCard = event.target.closest('[data-play-verse]');
     if (playVerseCard) {
-      playV(Number(playVerseCard.dataset.playVerse));
+      toggleVersePlay(Number(playVerseCard.dataset.playVerse));
       return;
     }
 
