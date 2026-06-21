@@ -123,6 +123,52 @@ const REVELATION_ORDER=[96,68,73,74,1,111,81,87,92,89,93,94,103,100,108,102,107,
 function el(id){return document.getElementById(id)}function t(k){return (TR[lang]&&TR[lang][k])||TR.fr[k]||k}function readerUrl(s,a){return 'reader.html?s='+encodeURIComponent(s)+(a?'&a='+encodeURIComponent(a):'')}function focusHomeSearch(){el('home-search')?.focus()}function showToast(msg){const b=el('toast');if(!b)return;b.textContent=msg;b.classList.add('show');clearTimeout(showToast._t);showToast._t=setTimeout(()=>b.classList.remove('show'),2400)}
 function closePopovers(except){['langMenu','footerLangMenu','themeMenu'].forEach(id=>{if(id!==except)el(id)?.classList.remove('open')});if(except!=='menuPanel')el('menuPanel')?.classList.remove('open')}function togglePopover(id){const m=el(id);const open=m.classList.contains('open');closePopovers(id);m.classList.toggle('open',!open)}function toggleMenu(){const m=el('menuPanel');const open=m.classList.contains('open');closePopovers('menuPanel');m.classList.toggle('open',!open)}
 document.addEventListener('click',e=>{if(!e.target.closest('.select-pop')&&!e.target.closest('#menuPanel')&&!e.target.closest('#menuBtn'))closePopovers();if(!e.target.closest('.search-wrap'))el('searchResults')?.classList.remove('open')});
+function initHomeBindings(){
+  document.addEventListener('click',e=>{
+    const pop=e.target.closest('[data-popover]');
+    if(pop){togglePopover(pop.dataset.popover);return}
+    const langBtn=e.target.closest('[data-lang]');
+    if(langBtn){setLang(langBtn.dataset.lang);return}
+    const themeBtn=e.target.closest('[data-theme-choice]');
+    if(themeBtn){setThemeMode(themeBtn.dataset.themeChoice);return}
+    const browseBtn=e.target.closest('[data-browse]');
+    if(browseBtn){setBrowseMode(browseBtn.dataset.browse);return}
+    const hashBtn=e.target.closest('[data-reader-hash]');
+    if(hashBtn){goReaderHash(hashBtn.dataset.readerHash);return}
+    const surahBtn=e.target.closest('[data-reader-surah]');
+    if(surahBtn){location.href=readerUrl(surahBtn.dataset.readerSurah);return}
+    const action=e.target.closest('[data-action]');
+    if(!action)return;
+    if(action.tagName==='A')e.preventDefault();
+    const actions={
+      'account-soon':()=>showToast(t('accountSoon')),
+      'cycle-theme':cycleThemeMode,
+      'focus-search':focusHomeSearch,
+      'toggle-menu':toggleMenu,
+      'resume-reading':resumeReading,
+      'clear-search':clearSearchBox,
+      'voice-soon':()=>showToast(t('voiceSoon')),
+      'show-popular':showPopular,
+      'play-daily':playDailyAyah,
+      'share-daily':shareDailyAyah,
+      'toggle-sort':toggleSort
+    };
+    actions[action.dataset.action]?.();
+  });
+  document.addEventListener('submit',e=>{
+    const form=e.target.closest('[data-form]');
+    if(!form)return;
+    if(form.dataset.form==='search')searchAndOpen(e);
+    if(form.dataset.form==='newsletter')subscribeNewsletter(e);
+  });
+  const search=el('home-search');
+  if(search){
+    search.addEventListener('focus',showSearchPanel);
+    search.addEventListener('input',handleSearchInput);
+    search.addEventListener('keydown',handleSearchKeys);
+  }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initHomeBindings);else initHomeBindings();
 function sysTheme(){return matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}function themeLabel(){return themeMode==='auto'?'Auto':themeMode==='dark'?'Sombre':themeMode==='light'?'Clair':'Sepia'}function themeIcon(){return themeMode==='auto'?'monitor':themeMode==='dark'?'moon':themeMode==='light'?'sun':'book'}function applyTheme(){document.body.dataset.theme=themeMode==='auto'?sysTheme():themeMode;if(el('themeBtn'))el('themeBtn').textContent=themeLabel();if(el('headerThemeBtn')){el('headerThemeBtn').innerHTML=NQIcon.svg(themeIcon());el('headerThemeBtn').title='Thème: '+themeLabel();el('headerThemeBtn').setAttribute('aria-label','Thème: '+themeLabel())}document.querySelectorAll('[data-theme-choice]').forEach(b=>b.classList.toggle('on',b.dataset.themeChoice===themeMode))}function setThemeMode(m){themeMode=m;localStorage.setItem('aq_home_theme',m);localStorage.setItem('aq_theme',m);if(window.AQGlobal)window.AQGlobal.setTheme(m);applyTheme();closePopovers()}function cycleThemeMode(){const modes=['auto','dark','light','sepia'];setThemeMode(modes[(modes.indexOf(themeMode)+1)%modes.length]);showToast('Thème: '+themeLabel())}matchMedia('(prefers-color-scheme: light)').addEventListener?.('change',()=>{if(themeMode==='auto')applyTheme()});
 function applyLang(){document.documentElement.lang=lang;document.querySelectorAll('[data-i18n]').forEach(n=>n.textContent=t(n.dataset.i18n));document.querySelectorAll('[data-i18n-placeholder]').forEach(n=>n.placeholder=t(n.dataset.i18nPlaceholder));if(el('langBtn'))el('langBtn').textContent=lang.toUpperCase();if(el('footerLangBtn'))el('footerLangBtn').textContent=lang==='fr'?'Français':lang==='en'?'English':'العربية';document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('on',b.dataset.lang===lang));renderBrowse();updateResume()}function setLang(l){lang=l;localStorage.setItem('aq_home_lang',l);localStorage.setItem('aq_lang',l);if(window.AQGlobal)window.AQGlobal.setLang(l);applyLang();closePopovers();showToast(l==='fr'?'Langue: français':l==='en'?'Language: English':'اللغة: العربية')}
 function norm(v){return (v||'').toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim()}function parseReference(q){const m=(q||'').trim().match(/^(\d{1,3})\s*[:/.\-\s]\s*(\d{1,3})$/);if(!m)return null;const s=+m[1],a=+m[2],meta=SS[s-1];if(!meta||a<1||a>meta.v)return null;return {s,a,meta}}function searchRes(q){const ref=parseReference(q);if(ref)return [{type:'ref',...ref}];const nq=norm(q),raw=q.trim();if(!raw)return [];return SS.filter(s=>String(s.n)===raw||norm(s.fr).includes(nq)||norm(s.en).includes(nq)||s.ar.includes(raw)).slice(0,8)}
