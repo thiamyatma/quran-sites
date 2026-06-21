@@ -57,7 +57,7 @@
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/layout.css">
 <link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/reader.css?v=reader-tools-20260621">
+<link rel="stylesheet" href="assets/css/reader.css?v=reader-refined-20260621">
 
 <script src="assets/icons/nq-icons.js"></script>
 <script defer src="assets/js/storage.js"></script>
@@ -83,7 +83,18 @@
     <div class="rptitle">Choisir le récitateur — اختر القارئ</div>
     <button class="pclose" data-action="close-rec" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
-  <div class="rpgrid" id="rpgrid"></div>
+  <div class="rec-layout">
+    <div class="rec-list">
+      <div class="rec-section-title"><span data-icon="microphone"></span> Récitateur</div>
+      <div class="rpgrid" id="rpgrid"></div>
+    </div>
+    <div class="rec-quality" id="rquality">
+      <div class="rec-section-title">Qualité audio</div>
+      <button class="qitem" data-quality="64">64 kbps</button>
+      <button class="qitem on" data-quality="128">128 kbps</button>
+      <button class="qitem" data-quality="192">192 kbps</button>
+    </div>
+  </div>
 </div>
 
 <!-- TOOLS PANEL -->
@@ -235,7 +246,7 @@
       <div class="vopts">
         <button class="vopt on" data-c="ar+tr" data-vo-type="content">🌐 Arabe + Traduction</button>
         <button class="vopt" data-c="ar" data-vo-type="content">عربي Arabe seul</button>
-        <button class="vopt" data-c="ar+ph" data-vo-type="content">ABC Arabe + Phonétique</button>
+        <button class="vopt" data-c="ar+ph" data-vo-type="content">Translit. Arabe + Phonétique</button>
       </div>
     </div>
 
@@ -290,7 +301,7 @@
     <div class="lsw">
       <button class="lb on" id="lbfr" data-reader-lang="fr">FR</button>
       <button class="lb" id="lben" data-reader-lang="en">EN</button>
-      <button class="lb" id="lbph" data-action="toggle-phon">ABC</button>
+      <button class="lb" id="lbph" data-action="toggle-phon">Translit.</button>
     </div>
     <button class="ibtn" id="thbtn" data-action="toggle-theme" aria-label="Thème"><span data-icon="moon"></span></button>
   </div>
@@ -413,7 +424,7 @@
       <div class="vodtr" id="vodtr"></div>
       <div class="vodacts">
         <button class="vbtn" id="vodplaybtn" data-action="play-vod"><span data-icon="headphones"></span> Écouter</button>
-        <button class="vbtn" data-action="toggle-vod-phon">ABC</button>
+        <button class="vbtn" data-action="toggle-vod-phon">Translit.</button>
         <button class="vbtn" data-open-share="vod"><span data-icon="image"></span> Image</button>
         <button class="vbtn" data-open-video="vod"><span data-icon="video"></span> Vidéo</button>
         <span class="vodref" id="vodref"></span>
@@ -462,7 +473,7 @@
 <audio id="aud" preload="auto"></audio>
 
 
-<script src="assets/js/reader.js?v=reader-tools-20260621"></script>
+<script src="assets/js/reader.js?v=reader-refined-20260621"></script>
 </body>
 </html>
 

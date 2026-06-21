@@ -5,7 +5,7 @@ let curRec='ar.alafasy',repMode='off',repCount=2,repCur=0,rangeStart=1,rangeEnd=
 let vData=[],trFr=[],trEn=[],trPh=[];
 let vodData=null,vodGN=0,shareV=null,shareTheme='dark';
 let playCtx='',repTimer=null;
-let arSize=30,audioSpeed=1,searchIndex=[],searchLoading=null,libraryView='favs';
+let arSize=30,audioSpeed=1,audioQuality=128,searchIndex=[],searchLoading=null,libraryView='favs';
 const PREF_KEY='aq_prefs';
 const SURAH_CACHE_PREFIX='aq_surah_';
 const LOCAL_SURAH_CACHE_PREFIX='aq_offline_surah_';
@@ -225,7 +225,7 @@ function loadPrefs(){
 function savePrefs(){
   const storedTheme=localStorage.getItem('aq_theme')||localStorage.getItem('aq_home_theme');
   const prefTheme=['auto','sepia'].includes(storedTheme)?storedTheme:(isLight?'light':'dark');
-  const p={lang:curLang,theme:prefTheme,rec:curRec,surah:curS,phon:showPhon,auto:autoplay,rep:repCount,repMode,rangeStart,rangeEnd,arSize,audioSpeed};
+  const p={lang:curLang,theme:prefTheme,rec:curRec,surah:curS,phon:showPhon,auto:autoplay,rep:repCount,repMode,rangeStart,rangeEnd,arSize,audioSpeed,audioQuality};
   localStorage.setItem(PREF_KEY,JSON.stringify(p));
 }
 function applyPrefs(p){
@@ -240,6 +240,7 @@ function applyPrefs(p){
   rangeEnd=Math.max(1,+p.rangeEnd||rangeStart);
   arSize=Math.max(22,Math.min(42,+p.arSize||30));
   audioSpeed=[.75,1,1.25,1.5].includes(+p.audioSpeed)?+p.audioSpeed:1;
+  audioQuality=[64,128,192].includes(+p.audioQuality)?+p.audioQuality:128;
   const themeMode=localStorage.getItem('aq_theme')||localStorage.getItem('aq_home_theme')||p.theme||'dark';
   const actualTheme=themeMode==='auto'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):themeMode;
   isLight=actualTheme==='light';
@@ -735,7 +736,7 @@ function toggleTheme(){
 /* ── AUDIO ── */
 function gN(s,a){return SS.slice(0,s-1).reduce((x,r)=>x+r.v,0)+a;}
 function audioSource(globalAyah,reciter=curRec){
-  return 'https://cdn.islamic.network/quran/audio/128/'+reciter+'/'+globalAyah+'.mp3';
+  return 'https://cdn.islamic.network/quran/audio/'+audioQuality+'/'+reciter+'/'+globalAyah+'.mp3';
 }
 function safePlayAudio(onFail){
   aud.playbackRate=audioSpeed;
@@ -964,8 +965,20 @@ function renderRec(){
       <div><div class="rname">${r.name}</div><div class="rstyle">${r.style}</div></div>
       <div class="rchk">✓</div>
     </div>`).join('');
+  document.querySelectorAll('[data-quality]').forEach(b=>b.classList.toggle('on',+b.dataset.quality===audioQuality));
 }
 function selRec(id,name){const was=isPlaying,v=curV;curRec=id;savePrefs();stopAud();renderRec();document.getElementById('frec').textContent=name;closeRec();if(was)setTimeout(()=>playV(v),150);}
+function setAudioQuality(q){
+  audioQuality=[64,128,192].includes(+q)?+q:128;
+  savePrefs();
+  renderRec();
+  toast('Qualité audio '+audioQuality+' kbps');
+  if(isPlaying){
+    const v=curV;
+    stopAud();
+    setTimeout(()=>playV(v),150);
+  }
+}
 function openRec(){renderRec();document.getElementById('rpanel').classList.add('open');document.getElementById('overlay').classList.add('show');}
 function closeRec(){document.getElementById('rpanel').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
 
@@ -1305,6 +1318,12 @@ function initReaderStaticBindings(){
     const reciterButton = event.target.closest('[data-reciter]');
     if (reciterButton) {
       selRec(reciterButton.dataset.id, reciterButton.dataset.name);
+      return;
+    }
+
+    const qualityButton = event.target.closest('[data-quality]');
+    if (qualityButton) {
+      setAudioQuality(qualityButton.dataset.quality);
       return;
     }
 
