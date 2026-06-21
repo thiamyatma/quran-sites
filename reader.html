@@ -174,7 +174,7 @@
   <div id="sharemodal">
     <div class="shttl">
       <span><span data-icon="share"></span> PARTAGER LE VERSET</span>
-      <button style="background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem" onclick="closeShare()" aria-label="Fermer"><span data-icon="close"></span></button>
+      <button class="modal-close-btn" onclick="closeShare()" aria-label="Fermer"><span data-icon="close"></span></button>
     </div>
     <div id="shcanvas-wrap"><canvas id="shcanvas" width="1080" height="1080"></canvas></div>
     <div class="shthemes">
@@ -191,7 +191,7 @@
   <div id="vidmodal">
     <div class="vidttl">
       <span><span data-icon="video"></span> CRÉER UNE VIDÉO</span>
-      <button style="background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem" onclick="closeVid()" aria-label="Fermer"><span data-icon="close"></span></button>
+      <button class="modal-close-btn" onclick="closeVid()" aria-label="Fermer"><span data-icon="close"></span></button>
     </div>
 
     <div class="vsec">
@@ -262,7 +262,7 @@
 <div id="toast"></div>
 
 <!-- APP -->
-<div id="app" style="position:relative;z-index:1;min-height:100vh;">
+<div id="app" class="reader-app">
 
   <!-- TOPBAR -->
   <div id="topbar">
@@ -425,9 +425,9 @@
       <div>Chargement du Saint Coran...</div>
     </div>
     <div id="errmsg">
-      <div style="font-size:2rem;margin-bottom:1rem">⚠</div>
+      <div class="error-mark">⚠</div>
       <div>Erreur de chargement.</div><br>
-      <button class="vbtn" style="margin:auto;display:block" onclick="loadSurah(curS)">Réessayer</button>
+      <button class="vbtn retry-btn" onclick="loadSurah(curS)">Réessayer</button>
     </div>
     <div id="vlist"></div>
   </div>
@@ -442,15 +442,15 @@
   </div>
 
   <footer>
-    <div style="font-family:'Noto Naskh Arabic',serif;font-size:1.1rem;color:var(--gold);margin-bottom:5px;">صَدَقَ اللَّهُ الْعَظِيمُ</div>
+    <div class="footer-arabic">صَدَقَ اللَّهُ الْعَظِيمُ</div>
     Allah le Très-Grand a dit la vérité · <span id="frec">Mishary Rashid Alafasy</span>
-    <div style="margin-top:.8rem;padding-top:.8rem;border-top:1px solid var(--bd);">
-      <a href="video.html" style="display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1rem;background:rgba(200,169,110,.08);border:1px solid var(--bd2);border-radius:var(--r);color:var(--gold);text-decoration:none;font-size:.78rem;margin-bottom:.8rem;"><span data-icon="video"></span> Générateur de vidéo</a>
+    <div class="footer-extra">
+      <a class="footer-video-link" href="video.html"><span data-icon="video"></span> Générateur de vidéo</a>
     <br>
-    Conçu avec ❤️ par <strong style="color:var(--gold)">Yatus</strong> — Dakar, Sénégal
+    Conçu avec ❤️ par <strong class="footer-author">Yatus</strong> — Dakar, Sénégal
     <br>
-    <a href="admin.html" style="display:inline-flex;align-items:center;gap:.3rem;margin-top:.6rem;padding:.3rem .9rem;border:1px solid var(--bd);border-radius:var(--r);color:var(--tx3);text-decoration:none;font-size:.7rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold3)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--tx3)'">🔐 Administration</a>
-      <br><span style="font-size:.72rem;">© 2025 al-quran1.vercel.app</span>
+    <a class="footer-admin-link" href="admin.html">🔐 Administration</a>
+      <br><span class="footer-copy">© 2025 al-quran1.vercel.app</span>
     </div>
   </footer>
 </div>
