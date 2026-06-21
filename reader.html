@@ -57,7 +57,7 @@
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/layout.css">
 <link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/reader.css?v=reader-colors-20260621">
+<link rel="stylesheet" href="assets/css/reader.css?v=reader-tools-20260621">
 
 <script src="assets/icons/nq-icons.js"></script>
 <script defer src="assets/js/storage.js"></script>
@@ -93,12 +93,26 @@
     <button class="pclose" data-action="close-tools" aria-label="Fermer"><span data-icon="close"></span></button>
   </div>
   <div class="tooltabs">
-    <button class="tooltab on" id="tooltab-search" data-tool="search">Recherche</button>
+    <button class="tooltab on" id="tooltab-tools" data-tool="tools">Outils</button>
+    <button class="tooltab" id="tooltab-search" data-tool="search">Recherche</button>
     <button class="tooltab" id="tooltab-favs" data-tool="favs">Favoris</button>
     <button class="tooltab" id="tooltab-khatm" data-tool="khatm">Khatm</button>
     <button class="tooltab" id="tooltab-settings" data-tool="settings">Réglages</button>
   </div>
-  <div class="toolbody on" id="tool-search">
+  <div class="toolbody on" id="tool-tools">
+    <div class="toolhint">Tous les outils de lecture et les réglages sont regroupés ici.</div>
+    <div class="toolgrid">
+      <button class="toolshortcut" data-action="open-tafsir"><span data-icon="book"></span><span><strong>Tafsir</strong><small>Explications</small></span></button>
+      <button class="toolshortcut" data-action="open-notes"><span data-icon="edit"></span><span><strong>Notes</strong><small>Mes notes</small></span></button>
+      <button class="toolshortcut" data-open-tool="favs"><span data-icon="heart"></span><span><strong>Favoris</strong><small>Versets aimés</small></span></button>
+      <button class="toolshortcut" data-open-tool="khatm"><span data-icon="target"></span><span><strong>Khatm</strong><small>Progression</small></span></button>
+      <button class="toolshortcut" data-action="share-current-verse"><span data-icon="share"></span><span><strong>Partager</strong><small>Verset actuel</small></span></button>
+      <button class="toolshortcut" data-action="download-current-verse-image"><span data-icon="image"></span><span><strong>Image</strong><small>Exporter le verset</small></span></button>
+      <button class="toolshortcut" data-action="open-rec"><span data-icon="microphone"></span><span><strong>Récitateur</strong><small>Changer la voix</small></span></button>
+      <button class="toolshortcut" data-open-tool="settings"><span data-icon="settings"></span><span><strong>Réglages</strong><small>Affichage & audio</small></span></button>
+    </div>
+  </div>
+  <div class="toolbody" id="tool-search">
     <input class="toolfield" id="qsearch" type="search" placeholder="Mot, sourate, ou référence 2:255" data-input="search-quran">
     <div class="toolhint">Recherche dans les textes arabe, français et anglais. Le premier chargement peut prendre quelques secondes.</div>
     <div class="toolstatus" id="search-status"></div>
@@ -272,9 +286,7 @@
     <div class="tsp"></div>
     <select class="ssel" id="ssel" data-change="load-surah"></select>
     <button class="ibtn" data-open-tool="search" aria-label="Recherche" title="Recherche"><span data-icon="search"></span></button>
-    <button class="ibtn" data-open-tool="favs" aria-label="Favoris" title="Favoris"><span data-icon="heart"></span></button>
-    <button class="ibtn" data-open-tool="khatm" aria-label="Progression Khatm" title="Khatm"><span data-icon="target"></span></button>
-    <button class="ibtn" data-open-tool="settings" aria-label="Réglages" title="Réglages"><span data-icon="settings"></span></button>
+    <button class="ibtn tools-btn" data-open-tool="tools" aria-label="Outils" title="Outils"><span data-icon="settings"></span></button>
     <div class="lsw">
       <button class="lb on" id="lbfr" data-reader-lang="fr">FR</button>
       <button class="lb" id="lben" data-reader-lang="en">EN</button>
@@ -375,8 +387,8 @@
     <button class="mbitem" data-open-tool="favs" aria-label="Favoris">
       <span class="mbico" data-icon="heart"></span><span>Favoris</span>
     </button>
-    <button class="mbitem" data-open-tool="settings" aria-label="Réglages">
-      <span class="mbico" data-icon="settings"></span><span>Réglages</span>
+    <button class="mbitem" data-open-tool="tools" aria-label="Outils">
+      <span class="mbico" data-icon="settings"></span><span>Outils</span>
     </button>
   </div>
 
@@ -450,7 +462,7 @@
 <audio id="aud" preload="auto"></audio>
 
 
-<script src="assets/js/reader.js?v=reader-cleanup-20260621"></script>
+<script src="assets/js/reader.js?v=reader-tools-20260621"></script>
 </body>
 </html>
 

@@ -360,7 +360,7 @@ function goS(n){closePanel();loadSurah(n);}
 function openPanel(){document.getElementById('spanel').classList.add('open');document.getElementById('overlay').classList.add('show');}
 function closePanel(){document.getElementById('spanel').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
 
-function openTools(tab='search'){
+function openTools(tab='tools'){
   closePanel();closeRec();
   document.getElementById('toolpanel').classList.add('open');
   document.getElementById('overlay').classList.add('show');
@@ -371,7 +371,7 @@ function closeTools(){
   document.getElementById('overlay').classList.remove('show');
 }
 function showTool(tab){
-  ['search','favs','khatm','settings'].forEach(x=>{
+  ['tools','search','favs','khatm','settings'].forEach(x=>{
     document.getElementById('tool-'+x).classList.toggle('on',x===tab);
     document.getElementById('tooltab-'+x).classList.toggle('on',x===tab);
   });

@@ -1468,3 +1468,63 @@ footer {
   border-color: color-mix(in srgb, var(--accent-hover) 55%, transparent) !important;
   color: var(--accent-hover) !important;
 }
+
+/* Compact tools hub: one entry point instead of scattered desktop buttons. */
+#desk-right {
+  display: none !important;
+}
+
+.toolgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.toolshortcut {
+  min-height: 68px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text);
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.toolshortcut:hover {
+  border-color: color-mix(in srgb, var(--accent-hover) 55%, transparent);
+  color: var(--accent-hover);
+}
+
+.toolshortcut > .nq-icon-wrap,
+.toolshortcut > svg {
+  color: var(--accent-hover);
+  flex: 0 0 auto;
+}
+
+.toolshortcut span:last-child {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.toolshortcut strong {
+  font-size: .95rem;
+  line-height: 1.1;
+}
+
+.toolshortcut small {
+  color: var(--text-muted);
+  font-size: .78rem;
+  line-height: 1.2;
+}
+
+@media (max-width: 420px) {
+  .toolgrid {
+    grid-template-columns: 1fr;
+  }
+}
