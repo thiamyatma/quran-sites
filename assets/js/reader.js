@@ -203,6 +203,8 @@ function applyInitialRoute(route){
   }
   if(route.a)setTimeout(()=>focusVerse(route.a),260);
 }
+let readerShellScrollBound=false;
+
 window.addEventListener('load',()=>{
   // Track visit
   localStorage.setItem('aq_visitors', (+localStorage.getItem('aq_visitors')||0)+1);
@@ -219,6 +221,7 @@ window.addEventListener('load',()=>{
   if(initialRoute.s)curS=initialRoute.s;
   buildSel();renderSList();renderRec();renderDonWidget();updateResumeBtn();renderKhatm();
   loadSurah(curS).then(()=>applyInitialRoute(initialRoute));loadVod();
+  setupReaderShellScroll();
   updateStickyState();
 });
 window.addEventListener('scroll',updateStickyState,{passive:true});
@@ -485,15 +488,26 @@ function scrollReaderToTop(behavior='auto'){
   const area=readerScrollArea();
   if(area){
     area.scrollTo({top:0,behavior});
+    updateStickyState();
     return;
   }
   window.scrollTo({top:0,behavior});
 }
+function setupReaderShellScroll(){
+  if(readerShellScrollBound)return;
+  const area=readerScrollArea();
+  if(!area)return;
+  area.addEventListener('scroll',updateStickyState,{passive:true});
+  readerShellScrollBound=true;
+}
 function updateStickyState(){
   if(document.body.classList.contains('reader-page')){
     document.body.classList.remove('reader-compact');
+    const area=readerScrollArea();
+    document.body.classList.toggle('reader-scrolled',!!area&&area.scrollTop>80);
     return;
   }
+  document.body.classList.remove('reader-scrolled');
   document.body.classList.toggle('reader-compact',window.scrollY>80);
 }
 
