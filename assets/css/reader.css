@@ -2181,3 +2181,30 @@ html {
     justify-self: end;
   }
 }
+
+/* Keep fixed mini player from covering reading content. */
+body.reader-compact #app #vwrap,
+body.reader-compact #app #shdr,
+body.reader-compact #app #vodwrap,
+body.reader-compact #app .mushaf-view {
+  padding-top: 270px !important;
+}
+
+body.reader-compact #app .vc,
+body.reader-compact #app .mushaf-page {
+  scroll-margin-top: 220px !important;
+}
+
+@media (max-width: 1023px) {
+  body.reader-compact #app #vwrap,
+  body.reader-compact #app #shdr,
+  body.reader-compact #app #vodwrap,
+  body.reader-compact #app .mushaf-view {
+    padding-top: 430px !important;
+  }
+
+  body.reader-compact #app .vc,
+  body.reader-compact #app .mushaf-page {
+    scroll-margin-top: 260px !important;
+  }
+}

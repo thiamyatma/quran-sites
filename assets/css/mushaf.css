@@ -43,6 +43,26 @@
   color: var(--accent-hover);
 }
 
+#topbar .reader-mode-switch {
+  grid-column: auto;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 4px;
+  flex: 0 0 auto;
+  border-radius: 14px;
+}
+
+#topbar .mode-tab {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: .84rem;
+}
+
+#topbar .mode-resume {
+  display: none;
+}
+
 .mushaf-view {
   grid-column: 1 / -1;
   width: 100%;
@@ -292,6 +312,18 @@ body[data-theme="sepia"] .mushaf-page {
     width: auto;
     margin: 0 14px 14px;
     overflow-x: auto;
+  }
+
+  #topbar .reader-mode-switch {
+    margin: 0;
+    padding: 3px;
+    flex: 0 0 auto;
+  }
+
+  #topbar .mode-tab {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: .8rem;
   }
 
   .mode-tab,

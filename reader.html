@@ -57,8 +57,8 @@
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/layout.css">
 <link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/reader.css?v=reader-sticky-20260622">
-<link rel="stylesheet" href="assets/css/mushaf.css?v=mushaf-20260622">
+<link rel="stylesheet" href="assets/css/reader.css?v=reader-toggle-bar-20260622">
+<link rel="stylesheet" href="assets/css/mushaf.css?v=mushaf-toggle-bar-20260622">
 
 <script src="assets/icons/nq-icons.js"></script>
 <script defer src="assets/js/storage.js"></script>
@@ -307,6 +307,12 @@
     <button class="ibtn" id="thbtn" data-action="toggle-theme" aria-label="Thème"><span data-icon="moon"></span></button>
   </div>
 
+  <div class="reader-mode-switch" role="tablist" aria-label="Mode de lecture">
+    <button class="mode-tab on" id="mode-classic" data-reading-mode="classic" role="tab" aria-selected="true">Lecture</button>
+    <button class="mode-tab" id="mode-mushaf" data-reading-mode="mushaf" role="tab" aria-selected="false">Mushaf</button>
+    <button class="mode-resume" id="mushaf-resume" data-mushaf-action="resume" hidden>Reprendre page 1</button>
+  </div>
+
   <!-- PLAYER BAR -->
   <div id="pbar">
     <div class="pinfo" id="pinfo">—</div>
@@ -361,12 +367,6 @@
     </div>
     <button class="mini-chip" data-action="open-rec"><span data-icon="microphone"></span> Récitateur</button>
     <button class="mini-icon" data-open-tool="tools" aria-label="Options audio"><span data-icon="settings"></span></button>
-  </div>
-
-  <div class="reader-mode-switch" role="tablist" aria-label="Mode de lecture">
-    <button class="mode-tab on" id="mode-classic" data-reading-mode="classic" role="tab" aria-selected="true">Lecture</button>
-    <button class="mode-tab" id="mode-mushaf" data-reading-mode="mushaf" role="tab" aria-selected="false">Mushaf</button>
-    <button class="mode-resume" id="mushaf-resume" data-mushaf-action="resume" hidden>Reprendre page 1</button>
   </div>
 
   <div class="desktop-shell">
@@ -530,7 +530,7 @@
 <audio id="aud" preload="auto"></audio>
 
 
-<script src="assets/js/reader.js?v=reader-mushaf-20260622"></script>
+<script src="assets/js/reader.js?v=reader-toggle-sticky-2-20260622"></script>
 <script src="assets/js/mushaf.js?v=mushaf-20260622"></script>
 </body>
 </html>
