@@ -450,6 +450,11 @@ function focusVerse(a){
 function norm(s){
   return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[\u064B-\u065F\u0670]/g,'').replace(/[^\p{L}\p{N}:]+/gu,' ').trim();
 }
+function playerSurahLabel(s=curS,a=null){
+  const m=SS[s-1];
+  const name=curLang==='fr'?m.fr:m.en;
+  return a?`${s}:${a} — ${m.ar} — ${name}`:`${s}. ${m.ar} — ${name}`;
+}
 
 /* ── LOAD SURAH ── */
 async function loadSurah(n){
@@ -461,7 +466,7 @@ async function loadSurah(n){
   document.getElementById('snen').textContent=m.en+' — '+m.fr;
   document.getElementById('snmeta').textContent=m.t+' · '+m.v+' versets';
   document.getElementById('bism').style.display=n===9?'none':'';
-  document.getElementById('pinfo').textContent=m.ar;
+  document.getElementById('pinfo').textContent=playerSurahLabel(n);
   const mt=document.getElementById('mobile-title-ar'),ms=document.getElementById('mobile-title-sub');
   if(mt)mt.textContent=m.ar;
   if(ms)ms.textContent=n+'. '+(curLang==='fr'?m.fr:m.en);
@@ -769,7 +774,7 @@ function playV(n,keepRepeat=false){
     localStorage.setItem(key,JSON.stringify(tops.slice(0,10)));
   } catch(e){}
   const m=SS[curS-1];
-  document.getElementById('pinfo').textContent=m.ar+' — '+toAr(n);
+  document.getElementById('pinfo').textContent=playerSurahLabel(curS,n);
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
   resetVersePlayButtons();
   const card=document.getElementById('vc'+n),btn=document.getElementById('vb'+n);
