@@ -212,7 +212,9 @@ window.addEventListener('load',()=>{
   if(initialRoute.s)curS=initialRoute.s;
   buildSel();renderSList();renderRec();renderDonWidget();updateResumeBtn();renderKhatm();
   loadSurah(curS).then(()=>applyInitialRoute(initialRoute));loadVod();
+  updateStickyState();
 });
+window.addEventListener('scroll',updateStickyState,{passive:true});
 
 function buildSel(){
   document.getElementById('ssel').innerHTML=SS.map(s=>`<option value="${s.n}">${s.n}. ${s.ar} — ${s.fr}</option>`).join('');
@@ -455,6 +457,23 @@ function playerSurahLabel(s=curS,a=null){
   const name=curLang==='fr'?m.fr:m.en;
   return a?`${s}:${a} — ${m.ar} — ${name}`:`${s}. ${m.ar} — ${name}`;
 }
+function setPlayerInfo(text){
+  const full=document.getElementById('pinfo');
+  const mini=document.getElementById('mini-info');
+  if(full)full.textContent=text;
+  if(mini)mini.textContent=text;
+}
+function setAudioProgress(current='0:00',total='0:00',width='0%'){
+  const ids=[['tcur',current],['ttot',total],['mini-tcur',current],['mini-ttot',total]];
+  ids.forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.textContent=value;});
+  const fill=document.getElementById('progfill');
+  const miniFill=document.getElementById('mini-progfill');
+  if(fill)fill.style.width=width;
+  if(miniFill)miniFill.style.width=width;
+}
+function updateStickyState(){
+  document.body.classList.toggle('reader-compact',window.scrollY>80);
+}
 
 /* ── LOAD SURAH ── */
 async function loadSurah(n){
@@ -466,7 +485,7 @@ async function loadSurah(n){
   document.getElementById('snen').textContent=m.en+' — '+m.fr;
   document.getElementById('snmeta').textContent=m.t+' · '+m.v+' versets';
   document.getElementById('bism').style.display=n===9?'none':'';
-  document.getElementById('pinfo').textContent=playerSurahLabel(n);
+  setPlayerInfo(playerSurahLabel(n));
   const mt=document.getElementById('mobile-title-ar'),ms=document.getElementById('mobile-title-sub');
   if(mt)mt.textContent=m.ar;
   if(ms)ms.textContent=n+'. '+(curLang==='fr'?m.fr:m.en);
@@ -718,6 +737,7 @@ function setLang(l){
   renderSList();
   const m=SS[curS-1],ms=document.getElementById('mobile-title-sub');
   if(ms)ms.textContent=curS+'. '+(curLang==='fr'?m.fr:m.en);
+  setPlayerInfo(playerSurahLabel(curS,playCtx==='verse'?curV:null));
   updateDesktopSurahInfo();
 }
 function togglePhon(){
@@ -774,7 +794,7 @@ function playV(n,keepRepeat=false){
     localStorage.setItem(key,JSON.stringify(tops.slice(0,10)));
   } catch(e){}
   const m=SS[curS-1];
-  document.getElementById('pinfo').textContent=playerSurahLabel(curS,n);
+  setPlayerInfo(playerSurahLabel(curS,n));
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
   resetVersePlayButtons();
   const card=document.getElementById('vc'+n),btn=document.getElementById('vb'+n);
@@ -815,9 +835,7 @@ function stopAud(keepRepeat=false){
   updateRepeatUI();
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('playing'));
   resetVersePlayButtons();
-  document.getElementById('progfill').style.width='0%';
-  document.getElementById('tcur').textContent='0:00';
-  document.getElementById('ttot').textContent='0:00';
+  setAudioProgress();
 }
 function togglePlay(){
   if(!aud.src){playV(curV);return;}
@@ -832,10 +850,17 @@ function togglePlay(){
 }
 function updPB(){
   document.getElementById('playbtn').innerHTML=nqIcon(isPlaying?'pause':'play');
+  const miniPlay=document.getElementById('mini-playbtn');
+  if(miniPlay){
+    miniPlay.innerHTML=nqIcon(isPlaying?'pause':'play');
+    miniPlay.classList.toggle('on',isPlaying);
+  }
   const mb=document.getElementById('mbplaybtn');
   if(mb){mb.innerHTML=nqIcon(isPlaying?'pause':'play');mb.classList.toggle('on',isPlaying);}
   const bar=document.getElementById('pbar');
   if(bar)bar.classList.toggle('playing',isPlaying);
+  const mini=document.getElementById('mini-player');
+  if(mini)mini.classList.toggle('playing',isPlaying);
 }
 function prevV(){if(curV>1)playV(curV-1);else if(curS>1)loadSurah(curS-1).then(()=>setTimeout(()=>playV(totV),800));}
 function nextV(){if(curV<totV)playV(curV+1);else if(curS<114)loadSurah(curS+1).then(()=>setTimeout(()=>playV(1),1200));}
@@ -847,9 +872,7 @@ aud.addEventListener('ended',()=>{
 });
 aud.addEventListener('timeupdate',()=>{
   if(!aud.duration)return;
-  document.getElementById('progfill').style.width=(aud.currentTime/aud.duration*100)+'%';
-  document.getElementById('tcur').textContent=fmt(aud.currentTime);
-  document.getElementById('ttot').textContent=fmt(aud.duration);
+  setAudioProgress(fmt(aud.currentTime),fmt(aud.duration),(aud.currentTime/aud.duration*100)+'%');
 });
 function seekA(e){if(!aud.duration)return;const r=e.currentTarget.getBoundingClientRect();aud.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*aud.duration;}
 
@@ -858,8 +881,7 @@ function replayV(){
   try{aud.currentTime=0;}catch(e){}
   const btn=document.getElementById('vb'+curV);
   if(btn){btn.classList.add('on');setNqIconLabel(btn,'pause','En cours');}
-  document.getElementById('progfill').style.width='0%';
-  document.getElementById('tcur').textContent='0:00';
+  setAudioProgress('0:00',document.getElementById('ttot')?.textContent||'0:00','0%');
   safePlayAudio(()=>toast('Impossible de relancer l’audio')).then(updateCurrentVersePlayButton);
 }
 function repeatVerse(n){

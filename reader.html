@@ -57,7 +57,7 @@
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/layout.css">
 <link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/reader.css?v=reader-polished-20260622">
+<link rel="stylesheet" href="assets/css/reader.css?v=reader-sticky-20260622">
 
 <script src="assets/icons/nq-icons.js"></script>
 <script defer src="assets/js/storage.js"></script>
@@ -345,6 +345,23 @@
     <button class="recbtn" data-action="open-rec"><span data-icon="microphone"></span> Récitateur</button>
   </div>
 
+  <!-- SMART MINI PLAYER -->
+  <div id="mini-player" class="audio-mini-player" aria-label="Mini lecteur audio">
+    <div class="mini-title" id="mini-info">—</div>
+    <div class="mini-controls">
+      <button class="mini-btn" data-action="previous-verse" aria-label="Verset précédent"><span data-icon="previous"></span></button>
+      <button class="mini-btn mini-play" id="mini-playbtn" data-action="toggle-play" aria-label="Lecture"><span data-icon="play"></span></button>
+      <button class="mini-btn" data-action="next-verse" aria-label="Verset suivant"><span data-icon="next"></span></button>
+    </div>
+    <div class="mini-progress">
+      <span class="mini-time" id="mini-tcur">0:00</span>
+      <div class="mini-bar" data-action="seek-audio"><div class="mini-fill" id="mini-progfill"></div></div>
+      <span class="mini-time" id="mini-ttot">0:00</span>
+    </div>
+    <button class="mini-chip" data-action="open-rec"><span data-icon="microphone"></span> Récitateur</button>
+    <button class="mini-icon" data-open-tool="tools" aria-label="Options audio"><span data-icon="settings"></span></button>
+  </div>
+
   <div class="desktop-shell">
   <aside id="desk-left" aria-label="Navigation des versets">
     <div class="desk-title"><span>SOURATE</span><button class="pclose" data-action="open-panel">‹</button></div>
@@ -473,7 +490,7 @@
 <audio id="aud" preload="auto"></audio>
 
 
-<script src="assets/js/reader.js?v=reader-polished-20260622"></script>
+<script src="assets/js/reader.js?v=reader-sticky-20260622"></script>
 </body>
 </html>
 
