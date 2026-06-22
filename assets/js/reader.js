@@ -535,6 +535,7 @@ async function loadSurah(n){
     setRangeBounds(false);
     document.getElementById('loading').style.display='none';
     renderV();renderDesktopAyahs();updateOfflineStatus();
+    window.NoorMushaf?.syncToReader?.({scroll:false});
     if(fromOffline)toast('Sourate chargée hors ligne');
   }catch(e){
     document.getElementById('loading').style.display='none';

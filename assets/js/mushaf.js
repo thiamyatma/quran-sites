@@ -8,7 +8,7 @@
 
   let currentPage = clampPage(Number(localStorage.getItem(LAST_PAGE_KEY)) || 1);
   let currentMode = 'classic';
-  let loadingPage = null;
+  let loadRequestId = 0;
 
   const el = {};
 
@@ -125,22 +125,21 @@
 
   async function loadMushafPage(page, options = {}) {
     const nextPage = clampPage(page);
+    const requestId = ++loadRequestId;
     currentPage = nextPage;
     localStorage.setItem(LAST_PAGE_KEY, String(currentPage));
     updateResumeButton();
     setLoading(currentPage);
-    loadingPage = currentPage;
     try {
       const data = await fetchPage(currentPage);
-      if (loadingPage !== currentPage) return;
+      if (requestId !== loadRequestId) return;
       renderPage(data);
       if (options.scroll !== false) {
         el.view.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     } catch (error) {
+      if (requestId !== loadRequestId) return;
       setError(currentPage, error.message);
-    } finally {
-      loadingPage = null;
     }
   }
 
@@ -171,9 +170,16 @@
     el.view.setAttribute('aria-hidden', String(currentMode !== 'mushaf'));
 
     if (currentMode === 'mushaf') {
-      const currentAyahPage = window.NoorReaderState?.().page;
-      loadMushafPage(currentAyahPage || currentPage, { scroll: true });
+      syncToReader({ scroll: true });
     }
+  }
+
+  function syncToReader(options = {}) {
+    if (currentMode !== 'mushaf') return;
+    const state = window.NoorReaderState?.();
+    const readerPage = state?.page;
+    if (!readerPage) return;
+    loadMushafPage(readerPage, { scroll: options.scroll !== false });
   }
 
   function go(delta) {
@@ -251,8 +257,12 @@
   window.NoorMushaf = {
     setMode,
     loadPage: loadMushafPage,
+    syncToReader,
     get currentPage() {
       return currentPage;
+    },
+    get currentMode() {
+      return currentMode;
     }
   };
 
