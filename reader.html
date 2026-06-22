@@ -58,6 +58,7 @@
 <link rel="stylesheet" href="assets/css/layout.css">
 <link rel="stylesheet" href="assets/css/components.css">
 <link rel="stylesheet" href="assets/css/reader.css?v=reader-sticky-20260622">
+<link rel="stylesheet" href="assets/css/mushaf.css?v=mushaf-20260622">
 
 <script src="assets/icons/nq-icons.js"></script>
 <script defer src="assets/js/storage.js"></script>
@@ -362,6 +363,12 @@
     <button class="mini-icon" data-open-tool="tools" aria-label="Options audio"><span data-icon="settings"></span></button>
   </div>
 
+  <div class="reader-mode-switch" role="tablist" aria-label="Mode de lecture">
+    <button class="mode-tab on" id="mode-classic" data-reading-mode="classic" role="tab" aria-selected="true">Lecture</button>
+    <button class="mode-tab" id="mode-mushaf" data-reading-mode="mushaf" role="tab" aria-selected="false">Mushaf</button>
+    <button class="mode-resume" id="mushaf-resume" data-mushaf-action="resume" hidden>Reprendre page 1</button>
+  </div>
+
   <div class="desktop-shell">
   <aside id="desk-left" aria-label="Navigation des versets">
     <div class="desk-title"><span>SOURATE</span><button class="pclose" data-action="open-panel">‹</button></div>
@@ -449,6 +456,39 @@
     </div>
   </div>
 
+  <!-- MUSHAF PAGE MODE -->
+  <section id="mushaf-view" class="mushaf-view" aria-hidden="true">
+    <div class="mushaf-toolbar">
+      <div>
+        <div class="mushaf-kicker">Mode Mushaf</div>
+        <h2 id="mushaf-title">Page 1 / 604</h2>
+        <p id="mushaf-meta">Chargement de la page...</p>
+      </div>
+      <div class="mushaf-actions">
+        <button class="mushaf-btn" data-mushaf-action="prev"><span data-icon="previous"></span> Page précédente</button>
+        <label class="mushaf-jump">
+          <span>Aller à</span>
+          <input id="mushaf-page-input" type="number" min="1" max="604" value="1" inputmode="numeric">
+        </label>
+        <button class="mushaf-btn" data-mushaf-action="next">Page suivante <span data-icon="next"></span></button>
+      </div>
+    </div>
+
+    <div class="mushaf-book">
+      <button class="mushaf-side-nav prev" data-mushaf-action="prev" aria-label="Page précédente"><span data-icon="previous"></span></button>
+      <article class="mushaf-page" id="mushaf-page" dir="rtl" aria-live="polite">
+        <div class="mushaf-loading">Chargement...</div>
+      </article>
+      <button class="mushaf-side-nav next" data-mushaf-action="next" aria-label="Page suivante"><span data-icon="next"></span></button>
+    </div>
+
+    <div class="mushaf-bottom-nav">
+      <button class="mushaf-btn" data-mushaf-action="prev"><span data-icon="previous"></span> Précédente</button>
+      <div class="mushaf-page-count" id="mushaf-page-count">1 / 604</div>
+      <button class="mushaf-btn" data-mushaf-action="next">Suivante <span data-icon="next"></span></button>
+    </div>
+  </section>
+
   <!-- VERSES -->
   <div id="vwrap">
     <div id="loading">
@@ -490,7 +530,8 @@
 <audio id="aud" preload="auto"></audio>
 
 
-<script src="assets/js/reader.js?v=reader-sticky-20260622"></script>
+<script src="assets/js/reader.js?v=reader-mushaf-20260622"></script>
+<script src="assets/js/mushaf.js?v=mushaf-20260622"></script>
 </body>
 </html>
 

@@ -157,6 +157,13 @@ const SS=[
   {n:114,ar:'الناس',en:'An-Nas',fr:'Les Hommes',v:6,t:'Mecquoise'},
 ];
 
+window.NoorQuranSurahs = SS;
+window.NoorReaderState = () => ({
+  curS,
+  curV,
+  page: vData?.[Math.max(0, curV - 1)]?.page || null
+});
+
 const RECS=[
   {id:'ar.alafasy',name:'Mishary Alafasy',ar:'مشاري العفاسي',style:'Mujawwad · Koweït'},
   {id:'ar.abdurrahmaansudais',name:'Abdurrahmaan As-Sudais',ar:'عبد الرحمن السديس',style:'Tarteel · Arabie Saoudite'},

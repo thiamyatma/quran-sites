@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'noorquran-shell-v11';
+const SHELL_CACHE = 'noorquran-shell-v12';
 const API_CACHE = 'noorquran-api-v2';
 const OFFLINE_URL = '/offline.html';
 const SHELL = [
@@ -17,6 +17,7 @@ const SHELL = [
   '/assets/css/components.css',
   '/assets/css/home.css',
   '/assets/css/reader.css',
+  '/assets/css/mushaf.css',
   '/assets/css/admin.css',
   '/assets/css/video.css',
   '/assets/js/app.js',
@@ -28,6 +29,7 @@ const SHELL = [
   '/assets/js/storage.js',
   '/assets/js/home.js',
   '/assets/js/reader.js',
+  '/assets/js/mushaf.js',
   '/assets/js/admin.js',
   '/assets/js/video.js',
   '/assets/icons/nq-icons.js',
