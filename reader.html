@@ -57,7 +57,7 @@
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/layout.css">
 <link rel="stylesheet" href="assets/css/components.css">
-<link rel="stylesheet" href="assets/css/reader.css?v=reader-smart-static-20260622">
+<link rel="stylesheet" href="assets/css/reader.css?v=reader-audio-options-20260622">
 <link rel="stylesheet" href="assets/css/mushaf.css?v=mushaf-toggle-bar-20260622">
 
 <script src="assets/icons/nq-icons.js"></script>
@@ -328,27 +328,31 @@
       <div class="progbar" data-action="seek-audio"><div class="progfill" id="progfill"></div></div>
       <span class="tlbl" id="ttot">0:00</span>
     </div>
-    <div class="repwrap">
-      <span class="replbl" data-icon="repeat"></span>
-      <div class="rbopts">
-        <button class="rb on" id="rep-off" data-repeat-mode="off">Off</button>
-        <button class="rb" id="rep-verse" data-repeat-mode="verse">Verset</button>
-        <button class="rb" id="rep-range" data-repeat-mode="range">Plage</button>
-        <button class="rb" data-repeat-count="2">2×</button>
-        <button class="rb" data-repeat-count="3">3×</button>
-        <button class="rb" data-repeat-count="5">5×</button>
-        <button class="rb" data-repeat-count="10">10×</button>
+    <button class="recbtn audio-options-btn" id="audioOptionsBtn" data-action="toggle-audio-options" aria-expanded="false" aria-controls="audio-options-panel"><span data-icon="settings"></span> Options</button>
+    <div class="audio-options-panel" id="audio-options-panel">
+      <div class="audio-options-title">Options audio</div>
+      <div class="repwrap">
+        <span class="replbl" data-icon="repeat"></span>
+        <div class="rbopts">
+          <button class="rb on" id="rep-off" data-repeat-mode="off">Off</button>
+          <button class="rb" id="rep-verse" data-repeat-mode="verse">Verset</button>
+          <button class="rb" id="rep-range" data-repeat-mode="range">Plage</button>
+          <button class="rb" data-repeat-count="2">2×</button>
+          <button class="rb" data-repeat-count="3">3×</button>
+          <button class="rb" data-repeat-count="5">5×</button>
+          <button class="rb" data-repeat-count="10">10×</button>
+        </div>
+        <div class="rangebox" id="rangebox">
+          <input class="rinput" id="rangeStart" type="number" min="1" value="1" data-change="range-bounds">
+          <span class="replbl" data-icon="timeline"></span>
+          <input class="rinput" id="rangeEnd" type="number" min="1" value="1" data-change="range-bounds">
+        </div>
+        <span class="repcount" id="repcount" aria-live="polite"></span>
       </div>
-      <div class="rangebox" id="rangebox">
-        <input class="rinput" id="rangeStart" type="number" min="1" value="1" data-change="range-bounds">
-        <span class="replbl" data-icon="timeline"></span>
-        <input class="rinput" id="rangeEnd" type="number" min="1" value="1" data-change="range-bounds">
+      <div class="autotog" data-action="toggle-auto">
+        <div class="togsw on" id="autosw"><div class="togknob"></div></div>
+        <span class="autolbl">Auto</span>
       </div>
-      <span class="repcount" id="repcount" aria-live="polite"></span>
-    </div>
-    <div class="autotog" data-action="toggle-auto">
-      <div class="togsw on" id="autosw"><div class="togknob"></div></div>
-      <span class="autolbl">Auto</span>
     </div>
     <button class="recbtn" data-action="open-rec"><span data-icon="microphone"></span> Récitateur</button>
   </div>
@@ -534,7 +538,7 @@
 <audio id="aud" preload="auto"></audio>
 
 
-<script src="assets/js/reader.js?v=reader-smart-static-20260622"></script>
+<script src="assets/js/reader.js?v=reader-audio-options-20260622"></script>
 <script src="assets/js/mushaf.js?v=mushaf-sync-20260622"></script>
 </body>
 </html>

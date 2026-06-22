@@ -500,6 +500,18 @@ function setupReaderShellScroll(){
   area.addEventListener('scroll',updateStickyState,{passive:true});
   readerShellScrollBound=true;
 }
+function toggleAudioOptions(force){
+  const panel=document.getElementById('audio-options-panel');
+  const button=document.getElementById('audioOptionsBtn');
+  const bar=document.getElementById('pbar');
+  if(!panel||!button||!bar)return;
+  const open=typeof force==='boolean'?force:!bar.classList.contains('options-open');
+  if(open)closeRec();
+  bar.classList.toggle('options-open',open);
+  panel.classList.toggle('open',open);
+  button.classList.toggle('on',open);
+  button.setAttribute('aria-expanded',open?'true':'false');
+}
 function updateStickyState(){
   if(document.body.classList.contains('reader-page')){
     document.body.classList.remove('reader-compact');
@@ -1043,7 +1055,7 @@ function setAudioQuality(q){
     setTimeout(()=>playV(v),150);
   }
 }
-function openRec(){renderRec();document.getElementById('rpanel').classList.add('open');document.getElementById('overlay').classList.add('show');}
+function openRec(){toggleAudioOptions(false);renderRec();document.getElementById('rpanel').classList.add('open');document.getElementById('overlay').classList.add('show');}
 function closeRec(){document.getElementById('rpanel').classList.remove('open');document.getElementById('overlay').classList.remove('show');}
 
 /* ── VERSET DU JOUR ── */
@@ -1438,7 +1450,7 @@ function initReaderStaticBindings(){
       'close-panel': closePanel,
       'close-rec': closeRec,
       'close-tools': closeTools,
-      'close-all-panels': () => { closePanel(); closeRec(); closeTools(); },
+      'close-all-panels': () => { closePanel(); closeRec(); closeTools(); toggleAudioOptions(false); },
       'close-share': closeShare,
       'close-video': closeVid,
       'download-share': dlShare,
@@ -1448,6 +1460,7 @@ function initReaderStaticBindings(){
       'previous-verse': prevV,
       'next-verse': nextV,
       'toggle-auto': toggleAuto,
+      'toggle-audio-options': () => toggleAudioOptions(),
       'focus-current-verse': () => focusVerse(curV),
       'open-tafsir': openTafsir,
       'open-notes': openNotes,

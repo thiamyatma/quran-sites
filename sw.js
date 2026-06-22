@@ -1,4 +1,4 @@
-const SHELL_CACHE = 'noorquran-shell-v13';
+const SHELL_CACHE = 'noorquran-shell-v14';
 const API_CACHE = 'noorquran-api-v2';
 const OFFLINE_URL = '/offline.html';
 const SHELL = [
