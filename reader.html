@@ -66,7 +66,7 @@
 <script defer src="assets/js/i18n.js"></script>
 <script defer src="assets/js/app.js?v=local-cache-reset-20260621"></script>
 </head>
-<body>
+<body class="reader-page">
 
 <!-- SIDE PANEL (sourates) -->
 <div id="spanel">
@@ -307,6 +307,7 @@
     <button class="ibtn" id="thbtn" data-action="toggle-theme" aria-label="Thème"><span data-icon="moon"></span></button>
   </div>
 
+  <section class="reader-controls" id="reader-controls" aria-label="Contrôles de lecture">
   <div class="reader-mode-switch" role="tablist" aria-label="Mode de lecture">
     <button class="mode-tab on" id="mode-classic" data-reading-mode="classic" role="tab" aria-selected="true">Lecture</button>
     <button class="mode-tab" id="mode-mushaf" data-reading-mode="mushaf" role="tab" aria-selected="false">Mushaf</button>
@@ -351,6 +352,7 @@
     </div>
     <button class="recbtn" data-action="open-rec"><span data-icon="microphone"></span> Récitateur</button>
   </div>
+  </section>
 
   <!-- SMART MINI PLAYER -->
   <div id="mini-player" class="audio-mini-player" aria-label="Mini lecteur audio">
@@ -369,6 +371,7 @@
     <button class="mini-icon" data-open-tool="tools" aria-label="Options audio"><span data-icon="settings"></span></button>
   </div>
 
+  <main class="reader-scroll-area" id="reader-scroll-area">
   <div class="desktop-shell">
   <aside id="desk-left" aria-label="Navigation des versets">
     <div class="desk-title"><span>SOURATE</span><button class="pclose" data-action="open-panel">‹</button></div>
@@ -525,12 +528,13 @@
       <br><span class="footer-copy">© 2026 NoorQuran</span>
     </div>
   </footer>
+</main>
 </div>
 
 <audio id="aud" preload="auto"></audio>
 
 
-<script src="assets/js/reader.js?v=reader-mushaf-sync-20260622"></script>
+<script src="assets/js/reader.js?v=reader-app-shell-20260622"></script>
 <script src="assets/js/mushaf.js?v=mushaf-sync-20260622"></script>
 </body>
 </html>

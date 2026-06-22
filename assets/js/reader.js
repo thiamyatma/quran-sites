@@ -478,7 +478,22 @@ function setAudioProgress(current='0:00',total='0:00',width='0%'){
   if(fill)fill.style.width=width;
   if(miniFill)miniFill.style.width=width;
 }
+function readerScrollArea(){
+  return document.getElementById('reader-scroll-area');
+}
+function scrollReaderToTop(behavior='auto'){
+  const area=readerScrollArea();
+  if(area){
+    area.scrollTo({top:0,behavior});
+    return;
+  }
+  window.scrollTo({top:0,behavior});
+}
 function updateStickyState(){
+  if(document.body.classList.contains('reader-page')){
+    document.body.classList.remove('reader-compact');
+    return;
+  }
   document.body.classList.toggle('reader-compact',window.scrollY>80);
 }
 
@@ -503,7 +518,7 @@ async function loadSurah(n){
   document.getElementById('loading').style.display='block';
   document.getElementById('errmsg').style.display='none';
   document.getElementById('vlist').innerHTML='';
-  renderSList();renderKhatm();window.scrollTo({top:0,behavior:'smooth'});
+  renderSList();renderKhatm();scrollReaderToTop();
   try{
     const ck=SURAH_CACHE_PREFIX+n;
     const cached=readJsonStore(sessionStorage,ck,null);
